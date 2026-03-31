@@ -266,6 +266,259 @@ SKILL_EOF
 }
 
 # -----------------------------------------------------------------------------
+# Install Swarm Skills (/rswarm, /rhive) + Statusline
+# -----------------------------------------------------------------------------
+install_swarm_skills() {
+    info "Installing swarm skills and statusline..."
+
+    # --- /rswarm skill ---
+    RSWARM_DIR="$HOME/.claude/skills/rswarm"
+    mkdir -p "$RSWARM_DIR"
+    cat > "$RSWARM_DIR/SKILL.md" << 'RSWARM_EOF'
+---
+name: rswarm
+description: "Launch a full 15-agent Ruflo swarm to execute a task immediately. Triggers real multi-agent execution — not a reference."
+---
+
+# Ruflo Advanced Swarm — Immediate Execution
+
+When this skill is invoked, IMMEDIATELY launch a 15-agent swarm. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rswarm`)
+2. **Signal status line**: Run `echo 15 > /tmp/ruflo-swarm-active` via Bash to light up the swarm indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__claude-flow__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized`
+   - Spawn ALL 15 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-swarm-active` via Bash to turn off the swarm indicator
+
+## The 15 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Backend Dev 1 | Core backend implementation |
+| 3 | coder | Backend Dev 2 | Secondary backend / services |
+| 4 | coder | Frontend Dev | UI / frontend implementation |
+| 5 | backend-dev | DB Engineer | Schema, queries, data layer |
+| 6 | tester | Test Engineer 1 | Unit + integration tests |
+| 7 | tester | Test Engineer 2 | E2E + edge case tests |
+| 8 | security-auditor | Security Auditor | Vulnerability scanning, input validation, secrets check |
+| 9 | performance-engineer | Perf Engineer | Bottleneck analysis, optimization |
+| 10 | reviewer | Code Reviewer | Quality, patterns, best practices |
+| 11 | researcher | Researcher | Background research, prior art, docs lookup |
+| 12 | analyst | Code Analyst | Architecture assessment, dependency analysis |
+| 13 | coder | DevOps Engineer | CI/CD, deployment, infrastructure |
+| 14 | coder | Technical Writer | Documentation, README, usage guides |
+| 15 | tester | QA Coordinator | Final validation, cross-agent consistency check |
+
+Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But ALWAYS spawn 15.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RSWARM_EOF
+    success "Swarm skill (/rswarm) installed"
+
+    # --- /rhive skill ---
+    RHIVE_DIR="$HOME/.claude/skills/rhive"
+    mkdir -p "$RHIVE_DIR"
+    cat > "$RHIVE_DIR/SKILL.md" << 'RHIVE_EOF'
+---
+name: rhive
+description: "Launch a queen-led Ruflo hive-mind with raft consensus for autonomous task execution. The queen decomposes and delegates — hands-off."
+---
+
+# Ruflo Hive Mind — Queen-Led Autonomous Execution
+
+When this skill is invoked, IMMEDIATELY initialize a hive-mind with a queen agent that autonomously manages the work. Do NOT explain how hive-minds work. Do NOT show code examples. ACT.
+
+## How This Differs from /rswarm
+
+- `/rswarm` = you define the task, Claude pre-assigns 15 agents with fixed roles
+- `/rhive` = you define the GOAL, a queen agent takes over and autonomously manages everything
+
+The queen decides how many workers to spawn, what roles they need, how to coordinate them, and when the work is done. You set the goal and step back.
+
+## Execution Steps
+
+1. Read the user's goal (everything they typed after `/rhive`)
+2. **Signal status line**: Run `touch /tmp/ruflo-hive-active` via Bash to light up the hive indicator
+3. Initialize the hive-mind in ONE message:
+   - Call `mcp__claude-flow__hive-mind_init` with consensus `raft`
+   - Spawn a queen agent (hierarchical-coordinator type) via the Agent tool with `run_in_background: true`
+   - The queen's prompt MUST include:
+     a. The user's full goal
+     b. Instructions to use `mcp__claude-flow__hive-mind_spawn` to create workers as needed
+     c. Instructions to use `mcp__claude-flow__hive-mind_broadcast` for coordination
+     d. Instructions to use `mcp__claude-flow__hive-mind_consensus` for decisions
+     e. Instructions to use `mcp__claude-flow__hive-mind_memory` for shared state
+     f. Instructions to present final synthesized output when complete
+4. After spawning the queen, STOP. Do not poll. Do not check status. The queen runs the show.
+5. When the queen returns results, present them to the user.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-hive-active` via Bash to turn off the hive indicator
+
+## Queen Agent Behavior
+
+The queen MUST:
+- Decompose the goal into sub-tasks
+- Decide which worker types to spawn (from the 60+ available agent types)
+- Assign specific sub-tasks to each worker
+- Monitor worker output and coordinate
+- Use raft consensus — queen is the leader, maintains authoritative state
+- Use hive-mind memory for shared context across all workers
+- Synthesize all worker results into a final deliverable
+- Shut down workers when done
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Consensus: Raft (queen is authoritative leader)
+- Queen spawns workers autonomously — do not pre-define the team
+- Maximum workers: 15 (respect maxAgents config)
+- After spawning the queen, STOP and wait
+- Trust the queen's judgment on team composition and coordination
+RHIVE_EOF
+    success "Hive skill (/rhive) installed"
+
+    # --- Statusline script ---
+    # Writes a statusline.sh that uses /tmp lock files to detect swarm/hive activity.
+    # Lock files are used because rswarm/rhive agents run as Claude Code subprocesses
+    # (via the Agent tool), not as CLI processes — process detection cannot find them.
+    STATUSLINE_DIR="$HOME/.claude"
+    cat > "$STATUSLINE_DIR/statusline.sh" << 'STATUSLINE_EOF'
+#!/bin/bash
+# Ruflo Status Line — real state only
+# Detects: 2ndBrain (Obsidian), Ruflo (MCP), UIPro, Swarm/Hive activity
+
+input=$(cat)
+
+# Parse Claude Code's JSON input
+MODEL=$(echo "$input" | jq -r '.model.display_name // "Opus 4.6"' 2>/dev/null)
+CTX=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null | cut -d. -f1)
+DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0' 2>/dev/null)
+CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
+
+# Format duration
+if [ "$DURATION_MS" != "0" ] && [ "$DURATION_MS" != "null" ]; then
+  SECS=$((${DURATION_MS%.*} / 1000))
+  MINS=$((SECS / 60))
+  REMAINING_SECS=$((SECS % 60))
+  if [ "$MINS" -gt 0 ]; then
+    TIME_FMT="${MINS}m${REMAINING_SECS}s"
+  else
+    TIME_FMT="${SECS}s"
+  fi
+else
+  TIME_FMT="0s"
+fi
+
+# --- 2ndBRAIN CHECK ---
+BRAIN=""
+if echo "$CWD" | grep -qiE "OBSIDIAN/(2ndBrain|MASTER)" 2>/dev/null; then
+  BRAIN="🧠 2ndBrain"
+fi
+
+# --- RUFLO CHECK ---
+RUFLO=""
+if pgrep -f "claude-flow.*mcp" >/dev/null 2>&1 || pgrep -f "@claude-flow/cli" >/dev/null 2>&1 || pgrep -f "ruflo" >/dev/null 2>&1; then
+  RUFLO="⚡ Ruflo"
+fi
+
+# --- UIPRO CHECK (always on — global skill) ---
+UIPRO="🎨 UIPro"
+
+# --- SWARM CHECK (only shows when actively running) ---
+# Lock file is written by /rswarm skill, removed on completion.
+# Agents run as Claude Code subprocesses (not CLI), so pgrep won't find them.
+# Auto-clean lock files older than 30 min as stale.
+SWARM=""
+SWARM_LOCK="/tmp/ruflo-swarm-active"
+if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
+  if [ "$(find /tmp -maxdepth 1 -name 'ruflo-swarm-active' -mmin +30 2>/dev/null)" ]; then
+    rm -f "$SWARM_LOCK" 2>/dev/null
+  else
+    AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
+    if [ -n "$AGENT_COUNT" ]; then
+      SWARM="🐝 ${AGENT_COUNT}"
+    else
+      SWARM="🐝"
+    fi
+  fi
+fi
+
+# --- HIVE CHECK (only shows when actively running) ---
+# Same approach — trust lock file, auto-clean after 30 min.
+HIVE=""
+HIVE_LOCK="/tmp/ruflo-hive-active"
+if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
+  if [ "$(find /tmp -maxdepth 1 -name 'ruflo-hive-active' -mmin +30 2>/dev/null)" ]; then
+    rm -f "$HIVE_LOCK" 2>/dev/null
+  else
+    HIVE="🍯 Hive"
+  fi
+fi
+
+# --- BUILD THE LINE ---
+PARTS=""
+
+# 2ndBrain + Ruflo
+if [ -n "$BRAIN" ] && [ -n "$RUFLO" ]; then
+  PARTS="${BRAIN} + ${RUFLO}"
+elif [ -n "$BRAIN" ]; then
+  PARTS="${BRAIN}"
+elif [ -n "$RUFLO" ]; then
+  PARTS="${RUFLO}"
+fi
+
+# UIPro (always on)
+if [ -n "$PARTS" ]; then
+  PARTS="${PARTS} + ${UIPRO}"
+else
+  PARTS="${UIPRO}"
+fi
+
+# Swarm or Hive activity
+if [ -n "$SWARM" ] && [ -n "$HIVE" ]; then
+  PARTS="${PARTS} [${SWARM} + ${HIVE}]"
+elif [ -n "$SWARM" ]; then
+  PARTS="${PARTS} [${SWARM}]"
+elif [ -n "$HIVE" ]; then
+  PARTS="${PARTS} [${HIVE}]"
+fi
+
+echo "${PARTS} • ${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
+STATUSLINE_EOF
+    chmod +x "$STATUSLINE_DIR/statusline.sh"
+    success "Statusline script installed at $STATUSLINE_DIR/statusline.sh"
+
+    # --- Configure statusline in Claude Code settings ---
+    SETTINGS_FILE="$HOME/.claude/settings.json"
+    if [ -f "$SETTINGS_FILE" ] && command -v jq &>/dev/null; then
+        # Check if statusline is already configured
+        EXISTING=$(jq -r '.statusLine.command // ""' "$SETTINGS_FILE" 2>/dev/null)
+        if [ -z "$EXISTING" ] || [ "$EXISTING" = "null" ]; then
+            jq '.statusLine = {"type": "command", "command": "~/.claude/statusline.sh"}' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" \
+                && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+            success "Statusline configured in Claude Code settings"
+        else
+            success "Statusline already configured (${EXISTING})"
+        fi
+    else
+        warn "Could not configure statusline automatically. Add to ~/.claude/settings.json manually:"
+        echo '  "statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}'
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -320,6 +573,33 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: Context Hub skill not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Swarm skill (/rswarm)
+    if [ -f "$HOME/.claude/skills/rswarm/SKILL.md" ]; then
+        success "TEST: Swarm skill (/rswarm) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Swarm skill (/rswarm) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Hive skill (/rhive)
+    if [ -f "$HOME/.claude/skills/rhive/SKILL.md" ]; then
+        success "TEST: Hive skill (/rhive) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Hive skill (/rhive) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Statusline
+    if [ -f "$HOME/.claude/statusline.sh" ] && [ -x "$HOME/.claude/statusline.sh" ]; then
+        success "TEST: Statusline script installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Statusline script not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -414,6 +694,7 @@ main() {
     configure_model_defaults
     install_context_hub
     configure_context_hub_skill
+    install_swarm_skills
     run_self_test
     print_summary
 }

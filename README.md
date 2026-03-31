@@ -278,6 +278,16 @@ When Claude writes code that calls an external API, it's working from its traini
 
 Together, Ruflo and Context Hub are what take you from "using AI" to actually being an AI super user.
 
+### Swarm Skills
+
+Step 3 also installs two slash commands that let you launch multi-agent swarms on demand:
+
+- **`/rswarm <task>`** — Launches 15 agents immediately. You describe the task, Claude assigns roles (architect, coders, testers, security auditor, etc.) and they all work in parallel. Use this when you know what you want done and want brute-force execution.
+
+- **`/rhive <goal>`** — Launches a queen agent that autonomously manages everything. You describe the goal, the queen decides how to break it down, what workers to spawn, and how to coordinate them. Use this when you want to set a direction and step back.
+
+Both skills signal the statusline so you can see live indicators while agents are working.
+
 ### Run Step 3
 
 You should still be in Warp from Step 2. If you closed it, open Warp and type `cskip` to start a new Claude session. Remember, you can press **Shift+Tab** at any time to toggle auto-approve on or off.
@@ -309,6 +319,9 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 | Opus Lock | This locks all tasks to Opus so nothing silently downgrades to a weaker model. You're paying for Opus, so you should always get Opus. |
 | Context Hub | This gives Claude access to curated, up-to-date API documentation so it stops hallucinating function names. |
 | Context Hub Skill | This teaches Claude when and how to look up API docs automatically before writing integration code. |
+| Swarm Skill (`/rswarm`) | Type `/rswarm` followed by any task and Claude immediately launches 15 parallel agents to tackle it. A lead architect coordinates backend devs, testers, security auditors, and more — all working simultaneously. |
+| Hive Skill (`/rhive`) | Type `/rhive` followed by a goal and a queen agent takes full control. She decides what workers to spawn, how to coordinate them, and when the work is done. You set the goal and step back. |
+| Statusline | A real-time status bar that shows your active tools, model, session time, and context usage. When a swarm or hive is running, you'll see live indicators so you always know what's happening. |
 
 ### After Step 3
 
