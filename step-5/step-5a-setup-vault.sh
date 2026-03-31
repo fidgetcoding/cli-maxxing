@@ -113,6 +113,32 @@ create_folders() {
     mkdir -p "$VAULT_PATH/06-Assets"
     mkdir -p "$VAULT_PATH/07-Projects"
 
+    # Set up Obsidian config to exclude non-note folders from graph
+    mkdir -p "$VAULT_PATH/.obsidian"
+    cat > "$VAULT_PATH/.obsidian/app.json" << 'APPJSON_EOF'
+{
+  "promptDelete": false,
+  "attachmentFolderPath": "06-Assets",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
+  "userIgnoreFilters": [
+    "node_modules/",
+    ".agents/",
+    ".git/",
+    ".import-staging/",
+    ".claude/",
+    ".claude-flow/",
+    ".swarm/",
+    "scripts/",
+    "package.json",
+    "package-lock.json",
+    "skills-lock.json",
+    ".DS_Store",
+    ".sync-claude-to-vault.sh"
+  ]
+}
+APPJSON_EOF
+
     success "Folder structure created"
 }
 
@@ -265,9 +291,9 @@ Personal knowledge management system (PKM) in Obsidian built on Zettelkasten pri
 ## Note Creation Conventions
 
 ### Linking Philosophy
-- **Link liberally**: Create `[[wikilinks]]` to concepts, people, projects, and ideas
+- **Link liberally**: Create wikilinks (\`[[ ]]\` syntax) to concepts, people, projects, and ideas
 - **Prefer atomic notes**: One concept per note, well-linked to related concepts
-- **Use aliases**: `[[Machine Learning|ML]]` when shorthand is clearer
+- **Use aliases**: \`[​[Machine Learning|ML]]\` when shorthand is clearer (note the pipe for display text)
 - **Always link back**: Every note should link to at least one other note or MOC
 - **Never put wikilinks inside tables**: Obsidian graph view cannot detect them. Use bullet lists instead.
 

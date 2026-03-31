@@ -73,6 +73,36 @@ echo "    Projects:   $PROJECT_COUNT project folders"
 echo "    Total:      $TOTAL_NOTES notes"
 echo ""
 
+# Auto-link orphan files to their parent project
+info "Linking orphan files to parent projects..."
+LINK_COUNT=0
+find "$VAULT_PATH/07-Projects" -name '*.md' | while read f; do
+    if ! grep -q '\[\[' "$f" 2>/dev/null; then
+        project=$(echo "$f" | sed "s|$VAULT_PATH/07-Projects/||" | cut -d'/' -f1)
+        if [ -n "$project" ]; then
+            printf "\n\n---\n[[${project}]]\n" >> "$f"
+            LINK_COUNT=$((LINK_COUNT + 1))
+        fi
+    fi
+done
+success "Linked orphan files to parent projects"
+
+# Embed unlinked media files in project index notes
+info "Embedding unlinked media files..."
+find "$VAULT_PATH/07-Projects" -type f -not -name '*.md' | while read f; do
+    name=$(basename "$f")
+    # Check if already embedded anywhere
+    if ! grep -rq "!\\[\\[${name}\\]\\]" "$VAULT_PATH" --include='*.md' 2>/dev/null; then
+        project=$(echo "$f" | sed "s|$VAULT_PATH/07-Projects/||" | cut -d'/' -f1)
+        index="$VAULT_PATH/07-Projects/${project}/${project}.md"
+        if [ -f "$index" ]; then
+            printf "\n![[${name}]]\n" >> "$index"
+        fi
+    fi
+done
+success "Media files embedded"
+
+echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${GREEN}  Step 5d — Ready for Claude to Wire Everything Up${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
