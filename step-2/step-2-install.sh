@@ -29,7 +29,7 @@ detect_os() {
     case "$(uname -s)" in
         Darwin)       OS="mac" ;;
         Linux)        OS="linux" ;;
-        MINGW*|MSYS*|CYGWIN*) fail "Windows is not supported yet. This setup is for macOS and Linux only." ;;
+        MINGW*|MSYS*|CYGWIN*) fail "Windows is not supported. This script is for macOS and Linux only." ;;
         *)            fail "Unsupported OS: $(uname -s). This script supports macOS and Linux only." ;;
     esac
     info "Detected OS: $OS"

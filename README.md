@@ -31,7 +31,7 @@ Everything you need to start working with AI-powered development tools, installe
 - **Don't run it as root.** Just open your terminal normally and paste the command.
 - If anything is already installed on your machine, the scripts will detect that and skip it automatically.
 
-> **Windows:** Not supported yet. This is built for macOS and Linux right now. Windows support may be added in the future.
+> **Windows:** Not supported. This is built for macOS and Linux only.
 
 ---
 

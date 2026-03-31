@@ -28,7 +28,7 @@ detect_os() {
     case "$(uname -s)" in
         Darwin)       OS="mac" ;;
         Linux)        OS="linux" ;;
-        MINGW*|MSYS*|CYGWIN*) fail "Windows is not supported yet. This setup is for macOS and Linux only." ;;
+        MINGW*|MSYS*|CYGWIN*) fail "Windows is not supported. This script is for macOS and Linux only." ;;
         *)            fail "Unsupported OS: $(uname -s). This script supports macOS and Linux only." ;;
     esac
     info "Detected OS: $OS"
@@ -307,6 +307,20 @@ cd "$VAULT" && exec claude --dangerously-skip-permissions "$@"
 CBRAIN_EOF
     chmod +x "$HOME/.local/bin/cbrain"
     success "cbrain command installed to ~/.local/bin/cbrain"
+
+    # Install cbraintg command (cbrain + Telegram channel)
+    info "Installing cbraintg command to ~/.local/bin..."
+    cat > "$HOME/.local/bin/cbraintg" << 'CBRAINTG_EOF'
+#!/usr/bin/env bash
+VAULT="$HOME/Desktop/2ndBrain"
+if [ ! -d "$VAULT" ]; then
+  echo "Error: 2ndBrain vault not found at $VAULT"
+  exit 1
+fi
+cd "$VAULT" && exec claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official "$@"
+CBRAINTG_EOF
+    chmod +x "$HOME/.local/bin/cbraintg"
+    success "cbraintg command installed to ~/.local/bin/cbraintg"
 }
 
 # -----------------------------------------------------------------------------
@@ -398,6 +412,15 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: cbrain command — not found or not executable"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # cbraintg command
+    if [ -x "$HOME/.local/bin/cbraintg" ]; then
+        success "TEST: cbraintg command — installed at ~/.local/bin/cbraintg"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: cbraintg command — not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
