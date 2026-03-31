@@ -19,6 +19,29 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 
 # -----------------------------------------------------------------------------
+# Install Obsidian
+# -----------------------------------------------------------------------------
+install_obsidian() {
+    echo ""
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}  Checking Obsidian Installation${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    echo "[INFO] Installing Obsidian..."
+    if [ -d "/Applications/Obsidian.app" ] || [ -d "$HOME/Applications/Obsidian.app" ]; then
+        echo "[OK] Obsidian already installed"
+    else
+        if command -v brew &>/dev/null; then
+            brew install --cask obsidian
+            echo "[OK] Obsidian installed"
+        else
+            echo "[WARN] Homebrew not found — install Obsidian manually from https://obsidian.md"
+        fi
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Find the vault
 # -----------------------------------------------------------------------------
 find_vault() {
@@ -33,11 +56,11 @@ find_vault() {
     # Try common locations
     VAULT_PATH=""
     for candidate in \
-        "$HOME/Desktop/Brain" \
+        "$HOME/Desktop/2ndBrain" \
         "$HOME/Desktop/Second-Brain" \
         "$HOME/Desktop/Vault" \
         "$HOME/Desktop/VAULT" \
-        "$HOME/Documents/Brain" \
+        "$HOME/Documents/2ndBrain" \
         "$HOME/Documents/Second-Brain" \
         "$HOME/Documents/Vault"; do
         if [ -d "$candidate" ]; then
@@ -62,13 +85,13 @@ find_vault() {
         echo -e "  ${YELLOW}Could not auto-detect your vault.${NC}"
         echo ""
         echo "  Please tell Claude where your vault is. For example:"
-        echo "  'My vault is at ~/Desktop/Brain'"
+        echo "  'My vault is at ~/Desktop/2ndBrain'"
         echo ""
         echo "  Or set it manually:"
         echo "  export VAULT_PATH=~/Desktop/YourVaultName"
         echo ""
-        # Default to Desktop/Brain so the script can continue
-        VAULT_PATH="$HOME/Desktop/Brain"
+        # Default to Desktop/2ndBrain so the script can continue
+        VAULT_PATH="$HOME/Desktop/2ndBrain"
         warn "Defaulting to $VAULT_PATH. Change this if needed."
     fi
 
@@ -217,7 +240,7 @@ create_claude_md() {
     info "Creating CLAUDE.md..."
 
     cat > "$VAULT_PATH/CLAUDE.md" << 'CLAUDEEOF'
-# CLAUDE.md — Second Brain
+# CLAUDE.md — 2ndBrain
 
 This file provides guidance to Claude Code when working with this Obsidian vault.
 
@@ -228,6 +251,7 @@ Personal knowledge management system (PKM) in Obsidian built on Zettelkasten pri
 ## Vault Structure
 
 ```
+2ndBrain/
 ├── 00-Inbox/        # Raw captures — URLs, quick thoughts, unprocessed notes
 ├── 01-Fleeting/     # Quick ideas and thoughts, lightly formatted
 ├── 02-Literature/   # Notes from articles, videos, books, podcasts (sourced content)
@@ -358,6 +382,34 @@ SYNCEOF
 }
 
 # -----------------------------------------------------------------------------
+# Register vault in Obsidian config
+# -----------------------------------------------------------------------------
+register_vault_in_obsidian() {
+    info "Registering vault in Obsidian..."
+
+    # Auto-register vault in Obsidian config
+    OBSIDIAN_CONFIG_DIR="$HOME/Library/Application Support/obsidian"
+    if [ "$(uname)" = "Darwin" ]; then
+        mkdir -p "$OBSIDIAN_CONFIG_DIR"
+        VAULT_ABS=$(cd "$VAULT_PATH" && pwd)
+        TS=$(date +%s)000
+        if [ -f "$OBSIDIAN_CONFIG_DIR/obsidian.json" ]; then
+            # Add vault to existing config using jq
+            if command -v jq &>/dev/null; then
+                jq --arg path "$VAULT_ABS" --arg ts "$TS" '.vaults["2ndbrain"] = {"path": $path, "ts": ($ts | tonumber)}' "$OBSIDIAN_CONFIG_DIR/obsidian.json" > "$OBSIDIAN_CONFIG_DIR/obsidian.json.tmp" && mv "$OBSIDIAN_CONFIG_DIR/obsidian.json.tmp" "$OBSIDIAN_CONFIG_DIR/obsidian.json"
+            fi
+        else
+            cat > "$OBSIDIAN_CONFIG_DIR/obsidian.json" << OBSIDIAN_EOF
+{"vaults":{"2ndbrain":{"path":"$VAULT_ABS","ts":$TS}}}
+OBSIDIAN_EOF
+        fi
+        success "Vault registered in Obsidian"
+    else
+        warn "Vault auto-registration is only supported on macOS"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -370,6 +422,16 @@ run_self_test() {
     TEST_PASS=0
     TEST_FAIL=0
 
+    # Test: Obsidian installed
+    if [ -d "/Applications/Obsidian.app" ] || [ -d "$HOME/Applications/Obsidian.app" ]; then
+        success "TEST: Obsidian is installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: Obsidian is not installed"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Test: Vault folders
     for folder in "00-Inbox" "01-Fleeting" "02-Literature" "03-Permanent" "04-MOC" "05-Templates" "06-Assets" "07-Projects"; do
         if [ -d "$VAULT_PATH/$folder" ]; then
             success "TEST: $folder exists"
@@ -405,6 +467,31 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    # Test: Vault registered in Obsidian
+    OBSIDIAN_CONFIG_DIR="$HOME/Library/Application Support/obsidian"
+    if [ -f "$OBSIDIAN_CONFIG_DIR/obsidian.json" ]; then
+        if command -v jq &>/dev/null; then
+            if jq -e '.vaults["2ndbrain"]' "$OBSIDIAN_CONFIG_DIR/obsidian.json" &>/dev/null; then
+                success "TEST: Vault registered in Obsidian config"
+                TEST_PASS=$((TEST_PASS + 1))
+            else
+                echo -e "${RED}[FAIL]${NC} TEST: Vault not found in Obsidian config"
+                TEST_FAIL=$((TEST_FAIL + 1))
+            fi
+        else
+            if grep -q "2ndbrain" "$OBSIDIAN_CONFIG_DIR/obsidian.json" 2>/dev/null; then
+                success "TEST: Vault registered in Obsidian config"
+                TEST_PASS=$((TEST_PASS + 1))
+            else
+                echo -e "${RED}[FAIL]${NC} TEST: Vault not found in Obsidian config"
+                TEST_FAIL=$((TEST_FAIL + 1))
+            fi
+        fi
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: Obsidian config file not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     echo ""
     if [ "$TEST_FAIL" -eq 0 ]; then
         echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC}"
@@ -427,10 +514,12 @@ print_summary() {
     echo "  Vault: $VAULT_PATH"
     echo ""
     echo "  Created:"
+    echo "    Obsidian installed (or verified)"
     echo "    8 Zettelkasten folders"
     echo "    5 note templates"
     echo "    CLAUDE.md (vault instructions for Claude)"
     echo "    sync.sh (automation script)"
+    echo "    Vault registered in Obsidian config"
     echo ""
     echo "  Next: Run Step 5b to import your Claude history."
     echo ""
@@ -441,11 +530,13 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    install_obsidian
     find_vault
     create_folders
     create_templates
     create_claude_md
     create_sync_script
+    register_vault_in_obsidian
     run_self_test
     print_summary
 }

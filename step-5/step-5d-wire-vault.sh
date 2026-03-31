@@ -28,10 +28,10 @@ echo ""
 VAULT_PATH="${VAULT_PATH:-}"
 if [ -z "$VAULT_PATH" ]; then
     for candidate in \
-        "$HOME/Desktop/Brain" \
+        "$HOME/Desktop/2ndBrain" \
         "$HOME/Desktop/Second-Brain" \
         "$HOME/Desktop/Vault" \
-        "$HOME/Documents/Brain" \
+        "$HOME/Documents/2ndBrain" \
         "$HOME/Documents/Second-Brain"; do
         if [ -d "$candidate/00-Inbox" ]; then
             VAULT_PATH="$candidate"

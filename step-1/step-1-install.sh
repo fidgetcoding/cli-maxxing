@@ -279,14 +279,34 @@ install_claude_code() {
 
     # Add cskip shortcut
     if ! grep -q 'alias cskip' "$SHELL_RC" 2>/dev/null; then
-        info "Adding 'cskip' shortcut to $SHELL_RC..."
+        info "Adding Claude Code shortcuts to $SHELL_RC..."
         echo "" >> "$SHELL_RC"
         echo "# Claude Code shortcuts" >> "$SHELL_RC"
         echo "alias cskip='claude --dangerously-skip-permissions'" >> "$SHELL_RC"
-        success "Shortcut added: type 'cskip' to launch Claude (auto-approve mode)"
+        echo "alias cc='claude'" >> "$SHELL_RC"
+        echo "alias ccr='claude --resume'" >> "$SHELL_RC"
+        echo "alias ccc='claude --continue'" >> "$SHELL_RC"
+        success "Shortcuts added: cskip, cc, ccr, ccc"
     else
         success "cskip shortcut already configured"
     fi
+
+    # Source shell config to activate aliases in current session
+    source "$SHELL_RC" 2>/dev/null || true
+
+    # Install cbrain command
+    info "Installing cbrain command to ~/.local/bin..."
+    cat > "$HOME/.local/bin/cbrain" << 'CBRAIN_EOF'
+#!/usr/bin/env bash
+VAULT="$HOME/Desktop/2ndBrain"
+if [ ! -d "$VAULT" ]; then
+  echo "Error: 2ndBrain vault not found at $VAULT"
+  exit 1
+fi
+cd "$VAULT" && exec claude --dangerously-skip-permissions "$@"
+CBRAIN_EOF
+    chmod +x "$HOME/.local/bin/cbrain"
+    success "cbrain command installed to ~/.local/bin/cbrain"
 }
 
 # -----------------------------------------------------------------------------
@@ -369,6 +389,15 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: cskip shortcut — not found in $SHELL_RC"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # cbrain command
+    if [ -x "$HOME/.local/bin/cbrain" ]; then
+        success "TEST: cbrain command — installed at ~/.local/bin/cbrain"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: cbrain command — not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -471,6 +500,12 @@ main() {
     install_git
     install_node
     install_warp
+
+    # Ensure base directories exist (tools assume these)
+    mkdir -p "$HOME/.local/bin"
+    mkdir -p "$HOME/.config"
+    mkdir -p "$HOME/.cache"
+
     install_claude_code
     run_self_test
     print_summary

@@ -13,8 +13,10 @@ Everything you need to start working with AI-powered development tools, installe
 | [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, and utilities | ~3 min |
 | [Step 3](#step-3---ruflo--context-hub) | Ruflo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [Step 4](#step-4---design-tools) | Design Tools | UI/UX skills + component generation | ~3 min |
-| [Step 5](#step-5---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | 15-30+ min |
-| [Step 6](#step-6---visual-media) | Visual Media | Programmatic video creation with Remotion | ~3 min |
+| [Step 5](#step-5---visual-media) | Visual Media | Programmatic video creation with Remotion | ~3 min |
+| [Step 6](#step-6---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | 15-30+ min |
+| [Step 7](#step-7---status-line) | Status Line | Final config — status indicators wired up | ~2 min |
+| [Quick Reference](#quick-reference--commands--shortcuts) | Commands & Shortcuts | Every command and shortcut from all steps in one place | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
 | [Staying Up to Date](#staying-up-to-date) | Update command | Re-run everything, catch new steps | |
 
@@ -37,7 +39,7 @@ Everything you need to start working with AI-powered development tools, installe
 
 [Back to top](#quick-nav)
 
-There are six steps. Run them in order. Each one builds on the last.
+There are seven steps. Run them in order. Each one builds on the last.
 
 **[Step 1](#step-1---get-claude-running)** is the only part that feels "techy." This step gets the bare essentials on your machine so Claude (your AI assistant) and Warp (your new terminal) can run. You paste one command and it handles the rest, but there are a few manual steps after it finishes, like setting up your Warp account and logging into Claude. This is the most hands-on part of the entire process. After Step 1, you can ask Claude questions at any point. If something doesn't make sense, just ask. That's the whole point.
 
@@ -47,9 +49,11 @@ There are six steps. Run them in order. Each one builds on the last.
 
 **[Step 4](#step-4---design-tools)** gives Claude professional design skills and a library of production-ready UI components.
 
-**[Step 5](#step-5---second-brain-obsidian)** sets up your personal knowledge management system in Obsidian. This is the biggest step but also the most rewarding.
+**[Step 5](#step-5---visual-media)** gives Claude the ability to create videos programmatically using React. Animations, captions, transitions, data visualizations — all generated from code.
 
-**[Step 6](#step-6---visual-media)** gives Claude the ability to create videos programmatically using React. Animations, captions, transitions, data visualizations — all generated from code.
+**[Step 6](#step-6---second-brain-obsidian)** sets up your personal knowledge management system in Obsidian. This is the biggest step but also the most rewarding. It's the transition from setup to daily use.
+
+**[Step 7](#step-7---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms or hive-minds. After this, you're done.
 
 Between Steps 1 and 2, make sure to read the **[Keyboard + Command Cheat Sheet](#keyboard--command-cheat-sheet)** so you know how to type, navigate, and use hotkeys in your terminal.
 
@@ -308,7 +312,25 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 
 ### After Step 3
 
-Your core tools are installed. Continue to Step 4 for design tools and Step 5 for your Second Brain. Or open a new `cskip` session and try something ambitious. Ruflo kicks in automatically when the task calls for it.
+Your core tools are installed. Continue to Step 4 for design tools, Step 5 for visual media, and Step 6 for your Second Brain. Or open a new `cskip` session and try something ambitious. Ruflo kicks in automatically when the task calls for it.
+
+### MCP Server Setup
+
+Claude Code can connect to MCP (Model Context Protocol) servers for extended capabilities. After running Step 3 (Ruflo), the MCP server is configured automatically.
+
+For manual MCP setup or troubleshooting, see the [Claude Code MCP documentation](https://docs.claude.ai/en/docs/mcp-servers).
+
+#### Verify MCP Connection
+
+After setup, verify the MCP server is connected:
+```bash
+claude mcp list
+```
+
+If the Ruflo MCP server isn't showing, re-add it:
+```bash
+claude mcp add claude-flow -- npx -y @claude-flow/cli@latest
+```
 
 ---
 
@@ -379,13 +401,63 @@ The UI/UX Pro Max Skill installs automatically. But 21st.dev needs you to create
 
 ---
 
-## Step 5 - Second Brain (Obsidian)
+## Step 5 - Visual Media
+
+[Back to top](#quick-nav)
+
+This step gives Claude the ability to create videos programmatically using React. Instead of editing video in a timeline tool, you describe what you want and Claude writes code that generates the video. Animations, captions, transitions, data visualizations, 3D content — all from code.
+
+### Remotion
+
+Built by [@remotion-dev](https://github.com/remotion-dev) ([site](https://remotion.dev)). Remotion is a framework for creating videos using React. You write React components and Remotion renders them into actual video files.
+
+This is not screen recording or template filling. It's real programmatic video creation:
+
+- **React-based video.** Every frame is a React component. If you can build it in React, you can turn it into a video.
+- **Animations and transitions.** Spring animations, easing curves, scene transitions, text animations — all built in.
+- **Captions and subtitles.** Automatic caption generation and styling, synced to audio.
+- **Audio and sound.** Import audio, control volume, trim, adjust speed and pitch, add sound effects, visualize audio as waveforms or spectrum bars.
+- **3D content.** Three.js and React Three Fiber integration for 3D scenes in your videos.
+- **Charts and data viz.** Bar charts, pie charts, line charts, stock charts — animated and rendered as video.
+- **Maps.** Animated Mapbox maps in your videos.
+- **FFmpeg integration.** Trim videos, detect silence, process audio — the heavy-duty video operations.
+- **Parametric videos.** Define a schema and generate different versions of the same video with different data.
+
+The Remotion skill teaches Claude best practices, patterns, and techniques for all of these. Claude doesn't just know about Remotion — it knows the right way to use it.
+
+### Run Step 5
+
+You should still be in Warp. If you closed it, open Warp and type `cskip` to start a new Claude session.
+
+Once you're inside the Claude session, paste this and hit Enter:
+
+> [!IMPORTANT]
+> **Paste this into your Claude session:**
+> ```
+> run this command to install visual media tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6-install.sh | bash
+> ```
+
+
+### What This Step Installs
+
+| Component | What it does |
+|-----------|-------------|
+| Remotion Skills | Teaches Claude best practices for programmatic video creation with React — animations, transitions, captions, audio, 3D, charts, and more. |
+| FFmpeg | Powerful command-line tool for video and audio processing. Used by Remotion for rendering and by Claude for media operations. |
+
+### After Step 5
+
+You're now set up for visual media creation. Ask Claude to create a Remotion project and describe the video you want. Claude will scaffold the project, write the components, and you can render the output.
+
+---
+
+## Step 6 - Second Brain (Obsidian)
 
 [Back to top](#quick-nav)
 
 This is the biggest step. It sets up your personal knowledge management system, a "Second Brain" that captures, connects, and retrieves everything you know and everything you're working on. This step takes real time. Don't rush it.
 
-> **Heads up:** This step has multiple parts (5a through 5d). Each one is its own script. Take them one at a time.
+> **Heads up:** This step has multiple parts (6a through 6d). Each one is its own script. Take them one at a time.
 
 ### What is a Second Brain?
 
@@ -430,7 +502,7 @@ The folder structure we use is based on Zettelkasten principles:
 | **06-Assets** | Images, PDFs, attachments. Anything that isn't a text note. |
 | **07-Projects** | Active projects. Each one gets its own folder with an index note. If you use Claude Projects, you can mirror your Claude project names here. |
 
-### Step 5a - Install Obsidian + Create Your Vault
+### Step 6a - Install Obsidian + Create Your Vault
 
 This part installs Obsidian on your machine and has Claude set up the full folder structure for you.
 
@@ -445,7 +517,7 @@ Or just go to [obsidian.md/download](https://obsidian.md/download) and download 
 
 1. Open Obsidian. **How to find it:** On Mac, press **Cmd+Space** and type **Obsidian**. On Linux, look for "Obsidian" in your applications menu.
 2. Click **Create new vault**
-3. Name it something you'll remember. "Brain" or "Second-Brain" or "Vault" all work fine.
+3. Name it something you'll remember. "2ndBrain" or "Second-Brain" or "Vault" all work fine.
 4. For the location, pick somewhere easy to find. We recommend your **Desktop** or a **Documents** folder. Don't bury it deep in some random directory.
 5. Click **Create**
 
@@ -468,7 +540,7 @@ Claude will ask you where your vault is located, then:
 - Set up the **WebFetch workflow** so Claude knows how to capture content from URLs into your vault (it pulls the page, creates a Literature Note, extracts permanent notes, and links everything)
 - Set up a **sync automation script** you can run later to keep things tidy
 
-### Step 5b - Import Your Claude History
+### Step 6b - Import Your Claude History
 
 Before importing your other notes, let's get your Claude conversation history in first. This helps because some people name their vault project folders after their Claude Projects, and having that data available makes the whole organization process smoother.
 
@@ -501,13 +573,13 @@ Claude will ask you where the zip file is, then:
 - Extract key concepts into **permanent notes** in `03-Permanent/`
 - Start building **bidirectional links** between related projects and notes
 
-### Step 5c - Import Your Existing Notes
+### Step 6c - Import Your Existing Notes
 
 Now let's get the rest of your notes in. If you have notes in Apple Notes, Google Keep, Notion, Evernote, or any other app, this step helps you export them and bring them into your vault.
 
 **For Apple Notes (Mac):**
 
-1. Download [Apple Notes Exporter](https://github.com/thijsve/apple-notes-exporter). This is a free app that exports your Apple Notes as files Claude can read.
+1. Download [Apple Notes Exporter](https://apps.apple.com/us/app/exporter/id1099120373) from the App Store. This is a free app that exports your Apple Notes as files Claude can read.
 2. **How to find it after downloading:** Check your Downloads folder. On Mac, press **Cmd+Space** and type the app name. On Linux, check your applications menu.
 3. Open it, select the notes you want to export, and save them to a folder you can find easily.
 
@@ -528,10 +600,10 @@ Claude will ask you where your exported notes are, what format they're in, and t
 
 - **Convert files to markdown** using Pandoc (installed in Step 2). This handles Word docs (.docx), PowerPoint (.pptx), Excel spreadsheets (.xlsx), and HTML files. Everything becomes clean, linkable markdown.
 - **Validate every file.** Claude checks for corrupt, empty, or fake files (like a .pdf that's actually an empty text file) and flags them.
-- **Move everything into the Inbox** for processing in Step 5d.
+- **Move everything into the Inbox** for processing in Step 6d.
 - **Ask you how you want to organize things.** Claude will have a conversation with you about what folders make sense for your notes, what categories you care about, and how you want things grouped. This isn't one-size-fits-all. Your vault should reflect how your brain works.
 
-### Step 5d - Wire It All Up
+### Step 6d - Wire It All Up
 
 This is where the magic happens. Claude goes through everything in your vault and connects it all together. This is the stuff that would take you hours to do manually. Claude does it in minutes.
 
@@ -563,7 +635,7 @@ If you have GitHub repos, Claude can connect them to your vault. This means if i
 
 > **This step takes the longest.** Depending on how many notes and Claude conversations you have, this could take 15-30+ minutes. Let Claude work. You can watch it go or come back when it's done.
 
-### Step 5 Troubleshooting
+### Step 6 Troubleshooting
 
 If things don't look right, here are the most common issues and how to fix them. You can ask Claude to fix any of these for you.
 
@@ -584,7 +656,7 @@ If things don't look right, here are the most common issues and how to fix them.
 **Frontmatter is missing on some notes:**
 - If notes don't have the YAML frontmatter block at the top, Obsidian can't filter or categorize them properly. Tell Claude: "Add proper frontmatter to any notes in my vault that are missing it."
 
-**The Inbox is still full after running 5d:**
+**The Inbox is still full after running 6d:**
 - Claude might have been conservative about categorizing some notes. Tell Claude: "Process everything remaining in my Inbox. Sort each note into the appropriate folder and create links."
 
 **You want to reorganize folders or rename projects:**
@@ -594,53 +666,203 @@ If things don't look right, here are the most common issues and how to fix them.
 
 ---
 
-## Step 6 - Visual Media
+## Step 7 - Status Line
+
+This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms or hive-minds.
+
+### What It Sets Up
+
+| Component | What it shows |
+|-----------|--------------|
+| 🧠 2ndBrain | You're working inside your Obsidian vault |
+| ⚡ Ruflo | The Ruflo MCP server is connected |
+| 🎨 UIPro | Design skill is loaded (always on after Step 4) |
+| 🐝 Swarm | A swarm is active (shows agent count during `/rswarm`) |
+| 🍯 Hive | A hive-mind is active (during `/rhive`) |
+
+The status line also shows your current model, session duration, and context window usage.
+
+### Install
+
+> run this command to set up your status line: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-7/step-7-install.sh | bash
+
+Or manually:
+1. Copy `statusline.sh` to `~/.claude/statusline.sh`
+2. Add to your `~/.claude/settings.json`:
+```json
+"statusLine": {
+  "type": "command",
+  "command": "~/.claude/statusline.sh"
+}
+```
+3. Restart Claude Code
+
+### After Step 7
+
+You're done. Everything is installed, configured, and wired together. Open a new `cskip` or `cbrain` session and your status line will show exactly what's active.
+
+---
+
+## Installation Order
+
+Run the steps in this order:
+
+| Step | Name | What it does |
+|------|------|-------------|
+| 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
+| 2 | Dev Tools | Python, Pandoc, jq, ripgrep, etc. |
+| 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
+| 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic + Pretext |
+| 5 | Visual Media | Remotion + FFmpeg |
+| 6 | Second Brain | Obsidian vault setup + data import (6a-6d) |
+| **7** | **Status Line** | **Final config — status indicators, system health check** |
+
+> **Note:** Step 6 (Second Brain) is the biggest step with four sub-parts (6a-6d). Step 7 (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
+
+---
+
+## Quick Reference — Commands & Shortcuts
 
 [Back to top](#quick-nav)
 
-This step gives Claude the ability to create videos programmatically using React. Instead of editing video in a timeline tool, you describe what you want and Claude writes code that generates the video. Animations, captions, transitions, data visualizations, 3D content — all from code.
+Everything installed by this setup, in one place. Print this, bookmark it, or just ask Claude "what commands do I have?"
 
-### Remotion
+---
 
-Built by [@remotion-dev](https://github.com/remotion-dev) ([site](https://remotion.dev)). Remotion is a framework for creating videos using React. You write React components and Remotion renders them into actual video files.
+### Shell Commands (installed by Step 1)
 
-This is not screen recording or template filling. It's real programmatic video creation:
+These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any terminal session.
 
-- **React-based video.** Every frame is a React component. If you can build it in React, you can turn it into a video.
-- **Animations and transitions.** Spring animations, easing curves, scene transitions, text animations — all built in.
-- **Captions and subtitles.** Automatic caption generation and styling, synced to audio.
-- **Audio and sound.** Import audio, control volume, trim, adjust speed and pitch, add sound effects, visualize audio as waveforms or spectrum bars.
-- **3D content.** Three.js and React Three Fiber integration for 3D scenes in your videos.
-- **Charts and data viz.** Bar charts, pie charts, line charts, stock charts — animated and rendered as video.
-- **Maps.** Animated Mapbox maps in your videos.
-- **FFmpeg integration.** Trim videos, detect silence, process audio — the heavy-duty video operations.
-- **Parametric videos.** Define a schema and generate different versions of the same video with different data.
+| Command | What it does |
+|---------|-------------|
+| `cskip` | Launch Claude Code with all permissions skipped (`claude --dangerously-skip-permissions`) |
+| `cc` | Short alias for `claude` |
+| `ccr` | Resume last Claude conversation (`claude --resume`) |
+| `ccc` | Continue last Claude conversation (`claude --continue`) |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions |
 
-The Remotion skill teaches Claude best practices, patterns, and techniques for all of these. Claude doesn't just know about Remotion — it knows the right way to use it.
+> **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
 
-### Run Step 6
+---
 
-You should still be in Warp. If you closed it, open Warp and type `cskip` to start a new Claude session.
+### Warp Terminal Hotkeys
 
-Once you're inside the Claude session, paste this and hit Enter:
+These work inside Warp when a Claude session is active.
 
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
-> ```
-> run this command to install visual media tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6-install.sh | bash
-> ```
+| Hotkey | What it does |
+|--------|-------------|
+| **Shift+Tab** | Toggle auto-approve permissions on/off without restarting Claude |
+| **Ctrl+C** | Stop whatever is currently running / exit Claude |
+| **Ctrl+U** | Clear the entire line you are typing |
+| **Up Arrow** | Recall previous command from history |
+| **Tab** | Auto-complete file names and commands |
 
+---
 
-### What This Step Installs
+### Claude Code Built-In Commands (inside a session)
 
-| Component | What it does |
-|-----------|-------------|
-| Remotion Skills | Teaches Claude best practices for programmatic video creation with React — animations, transitions, captions, audio, 3D, charts, and more. |
-| FFmpeg | Powerful command-line tool for video and audio processing. Used by Remotion for rendering and by Claude for media operations. |
+| Command | What it does |
+|---------|-------------|
+| `/exit` | Quit Claude |
+| `/help` | Show all available commands |
+| `/permissions` | Check current permission settings |
+| `/clear` | Clear the conversation |
+| `/compact` | Summarize conversation to save context window |
+| `/voice` | Enable voice input mode |
+| `!command` | Run a shell command without leaving Claude (e.g., `!ls`) |
 
-### After Step 6
+---
 
-You're now set up for visual media creation. Ask Claude to create a Remotion project and describe the video you want. Claude will scaffold the project, write the components, and you can render the output.
+### Claude Code Skills (slash commands)
+
+These are custom skills installed by the setup scripts. Type them inside a Claude session.
+
+| Command | Installed in | What it does |
+|---------|-------------|-------------|
+| `/rswarm <task>` | Step 3 | Launch a 15-agent swarm with fixed roles for structured parallel execution |
+| `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
+| `/pretext <request>` | Step 4 | Text measurement and layout via @chenglou/pretext |
+
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language.
+
+---
+
+### Auto-Triggered Tools (natural language — no command needed)
+
+These activate on their own when Claude detects a relevant task via natural language. You never type a command — just describe what you want and Claude picks up the right tool.
+
+| Tool | Installed in | How it activates | Example prompt |
+|------|-------------|-----------------|----------------|
+| UI/UX Pro Max | Step 4 | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
+| 21st.dev Magic | Step 4 | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
+| Context Hub | Step 3 | Natural language — Claude writes code that calls external APIs | "Use the Stripe API to create a checkout" |
+| Remotion | Step 5 | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
+| Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
+
+> **Key distinction:** Slash commands (`/rswarm`, `/rhive`, `/pretext`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+
+---
+
+### Status Line Indicators
+
+When these tools are active, you may see indicators in your Claude session:
+
+| Indicator | Meaning |
+|-----------|---------|
+| 2ndBrain | Working inside your Obsidian vault |
+| Ruflo | Ruflo MCP server is connected |
+| UIPro | Design skill is loaded (always on after Step 4) |
+| 15 agents | Swarm is active with 15 agents (after `/rswarm`) |
+| Hive | Hive-mind is active (after `/rhive`) |
+
+---
+
+### Ruflo Commands (Step 3)
+
+These are available in your terminal after Step 3 installs the Ruflo CLI.
+
+| Command | What it does |
+|---------|-------------|
+| `npx @claude-flow/cli@latest doctor --fix` | Diagnose and fix Ruflo installation issues |
+| `npx @claude-flow/cli@latest daemon start` | Start the Ruflo background daemon |
+| `npx @claude-flow/cli@latest swarm status` | Check the status of any running swarm |
+| `npx @claude-flow/cli@latest memory search --query "..."` | Search your agent memory for past context |
+| `npx @claude-flow/cli@latest memory list` | List all stored memory entries |
+
+---
+
+### Update & Maintenance
+
+| Command | What it does |
+|---------|-------------|
+| `curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/update.sh \| bash` | Re-run all steps, skip what is installed, pick up anything new |
+| `source ~/.zshrc` | Reload shell config to activate new aliases |
+| `claude update` | Update Claude Code itself to the latest version |
+| `brew update && brew upgrade` | Update Homebrew and all installed packages (macOS) |
+
+---
+
+### Quick Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `cskip` not recognized | Run `source ~/.zshrc` to reload your shell config |
+| Claude asks for login | Run `claude` once normally and complete the browser login flow |
+| Shift+Tab does nothing | Make sure you are in Warp Terminal, not another terminal app |
+| Swarm not responding | Run `npx @claude-flow/cli@latest doctor --fix` to diagnose |
+| MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
+| Obsidian vault not found | Tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
+| Shift+Return acts like Enter | In Warp settings, set Default Mode to **Editor** (not Terminal). Or try Option+Enter as alternative. |
+
+---
+
+### Tips
+
+- Say "yes" when Claude asks for permission, or use the `!` prefix to run commands directly without leaving the session.
+- Voice commands work in Claude Code — use `/voice` to enable microphone input.
+- If Claude seems confused or slow, run `/compact` to summarize the conversation and free up context.
+- You can drag and drop files into Warp to paste their full file path.
+- Press **Up Arrow** to recall and re-run previous commands without retyping them.
 
 ---
 
@@ -656,7 +878,7 @@ Video walkthroughs for every step are coming soon. These will show you exactly w
 
 [Back to top](#quick-nav)
 
-This command re-runs all six steps (1 through 6), skips anything already installed, and picks up anything new. It covers everything in this repo as of right now. If new steps get added in the future, the update command will include them too.
+This command re-runs all seven steps (1 through 7), skips anything already installed, and picks up anything new. It covers everything in this repo as of right now. If new steps get added in the future, the update command will include them too.
 
 Open Warp and run `cskip` to start a Claude session, then paste the update command. Or if you prefer, just paste it directly into Warp without Claude.
 

@@ -25,14 +25,42 @@ echo -e "${BLUE}  Step 5c — Import Your Existing Notes${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-# Find vault
+# ── FIX A: Install Apple Notes Exporter ──────────────────────────────────────
+echo ""
+info "Setting up Apple Notes Exporter..."
+if [ "$(uname)" = "Darwin" ]; then
+  # Check if already installed
+  if [ -d "/Applications/Exporter.app" ]; then
+    success "Exporter app already installed"
+  else
+    echo ""
+    echo "  ┌─────────────────────────────────────────────────────────┐"
+    echo "  │  Apple Notes Exporter (\"Exporter\" on the App Store)    │"
+    echo "  │                                                         │"
+    echo "  │  Download here:                                         │"
+    echo "  │  https://apps.apple.com/us/app/exporter/id1099120373   │"
+    echo "  │                                                         │"
+    echo "  │  After installing:                                      │"
+    echo "  │  1. Open the Exporter app                               │"
+    echo "  │  2. Select Markdown as the export format                │"
+    echo "  │  3. Export your notes to a folder                       │"
+    echo "  │  4. Rerun this script to import them into your vault    │"
+    echo "  └─────────────────────────────────────────────────────────┘"
+    echo ""
+    warn "Exporter app not found — install it from the App Store link above, then rerun."
+  fi
+else
+  info "Apple Notes export is macOS only — skipping"
+fi
+
+# ── Find vault (FIX C: "Brain" → "2ndBrain") ────────────────────────────────
 VAULT_PATH="${VAULT_PATH:-}"
 if [ -z "$VAULT_PATH" ]; then
     for candidate in \
-        "$HOME/Desktop/Brain" \
+        "$HOME/Desktop/2ndBrain" \
         "$HOME/Desktop/Second-Brain" \
         "$HOME/Desktop/Vault" \
-        "$HOME/Documents/Brain" \
+        "$HOME/Documents/2ndBrain" \
         "$HOME/Documents/Second-Brain"; do
         if [ -d "$candidate/00-Inbox" ]; then
             VAULT_PATH="$candidate"
@@ -65,6 +93,15 @@ if python3 -c "import xlsx2csv" &>/dev/null 2>&1; then
     success "xlsx2csv available for spreadsheet conversion"
 else
     warn "xlsx2csv not found. Spreadsheet conversion may be limited."
+fi
+
+# ── FIX D: Self-test entry for Apple Notes Exporter ─────────────────────────
+if [ "$(uname)" = "Darwin" ]; then
+    if [ -d "/Applications/Exporter.app" ]; then
+        success "Exporter app ready for Apple Notes export"
+    else
+        warn "Exporter app not installed — get it at https://apps.apple.com/us/app/exporter/id1099120373"
+    fi
 fi
 
 # Look for exported notes in common locations

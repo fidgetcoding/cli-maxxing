@@ -35,7 +35,7 @@ curl -fsSL "$BASE_URL/step-2/step-2-install.sh" | bash
 echo ""
 
 # Step 3
-echo -e "${YELLOW}>>> Running Step 3 — Ruflo${NC}"
+echo -e "${YELLOW}>>> Running Step 3 — Ruflo + Context Hub${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-3/step-3-install.sh" | bash
 echo ""
@@ -46,44 +46,59 @@ echo ""
 curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
 echo ""
 
-# Step 5a (vault structure)
-echo -e "${YELLOW}>>> Running Step 5a — Second Brain Vault Structure${NC}"
-echo ""
-curl -fsSL "$BASE_URL/step-5/step-5a-setup-vault.sh" | bash
-echo ""
-
-# Step 5b (Claude history import)
-echo -e "${YELLOW}>>> Running Step 5b — Import Claude History${NC}"
-echo ""
-curl -fsSL "$BASE_URL/step-5/step-5b-import-claude.sh" | bash
-echo ""
-
-# Step 5c (notes import)
-echo -e "${YELLOW}>>> Running Step 5c — Import Existing Notes${NC}"
-echo ""
-curl -fsSL "$BASE_URL/step-5/step-5c-import-notes.sh" | bash
-echo ""
-
-# Step 5d (wire it up)
-echo -e "${YELLOW}>>> Running Step 5d — Wire Up Vault${NC}"
-echo ""
-curl -fsSL "$BASE_URL/step-5/step-5d-wire-vault.sh" | bash
-echo ""
-
-# Step 6
-echo -e "${YELLOW}>>> Running Step 6 — Visual Media${NC}"
+# Step 5 (Visual Media — scripts live in step-6/ directory)
+echo -e "${YELLOW}>>> Running Step 5 — Visual Media${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-6/step-6-install.sh" | bash
 echo ""
 
-# Add new steps here as they're created
+# Step 6a (vault structure — scripts live in step-5/ directory)
+echo -e "${YELLOW}>>> Running Step 6a — Second Brain Vault Structure${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-5/step-5a-setup-vault.sh" | bash
+echo ""
+
+# Step 6b (Claude history import)
+echo -e "${YELLOW}>>> Running Step 6b — Import Claude History${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-5/step-5b-import-claude.sh" | bash
+echo ""
+
+# Step 6c (notes import)
+echo -e "${YELLOW}>>> Running Step 6c — Import Existing Notes${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-5/step-5c-import-notes.sh" | bash
+echo ""
+
+# Step 6d (wire it up)
+echo -e "${YELLOW}>>> Running Step 6d — Wire Up Vault${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-5/step-5d-wire-vault.sh" | bash
+echo ""
+
+# Step 7 (Status Line — wrap-up)
+echo -e "${YELLOW}>>> Running Step 7 — Status Line${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-7/step-7-install.sh" | bash
+echo ""
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Update complete. Steps 1 through 6 are current.${NC}"
+echo -e "${GREEN}  Update complete. Steps 1 through 7 are current.${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "  Note: Steps 5b, 5c, and 5d are interactive. If you've"
+
+# Reload shell config so new aliases (cskip, cc, ccr, ccc, cbrain) are active
+if [ -f "$HOME/.zshrc" ]; then
+    source "$HOME/.zshrc" 2>/dev/null || true
+elif [ -f "$HOME/.bashrc" ]; then
+    source "$HOME/.bashrc" 2>/dev/null || true
+fi
+
+echo "  Available commands: cskip, cc, ccr, ccc, cbrain"
+echo "  Available skills:   /rswarm, /rhive, /pretext"
+echo ""
+echo "  Note: Steps 6b, 6c, and 6d are interactive. If you've"
 echo "  already completed them before, they just verify your setup."
 echo "  If you haven't, follow the prompts to import your data."
 echo ""
