@@ -264,6 +264,20 @@ C2DANGER_EOF
     chmod +x "$HOME/.local/bin/c2danger"
     success "c2danger command installed to ~/.local/bin/c2danger"
 
+    # Install cbrain command (2ndBrain + auto mode)
+    info "Installing cbrain command to ~/.local/bin..."
+    cat > "$HOME/.local/bin/cbrain" << 'CBRAIN_EOF'
+#!/usr/bin/env bash
+VAULT="$HOME/Desktop/2ndBrain"
+if [ ! -d "$VAULT" ]; then
+  echo "Error: 2ndBrain vault not found at $VAULT"
+  exit 1
+fi
+cd "$VAULT" && exec claude --permission-mode auto "$@"
+CBRAIN_EOF
+    chmod +x "$HOME/.local/bin/cbrain"
+    success "cbrain command installed to ~/.local/bin/cbrain"
+
     # Install cbraintg command (c2danger + Telegram channel)
     info "Installing cbraintg command to ~/.local/bin..."
     cat > "$HOME/.local/bin/cbraintg" << 'CBRAINTG_EOF'
@@ -356,6 +370,15 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: c2danger command — not found or not executable"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # cbrain command
+    if [ -x "$HOME/.local/bin/cbrain" ]; then
+        success "TEST: cbrain command — installed at ~/.local/bin/cbrain"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: cbrain command — not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 

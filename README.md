@@ -91,7 +91,7 @@ Here are the five commands you'll use most:
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
 | `/rswarm do the thing` | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `Ctrl+C` | Stop whatever is running, exit Claude, or clear everything you've typed in the input box |
-| `c2danger` | Jump straight into your 2ndBrain vault with permissions skipped *(requires Obsidian — set up in [Step 6](#step-6---second-brain-obsidian))* |
+| `cbrain` | Jump straight into your 2ndBrain vault with auto mode *(requires Obsidian — set up in [Step 6](#step-6---second-brain-obsidian))* |
 
 Everything else — aliases, slash commands, natural-language tools, troubleshooting — is in the **[full Cheat Sheet](CHEATSHEET.md)**.
 
@@ -750,7 +750,7 @@ Or manually:
 
 ### After Step 7
 
-You're done. Everything is installed, configured, and wired together. Open a new `cskip` or `c2danger` session and your status line will show exactly what's active.
+You're done. Everything is installed, configured, and wired together. Open a new `cskip` or `cbrain` session and your status line will show exactly what's active.
 
 ---
 
@@ -791,6 +791,7 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | `cc` | Short alias for `claude` |
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with auto mode *(requires Obsidian — Step 6)* |
 | `c2danger` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 6)* |
 | `cbraintg` | Same as `c2danger` but with Telegram channel connected |
 | `ctg` | Auto-approve mode + Telegram channel connected (any directory) |
@@ -969,7 +970,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 > ```
 
 **What it removes:**
-- Claude Code + shell aliases (cskip, cauto, cc, ccr, ccc, c2danger, cbraintg)
+- Claude Code + shell aliases (cskip, cauto, cc, ccr, ccc, cbrain, c2danger, cbraintg)
 - All MCP servers (Ruflo, claude-flow, Magic, YouTube Transcript)
 - All skills (rswarm, rhive, get-api-docs, UI/UX Pro Max, Remotion)
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, ffmpeg, xlsx2csv, poppler)
