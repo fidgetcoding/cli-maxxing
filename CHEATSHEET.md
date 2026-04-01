@@ -36,15 +36,12 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 |---------|-------------|
 | `claude` | Normal mode — asks permission before each action |
 | `cskip` | Auto-approve mode — runs without asking (faster) |
-| `cauto` | Auto mode — smart classifier approves safe ops, prompts on risky ones |
 | `cc` | Short alias for `claude` |
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
-| `cbrain` | Launch Claude Code in your 2ndBrain vault with auto mode *(requires Obsidian — Step 6)* |
-| `c2danger` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 6)* |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 6)* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected |
-| `c2tgdanger` | Same as `c2danger` but with Telegram channel connected |
-| `ctg` | Auto-approve mode + Telegram channel connected (any directory) |
+| `ctg` | Skip-permissions + Telegram channel connected (any directory) |
 
 > **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
 

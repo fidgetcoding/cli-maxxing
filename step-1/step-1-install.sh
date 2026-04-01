@@ -234,7 +234,6 @@ install_claude_code() {
     fi
     for alias_line in \
         "alias cskip='claude --dangerously-skip-permissions'" \
-        "alias cauto='claude --permission-mode auto'" \
         "alias cc='claude'" \
         "alias ccr='claude --resume'" \
         "alias ccc='claude --continue'"; do
@@ -247,24 +246,10 @@ install_claude_code() {
     if [ "$ALIASES_ADDED" -gt 0 ]; then
         success "Added $ALIASES_ADDED new shortcut(s) to $SHELL_RC"
     else
-        success "All shortcuts already configured (cskip, cauto, cc, ccr, ccc)"
+        success "All shortcuts already configured (cskip, cc, ccr, ccc)"
     fi
 
-    # Install c2danger command
-    info "Installing c2danger command to ~/.local/bin..."
-    cat > "$HOME/.local/bin/c2danger" << 'C2DANGER_EOF'
-#!/usr/bin/env bash
-VAULT="$HOME/Desktop/2ndBrain"
-if [ ! -d "$VAULT" ]; then
-  echo "Error: 2ndBrain vault not found at $VAULT"
-  exit 1
-fi
-cd "$VAULT" && exec claude --dangerously-skip-permissions "$@"
-C2DANGER_EOF
-    chmod +x "$HOME/.local/bin/c2danger"
-    success "c2danger command installed to ~/.local/bin/c2danger"
-
-    # Install cbrain command (2ndBrain + auto mode)
+    # Install cbrain command (2ndBrain + skip-permissions)
     info "Installing cbrain command to ~/.local/bin..."
     cat > "$HOME/.local/bin/cbrain" << 'CBRAIN_EOF'
 #!/usr/bin/env bash
@@ -273,12 +258,12 @@ if [ ! -d "$VAULT" ]; then
   echo "Error: 2ndBrain vault not found at $VAULT"
   exit 1
 fi
-cd "$VAULT" && exec claude --permission-mode auto "$@"
+cd "$VAULT" && exec claude --dangerously-skip-permissions "$@"
 CBRAIN_EOF
     chmod +x "$HOME/.local/bin/cbrain"
     success "cbrain command installed to ~/.local/bin/cbrain"
 
-    # Install cbraintg command (cbrain + Telegram channel, auto mode)
+    # Install cbraintg command (cbrain + Telegram channel)
     info "Installing cbraintg command to ~/.local/bin..."
     cat > "$HOME/.local/bin/cbraintg" << 'CBRAINTG_EOF'
 #!/usr/bin/env bash
@@ -287,24 +272,10 @@ if [ ! -d "$VAULT" ]; then
   echo "Error: 2ndBrain vault not found at $VAULT"
   exit 1
 fi
-cd "$VAULT" && exec claude --permission-mode auto --channels plugin:telegram@claude-plugins-official "$@"
+cd "$VAULT" && exec claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official "$@"
 CBRAINTG_EOF
     chmod +x "$HOME/.local/bin/cbraintg"
     success "cbraintg command installed to ~/.local/bin/cbraintg"
-
-    # Install c2tgdanger command (c2danger + Telegram channel, skip-permissions)
-    info "Installing c2tgdanger command to ~/.local/bin..."
-    cat > "$HOME/.local/bin/c2tgdanger" << 'C2TGDANGER_EOF'
-#!/usr/bin/env bash
-VAULT="$HOME/Desktop/2ndBrain"
-if [ ! -d "$VAULT" ]; then
-  echo "Error: 2ndBrain vault not found at $VAULT"
-  exit 1
-fi
-cd "$VAULT" && exec claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official "$@"
-C2TGDANGER_EOF
-    chmod +x "$HOME/.local/bin/c2tgdanger"
-    success "c2tgdanger command installed to ~/.local/bin/c2tgdanger"
 }
 
 # -----------------------------------------------------------------------------
@@ -364,26 +335,17 @@ run_self_test() {
 
     # Shell aliases
     ALIAS_PASS=0
-    ALIAS_TOTAL=5
-    for alias_name in cskip cauto cc ccr ccc; do
+    ALIAS_TOTAL=4
+    for alias_name in cskip cc ccr ccc; do
         if grep -q "alias ${alias_name}=" "$SHELL_RC" 2>/dev/null; then
             ALIAS_PASS=$((ALIAS_PASS + 1))
         fi
     done
     if [ "$ALIAS_PASS" -eq "$ALIAS_TOTAL" ]; then
-        success "TEST: shell aliases — all $ALIAS_TOTAL configured (cskip, cauto, cc, ccr, ccc)"
+        success "TEST: shell aliases — all $ALIAS_TOTAL configured (cskip, cc, ccr, ccc)"
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: shell aliases — only $ALIAS_PASS/$ALIAS_TOTAL found in $SHELL_RC"
-        TEST_FAIL=$((TEST_FAIL + 1))
-    fi
-
-    # c2danger command
-    if [ -x "$HOME/.local/bin/c2danger" ]; then
-        success "TEST: c2danger command — installed at ~/.local/bin/c2danger"
-        TEST_PASS=$((TEST_PASS + 1))
-    else
-        soft_fail "TEST: c2danger command — not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -402,15 +364,6 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: cbraintg command — not found or not executable"
-        TEST_FAIL=$((TEST_FAIL + 1))
-    fi
-
-    # c2tgdanger command
-    if [ -x "$HOME/.local/bin/c2tgdanger" ]; then
-        success "TEST: c2tgdanger command — installed at ~/.local/bin/c2tgdanger"
-        TEST_PASS=$((TEST_PASS + 1))
-    else
-        soft_fail "TEST: c2tgdanger command — not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 

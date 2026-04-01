@@ -86,12 +86,12 @@ Here are the six commands you'll use most:
 
 | Command | What it does |
 |---------|-------------|
-| `cauto` | Start with auto mode — smart approvals, prompts only on risky ops |
-| `cskip` | Start with all permissions skipped (fastest, no prompts at all) |
-| `cbrain` | Jump straight into your 2ndBrain vault with auto mode *(requires Obsidian — set up in [Step 6](#step-6---second-brain-obsidian))* |
+| `cskip` | Start with all permissions skipped (fastest, no prompts) |
+| `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires Obsidian — set up in [Step 6](#step-6---second-brain-obsidian))* |
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
 | `/rswarm *write task here*` | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `Ctrl+C` | Stop whatever is running or exit Claude |
+| `ccr` | Resume your last Claude conversation right where you left off |
 
 Everything else — aliases, slash commands, natural-language tools, troubleshooting — is in the **[full Cheat Sheet](CHEATSHEET.md)**.
 
@@ -787,15 +787,12 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | Command | What it does |
 |---------|-------------|
 | `cskip` | Launch Claude Code with all permissions skipped (`claude --dangerously-skip-permissions`) |
-| `cauto` | Auto mode — smart classifier approves safe ops, prompts on risky ones (`claude --permission-mode auto`) |
 | `cc` | Short alias for `claude` |
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
-| `cbrain` | Launch Claude Code in your 2ndBrain vault with auto mode *(requires Obsidian — Step 6)* |
-| `c2danger` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 6)* |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 6)* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected |
-| `c2tgdanger` | Same as `c2danger` but with Telegram channel connected |
-| `ctg` | Auto-approve mode + Telegram channel connected (any directory) |
+| `ctg` | Skip-permissions + Telegram channel connected (any directory) |
 
 > **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
 
@@ -971,7 +968,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 > ```
 
 **What it removes:**
-- Claude Code + shell aliases (cskip, cauto, cc, ccr, ccc, cbrain, c2danger, cbraintg, c2tgdanger)
+- Claude Code + shell aliases (cskip, cc, ccr, ccc, cbrain, cbraintg)
 - All MCP servers (Ruflo, claude-flow, Magic, YouTube Transcript)
 - All skills (rswarm, rhive, get-api-docs, UI/UX Pro Max, Remotion)
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, ffmpeg, xlsx2csv, poppler)
