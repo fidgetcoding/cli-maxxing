@@ -89,8 +89,8 @@ Here are the five commands you'll use most:
 | `claude` | Start a normal session — Claude asks before doing anything |
 | `cskip` | Start a session with all permissions skipped (faster, no prompts) |
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
-| `/rswarm <task>` | Launch a 15-agent swarm to parallelize a big task |
-| `Ctrl+C` | Stop whatever is running, or press twice to exit Claude entirely |
+| `/rswarm do the thing` | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
+| `Ctrl+C` | Stop whatever is running, exit Claude, or clear everything you've typed in the input box |
 | `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires Obsidian — set up in [Step 6](#step-6---second-brain-obsidian))* |
 
 Everything else — aliases, slash commands, natural-language tools, troubleshooting — is in the **[full Cheat Sheet](CHEATSHEET.md)**.
@@ -805,7 +805,7 @@ These work in any terminal when a Claude session is active.
 | Hotkey | What it does |
 |--------|-------------|
 | **Shift+Tab** | Toggle auto-approve permissions on/off without restarting Claude |
-| **Ctrl+C** | Stop whatever is currently running / exit Claude |
+| **Ctrl+C** | Stop whatever is running, exit Claude, or clear everything you've typed in the input box |
 | **Ctrl+U** | Clear the entire line you are typing |
 | **Up Arrow** | Recall previous command from history |
 | **Tab** | Auto-complete file names and commands |
@@ -832,7 +832,7 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 
 | Command | Installed in | What it does |
 |---------|-------------|-------------|
-| `/rswarm <task>` | Step 3 | Launch a 15-agent swarm with fixed roles for structured parallel execution |
+| `/rswarm do the thing` | Step 3 | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
 | `/pretext <request>` | Step 4 | Text measurement and layout via @chenglou/pretext |
 
