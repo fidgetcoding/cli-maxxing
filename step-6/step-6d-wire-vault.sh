@@ -2,7 +2,7 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 5d — Wire up your vault
+# Step 6d — Wire up your vault
 # Processes inbox, creates wikilinks, builds MOCs, validates everything
 # Run inside a cskip session
 # =============================================================================
@@ -20,7 +20,7 @@ fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Step 5d — Wire Up Your Vault${NC}"
+echo -e "${BLUE}  Step 6d — Wire Up Your Vault${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -47,7 +47,7 @@ if [ -z "$VAULT_PATH" ]; then
 fi
 
 if [ -z "$VAULT_PATH" ] || [ ! -d "$VAULT_PATH/00-Inbox" ]; then
-    fail "Could not find your vault. Run Step 5a first, or set VAULT_PATH manually."
+    fail "Could not find your vault. Run Step 6a first, or set VAULT_PATH manually."
 fi
 
 success "Vault found at: $VAULT_PATH"
@@ -104,7 +104,7 @@ success "Media files embedded"
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Step 5d — Ready for Claude to Wire Everything Up${NC}"
+echo -e "${GREEN}  Step 6d — Ready for Claude to Wire Everything Up${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 echo "  This is where Claude connects everything together."

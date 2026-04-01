@@ -136,11 +136,7 @@ If you see a version number, you're good. If not, repeat steps 1 and 2.
 
 Press **Ctrl+C** to exit Claude, then run `cskip` to continue with auto-approve mode (Claude runs without asking permission for each action). This is the recommended way to work through the remaining setup steps.
 
-### After the Script Finishes
-
-#### 1a. Set Up Your Claude Account
-
-#### 1b. Set Up Your Claude Account
+### Set Up Your Claude Account
 
 You'll need a Claude account with an active subscription before you can use Claude Code. **Do this now if you haven't already.** You won't be able to log in during Step 2 without it.
 
@@ -456,7 +452,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install visual media tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6-install.sh | bash
+> run this command to install visual media tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-5/step-5-install.sh | bash
 > ```
 
 
@@ -551,7 +547,7 @@ Obsidian will open with an empty vault. That's perfect. Now Claude will set it u
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up my Second Brain vault structure: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-5/step-5a-setup-vault.sh | bash
+> run this command to set up my Second Brain vault structure: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6a-setup-vault.sh | bash
 > ```
 
 
@@ -583,7 +579,7 @@ Before importing your other notes, let's get your Claude conversation history in
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to import my Claude history into my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-5/step-5b-import-claude.sh | bash
+> run this command to import my Claude history into my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6b-import-claude.sh | bash
 > ```
 
 
@@ -615,7 +611,7 @@ Now let's get the rest of your notes in. If you have notes in Apple Notes, Googl
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to import my notes into my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-5/step-5c-import-notes.sh | bash
+> run this command to import my notes into my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6c-import-notes.sh | bash
 > ```
 
 
@@ -644,7 +640,7 @@ What Claude will do:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to wire up my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-5/step-5d-wire-vault.sh | bash
+> run this command to wire up my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-6/step-6d-wire-vault.sh | bash
 > ```
 
 

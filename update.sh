@@ -46,34 +46,34 @@ echo ""
 curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
 echo ""
 
-# Step 5 (Visual Media — scripts live in step-6/ directory)
+# Step 5 (Visual Media)
 echo -e "${YELLOW}>>> Running Step 5 — Visual Media${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-6/step-6-install.sh" | bash
+curl -fsSL "$BASE_URL/step-5/step-5-install.sh" | bash
 echo ""
 
-# Step 6a (vault structure — scripts live in step-5/ directory)
+# Step 6a (vault structure)
 echo -e "${YELLOW}>>> Running Step 6a — Second Brain Vault Structure${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-5/step-5a-setup-vault.sh" | bash
+curl -fsSL "$BASE_URL/step-6/step-6a-setup-vault.sh" | bash
 echo ""
 
 # Step 6b (Claude history import)
 echo -e "${YELLOW}>>> Running Step 6b — Import Claude History${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-5/step-5b-import-claude.sh" | bash
+curl -fsSL "$BASE_URL/step-6/step-6b-import-claude.sh" | bash
 echo ""
 
 # Step 6c (notes import)
 echo -e "${YELLOW}>>> Running Step 6c — Import Existing Notes${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-5/step-5c-import-notes.sh" | bash
+curl -fsSL "$BASE_URL/step-6/step-6c-import-notes.sh" | bash
 echo ""
 
 # Step 6d (wire it up)
 echo -e "${YELLOW}>>> Running Step 6d — Wire Up Vault${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-5/step-5d-wire-vault.sh" | bash
+curl -fsSL "$BASE_URL/step-6/step-6d-wire-vault.sh" | bash
 echo ""
 
 # Step 7 (Status Line — wrap-up)

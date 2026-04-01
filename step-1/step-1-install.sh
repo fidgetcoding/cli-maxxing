@@ -240,9 +240,6 @@ install_claude_code() {
         success "cskip shortcut already configured"
     fi
 
-    # Source shell config to activate aliases in current session
-    source "$SHELL_RC" 2>/dev/null || true
-
     # Install cbrain command
     info "Installing cbrain command to ~/.local/bin..."
     cat > "$HOME/.local/bin/cbrain" << 'CBRAIN_EOF'
