@@ -11,6 +11,7 @@ Everything you need to start working with AI-powered development tools, installe
 | [Keyboard + Command Cheat Sheet](CHEATSHEET.md) | Terminal reference | Hotkeys, typing, and commands for your terminal | |
 | [Step 1](#step-1---get-claude-running) | Get Claude Running | Sets up the foundation on your machine | ~5 min |
 | [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, and utilities | ~3 min |
+| [Bonus: Ghostty](#bonus---ghostty-terminal) | Ghostty Terminal | GPU-accelerated terminal with clickable links and tabs | ~2 min |
 | [Step 3](#step-3---ruflo--context-hub) | Ruflo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [Step 4](#step-4---design-tools) | Design Tools | UI/UX skills + component generation | ~3 min |
 | [Step 5](#step-5---visual-media) | Visual Media | Remotion video creation + YouTube transcripts | ~3 min |
@@ -45,6 +46,8 @@ There are seven steps. Run them in order. Each one builds on the last.
 **[Step 1](#step-1---get-claude-running)** is the only part that feels "techy." This step gets the bare essentials on your machine so Claude (your AI assistant) can run. You paste one command and it handles the rest, but there are a few manual steps after it finishes, like logging into Claude. This is the most hands-on part of the entire process. After Step 1, you can ask Claude questions at any point. If something doesn't make sense, just ask. That's the whole point.
 
 **[Step 2](#step-2---dev-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
+
+**[Bonus: Ghostty](#bonus---ghostty-terminal)** is an optional step right after Step 2 that installs and configures Ghostty, a GPU-accelerated terminal. It's faster than CPU-rendered terminals, fully customizable, and has Cmd+Click support for opening URLs, file paths, and PDFs directly from the terminal. You don't need it to continue — everything works in any terminal — but if you want the nicest terminal experience, this is it.
 
 **[Step 3](#step-3---ruflo--context-hub)** is where you set up Ruflo and Context Hub. Ruflo is the multi-agent orchestration layer that turns Claude into a full team of AI agents. Context Hub stops Claude from hallucinating when writing code that calls APIs.
 
@@ -128,7 +131,7 @@ These are the tools that get installed automatically when you run the command ab
 
 ### Shift+Tab — Toggle Permissions
 
-When Claude is running in any terminal, you can press **Shift+Tab** to switch between normal mode (where Claude asks before doing anything) and auto-approve mode (where Claude just does it). No need to exit and relaunch. This works in any terminal app — Terminal.app, iTerm2, Warp, or whatever you prefer.
+When Claude is running in any terminal, you can press **Shift+Tab** to switch between normal mode (where Claude asks before doing anything) and auto-approve mode (where Claude just does it). No need to exit and relaunch. This works in any terminal app — Terminal.app, iTerm2, Ghostty, or whatever you prefer.
 
 After the script finishes, you need to activate the tools that were just installed. Do these three things in order:
 
@@ -254,6 +257,80 @@ These are the tools that Claude will install for you:
 Step 2 also sets up something called a "stop hook." Every time you end a Claude session (by pressing Ctrl+C or typing `/exit`), Claude will automatically review the conversation and save anything important to memory. Things like decisions you made, preferences you mentioned, or context about what you were working on. Next time you start a session, Claude already knows that stuff. You don't have to repeat yourself.
 
 You don't need to do anything to make this work. It's already configured. Just keep using Claude normally and it'll build up memory over time.
+
+---
+
+## Bonus - Ghostty Terminal
+
+[Back to top](#quick-nav)
+
+This is optional. Everything in this setup works in any terminal app — Terminal.app, iTerm2, whatever you've got. But if you want a terminal that's noticeably faster, looks great out of the box, and lets you Cmd+Click URLs and file paths to open them instantly, Ghostty is worth the two minutes.
+
+### Why Ghostty?
+
+Ghostty is a GPU-accelerated terminal emulator. Most terminals (including Terminal.app) render text on the CPU. Ghostty uses Metal on Mac (and OpenGL on Linux), which means it draws frames faster, scrolls smoother, and handles large output without lagging. If you've ever had your terminal choke on a massive log dump or a long build output, you'll feel the difference.
+
+Beyond speed, it's the customization and clickable links that make it worth switching:
+
+- **GPU-accelerated rendering.** Metal on Mac, OpenGL on Linux. Noticeably faster than CPU-rendered terminals, especially with large output.
+- **Tabbed interface with native title bar.** Looks and feels like a proper Mac app. Cmd+T for new tabs, red/yellow/green traffic light buttons, everything where you'd expect it.
+- **Cmd+Click to open anything.** URLs open in your browser. File paths open in the associated app. PDFs, websites, local files — just hold Cmd and click. This is the single most useful terminal feature you didn't know you were missing.
+- **Fully customizable.** Fonts, colors, padding, key bindings — everything is a plain text config file. No preferences UI to dig through, just edit the config and reload.
+- **Lightweight.** Ghostty launches fast and stays out of your way. No account, no telemetry, no update nags.
+
+This script installs Ghostty via Homebrew, sets up JetBrains Mono as the font, applies a dark color theme, configures the tabbed window style with traffic light buttons, enables Cmd+Click for URLs and file paths, and sets TextEdit as the default opener for text files so Cmd+Click on a `.md`, `.json`, or `.sh` file opens it right away.
+
+### Install Ghostty
+
+You can run this from your terminal directly — no Claude session needed:
+
+> [!IMPORTANT]
+> **Paste this into your terminal:**
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-2/bonus-ghostty.sh | bash
+> ```
+
+Or if you're already in a Claude session, paste this:
+
+> **Paste this into your Claude session:**
+> ```
+> run this command to install Ghostty: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/step-2/bonus-ghostty.sh | bash
+> ```
+
+### What This Step Installs
+
+| Component | What it does |
+|-----------|-------------|
+| Ghostty | GPU-accelerated terminal emulator. Fast, lightweight, customizable. |
+| JetBrains Mono | Clean monospace font designed for code. Installed via Homebrew. |
+| Ghostty Config | Pre-configured with dark theme, tabbed interface, traffic light buttons, link clicking, and font settings. |
+| duti (Mac) | File association manager. Sets TextEdit as the default opener for text files so Cmd+Click works the way you'd expect. |
+
+### After Installing
+
+1. Open Ghostty — press **Cmd+Space**, type **Ghostty**, hit Enter.
+2. All your shell aliases (`cskip`, `cbrain`, `cc`, etc.) work immediately. Nothing to reconfigure.
+3. Try **Cmd+Click** on any URL or file path in the terminal output. It just opens.
+4. Use **Cmd+T** to open new tabs.
+
+### Customizing Ghostty
+
+The config file is plain text:
+
+- **Mac:** `~/Library/Application Support/com.mitchellh.ghostty/config`
+- **Linux:** `~/.config/ghostty/config`
+
+Edit it with any text editor. Changes take effect the next time you open a Ghostty window. Common tweaks:
+
+| Setting | What it does | Default |
+|---------|-------------|---------|
+| `font-size` | Text size | `14` |
+| `font-family` | Font face | `JetBrains Mono` |
+| `background` | Background color (hex) | `000000` (black) |
+| `window-padding-x` / `y` | Inner padding in pixels | `8` |
+| `macos-titlebar-style` | Window style: `native`, `tabs`, or `transparent` | `tabs` |
+
+Full docs: [ghostty.org/docs](https://ghostty.org/docs)
 
 ---
 
@@ -762,6 +839,7 @@ Run the steps in this order:
 |------|------|-------------|
 | 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
 | 2 | Dev Tools | Python, Pandoc, jq, ripgrep, etc. |
+| Bonus | Ghostty Terminal | GPU-accelerated terminal (optional) |
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic + Pretext |
 | 5 | Visual Media | Remotion + YouTube Transcripts + FFmpeg |
@@ -972,6 +1050,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 - All MCP servers (Ruflo, claude-flow, Magic, YouTube Transcript)
 - All skills (rswarm, rhive, get-api-docs, UI/UX Pro Max, Remotion)
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, ffmpeg, xlsx2csv, poppler)
+- Ghostty config (the app itself is kept — only the config file installed by this setup is removed)
 - Status line config
 
 **What it does NOT remove:**

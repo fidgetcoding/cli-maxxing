@@ -162,6 +162,35 @@ else
 fi
 
 # -----------------------------------------------------------------------------
+# Bonus — Ghostty Config (remove config only, keep the app)
+# -----------------------------------------------------------------------------
+echo ""
+echo -e "${BLUE}--- Bonus: Ghostty Config ---${NC}"
+
+GHOSTTY_CONFIG_MAC="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+GHOSTTY_CONFIG_LINUX="$HOME/.config/ghostty/config"
+
+if [ -f "$GHOSTTY_CONFIG_MAC" ]; then
+    rm -f "$GHOSTTY_CONFIG_MAC"
+    rm -f "${GHOSTTY_CONFIG_MAC}.backup"
+    success "Ghostty config (macOS)"
+elif [ -f "$GHOSTTY_CONFIG_LINUX" ]; then
+    rm -f "$GHOSTTY_CONFIG_LINUX"
+    rm -f "${GHOSTTY_CONFIG_LINUX}.backup"
+    success "Ghostty config (Linux)"
+else
+    skip "Ghostty config (not found)"
+fi
+
+# duti (installed by bonus-ghostty.sh)
+if brew list duti &>/dev/null 2>&1; then
+    brew uninstall duti 2>/dev/null || true
+    success "brew: duti"
+else
+    skip "brew: duti (not found)"
+fi
+
+# -----------------------------------------------------------------------------
 # Step 2 — Dev Tools (brew packages)
 # -----------------------------------------------------------------------------
 echo ""
