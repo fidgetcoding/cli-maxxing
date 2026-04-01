@@ -88,7 +88,7 @@ echo -e "${GREEN}  Update complete. Steps 1 through 7 are current.${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-# Reload shell config so new aliases (cskip, cc, ccr, ccc, c2danger) are active
+# Reload shell config so new aliases (cskip, cc, ccr, ccc, cbrain, c2danger) are active
 if [ -f "$HOME/.zshrc" ]; then
     source "$HOME/.zshrc" 2>/dev/null || true
 elif [ -f "$HOME/.bashrc" ]; then
