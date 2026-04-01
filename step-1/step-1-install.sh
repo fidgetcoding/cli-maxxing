@@ -226,18 +226,27 @@ install_claude_code() {
         success "Claude Code installed"
     fi
 
-    # Add cskip shortcut
-    if ! grep -q 'alias cskip' "$SHELL_RC" 2>/dev/null; then
-        info "Adding Claude Code shortcuts to $SHELL_RC..."
+    # Add Claude Code shortcuts (check each individually so re-runs fill gaps)
+    ALIASES_ADDED=0
+    if ! grep -q '# Claude Code shortcuts' "$SHELL_RC" 2>/dev/null; then
         echo "" >> "$SHELL_RC"
         echo "# Claude Code shortcuts" >> "$SHELL_RC"
-        echo "alias cskip='claude --dangerously-skip-permissions'" >> "$SHELL_RC"
-        echo "alias cc='claude'" >> "$SHELL_RC"
-        echo "alias ccr='claude --resume'" >> "$SHELL_RC"
-        echo "alias ccc='claude --continue'" >> "$SHELL_RC"
-        success "Shortcuts added: cskip, cc, ccr, ccc"
+    fi
+    for alias_line in \
+        "alias cskip='claude --dangerously-skip-permissions'" \
+        "alias cc='claude'" \
+        "alias ccr='claude --resume'" \
+        "alias ccc='claude --continue'"; do
+        ALIAS_NAME=$(echo "$alias_line" | sed "s/alias \([^=]*\)=.*/\1/")
+        if ! grep -q "alias ${ALIAS_NAME}=" "$SHELL_RC" 2>/dev/null; then
+            echo "$alias_line" >> "$SHELL_RC"
+            ALIASES_ADDED=$((ALIASES_ADDED + 1))
+        fi
+    done
+    if [ "$ALIASES_ADDED" -gt 0 ]; then
+        success "Added $ALIASES_ADDED new shortcut(s) to $SHELL_RC"
     else
-        success "cskip shortcut already configured"
+        success "All shortcuts already configured (cskip, cc, ccr, ccc)"
     fi
 
     # Install cbrain command
@@ -324,12 +333,19 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
-    # cskip alias in shell config
-    if grep -q 'alias cskip' "$SHELL_RC" 2>/dev/null; then
-        success "TEST: cskip shortcut — configured in $SHELL_RC"
+    # Shell aliases
+    ALIAS_PASS=0
+    ALIAS_TOTAL=4
+    for alias_name in cskip cc ccr ccc; do
+        if grep -q "alias ${alias_name}=" "$SHELL_RC" 2>/dev/null; then
+            ALIAS_PASS=$((ALIAS_PASS + 1))
+        fi
+    done
+    if [ "$ALIAS_PASS" -eq "$ALIAS_TOTAL" ]; then
+        success "TEST: shell aliases — all $ALIAS_TOTAL configured (cskip, cc, ccr, ccc)"
         TEST_PASS=$((TEST_PASS + 1))
     else
-        soft_fail "TEST: cskip shortcut — not found in $SHELL_RC"
+        soft_fail "TEST: shell aliases — only $ALIAS_PASS/$ALIAS_TOTAL found in $SHELL_RC"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
