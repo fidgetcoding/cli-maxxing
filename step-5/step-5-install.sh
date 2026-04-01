@@ -190,7 +190,7 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 6 Complete — Visual Media Tools are Ready${NC}"
+    echo -e "${GREEN}  Step 5 Complete — Visual Media Tools are Ready${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Remotion and YouTube Transcripts are now available in Claude Code."
@@ -222,7 +222,7 @@ print_summary() {
 main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 6 — Visual Media${NC}"
+    echo -e "${BLUE}  Step 5 — Visual Media${NC}"
     echo -e "${BLUE}  Programmatic video creation • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
