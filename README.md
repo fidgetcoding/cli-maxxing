@@ -19,6 +19,7 @@ Everything you need to start working with AI-powered development tools, installe
 | [Quick Reference](#quick-reference--commands--shortcuts) | Commands & Shortcuts | Every command and shortcut from all steps in one place | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
 | [Staying Up to Date](#staying-up-to-date) | Update command | Re-run everything, catch new steps | |
+| [Uninstall](#uninstall) | Remove everything | Reverses all steps, cleans up tools and config | |
 
 ---
 
@@ -922,6 +923,32 @@ Open your terminal and run `cskip` to start a Claude session, then paste the upd
 > run this update command: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/update.sh | bash
 > ```
 
+
+---
+
+## Uninstall
+
+[Back to top](#quick-nav)
+
+If you need to remove everything installed by this setup, the uninstall script reverses all seven steps. It removes Claude Code, MCP servers, skills, shell aliases, dev tools, and brew packages. Your Obsidian vault and notes are never touched.
+
+> [!IMPORTANT]
+> **Paste this into your terminal:**
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/ai-super-setup/main/uninstall.sh | bash
+> ```
+
+**What it removes:**
+- Claude Code + shell aliases (cskip, cc, ccr, ccc, cbrain, cbraintg)
+- All MCP servers (Ruflo, claude-flow, Magic, YouTube Transcript)
+- All skills (rswarm, rhive, get-api-docs, UI/UX Pro Max, Remotion)
+- Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, ffmpeg, xlsx2csv, poppler)
+- Status line config
+
+**What it does NOT remove:**
+- Homebrew, Git, Node.js (other tools may depend on these — the script shows you how to remove them manually if you want)
+- Your Obsidian vault and notes
+- Your Claude account
 
 ---
 
