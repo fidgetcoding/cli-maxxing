@@ -62,6 +62,8 @@ Between Steps 1 and 2, make sure to read the **[Keyboard + Command Cheat Sheet](
 
 Already done with everything? Use the **[Staying Up to Date](#staying-up-to-date)** command to catch any new steps or updates that have been added since your last visit.
 
+If you ever want to start fresh or remove everything this setup installed, there's a one-command **[Uninstall](#uninstall)** that reverses all seven steps. It won't touch your Obsidian vault or notes.
+
 ### Already have Claude Code installed?
 
 If you already have Claude Code working on your machine, you can skip Step 1 entirely. Just jump straight to [Step 2](#step-2---dev-tools). Everything will work the same. You can paste the install commands directly in your terminal, or if you prefer, download this repo as a ZIP from GitHub, unzip it, and tell Claude to run the scripts from whatever folder they landed in.
