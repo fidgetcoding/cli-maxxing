@@ -112,7 +112,9 @@ These are the tools that get installed automatically when you run the command ab
 
 When Claude is running in any terminal, you can press **Shift+Tab** to switch between normal mode (where Claude asks before doing anything) and auto-approve mode (where Claude just does it). No need to exit and relaunch. This works in any terminal app — Terminal.app, iTerm2, Warp, or whatever you prefer.
 
-After the script finishes, you need to refresh your terminal so it can find the tools that were just installed. **Copy and paste this command, then hit Enter:**
+After the script finishes, you need to activate the tools that were just installed. Do these three things in order:
+
+**1. Reload your shell config** — copy and paste this, then hit Enter:
 
 ```bash
 source ~/.zshrc
@@ -120,13 +122,19 @@ source ~/.zshrc
 
 > On Linux or if you use bash, run `source ~/.bashrc` instead.
 
-This activates Claude and the other tools in your current terminal session. You only need to do this once — any new terminal window you open later will pick them up automatically.
+**2. Close the terminal window and reopen it.**
+
+**3. Verify Claude is working:**
+
+```bash
+claude --version
+```
+
+If you see a version number, you're good. If not, repeat steps 1 and 2.
 
 ### After the Script Finishes
 
-#### 1a. Open Your Terminal
-
-Open a fresh terminal window. On Mac, press **Cmd+Space**, type **Terminal**, and hit Enter. On Linux, look for "Terminal" in your applications menu, or press **Ctrl+Alt+T**. You can use any terminal app you prefer (Terminal.app, iTerm2, Warp, etc.).
+#### 1a. Set Up Your Claude Account
 
 #### 1b. Set Up Your Claude Account
 
