@@ -838,6 +838,16 @@ If things don't look right, here are the most common issues and how to fix them.
 
 This step connects Claude to the productivity tools you already use. Everything here is optional — install only the tools that match your workflow. Skip what you don't use.
 
+Once installed, these tools work through natural language. No commands to memorize, no special syntax — you just talk to Claude the way you'd talk to a person:
+
+- *"What's on my calendar today?"*
+- *"Am I free Thursday afternoon?"*
+- *"Schedule a meeting called Team Sync tomorrow at 2pm"*
+- *"Search my Notion for the meeting notes from last week"*
+- *"Create a new page in Notion called Project Roadmap"*
+
+Claude picks the right tool automatically based on what you ask. You never need to think about which MCP is handling it.
+
 ### Motion Calendar
 
 Built by [@lorecraft-io](https://github.com/lorecraft-io/motion-calendar-mcp). This is a custom MCP that gives Claude full access to your Motion calendar — something Motion's own public API doesn't support. While other Motion integrations are limited to tasks and projects, this one reads, creates, updates, and deletes calendar events directly.
