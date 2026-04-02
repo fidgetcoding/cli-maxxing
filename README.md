@@ -522,6 +522,7 @@ The UI/UX Pro Max Skill installs automatically. But 21st.dev needs you to create
 |-----------|-------------|
 | UI/UX Pro Max Skill | This gives Claude professional design intelligence. 161 design rules, 67 styles, 161 palettes, 57 font pairings, 99 UX guidelines. |
 | 21st.dev Magic MCP | This connects Claude to a library of production-ready UI components it can use when building interfaces. |
+| Pretext Skill | Text measurement and layout tool via @chenglou/pretext. Use the `/pretext` command for shrinkwrap, profiling, and variable-width flow. |
 
 ---
 
@@ -899,6 +900,8 @@ You now have your productivity stack connected to Claude. Ask about your schedul
 
 ## Step 8 - Status Line
 
+[Back to top](#quick-nav)
+
 This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms or hive-minds.
 
 ### What It Sets Up
@@ -915,7 +918,11 @@ The status line also shows your current model, session duration, and context win
 
 ### Run Step 8
 
+> [!IMPORTANT]
+> **Paste this into your Claude session:**
+> ```
 > run this command to set up your status line: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh | bash
+> ```
 
 Or manually:
 1. Copy `statusline.sh` to `~/.claude/statusline.sh`
@@ -946,11 +953,11 @@ Run the steps in this order:
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic + Pretext |
 | 5 | Visual Media | Remotion + YouTube Transcripts + IG/Social Transcription + FFmpeg |
-| 6 | Second Brain | Obsidian vault setup + data import (6a-6d) |
+| 6 | Second Brain | Obsidian vault setup + data import (6a-6e) |
 | 7 | Productivity Tools | Motion Calendar + Notion (optional) |
 | **8** | **Status Line** | **Final config — status indicators, system health check** |
 
-> **Note:** Step 6 (Second Brain) is the biggest step with four sub-parts (6a-6d). Step 7 (Productivity Tools) is all optional — install only the tools you use. Step 8 (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
+> **Note:** Step 6 (Second Brain) is the biggest step with five sub-parts (6a-6e). Step 7 (Productivity Tools) is all optional — install only the tools you use. Step 8 (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
 
 ---
 

@@ -95,14 +95,14 @@ install_motion_calendar() {
     echo -e "${BLUE}  You can find these in your Motion account settings.${NC}"
     echo ""
 
-    read -rp "  Motion API key: " MOTION_API_KEY
-    echo ""
-    read -rp "  Firebase API key: " FIREBASE_API_KEY
-    echo ""
+    read -sp "  Motion API key: " MOTION_API_KEY
+    echo " [saved]"
+    read -sp "  Firebase API key: " FIREBASE_API_KEY
+    echo " [saved]"
     read -sp "  Firebase refresh token: " FIREBASE_REFRESH_TOKEN
-    echo ""
-    read -rp "  Motion user ID: " MOTION_USER_ID
-    echo ""
+    echo " [saved]"
+    read -sp "  Motion user ID: " MOTION_USER_ID
+    echo " [saved]"
 
     if [ -z "$MOTION_API_KEY" ] || [ -z "$FIREBASE_API_KEY" ] || [ -z "$FIREBASE_REFRESH_TOKEN" ] || [ -z "$MOTION_USER_ID" ]; then
         warn "One or more Motion credentials were left blank."
