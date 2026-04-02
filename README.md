@@ -107,7 +107,7 @@ This is a quick reference for terminal hotkeys, typing basics, launching Claude,
 
 **[Open the full Cheat Sheet →](CHEATSHEET.md)**
 
-Here are the seven commands you'll use most:
+Here are the eight commands you'll use most:
 
 | Command | What it does |
 |---------|-------------|
@@ -115,6 +115,7 @@ Here are the seven commands you'll use most:
 | `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires Obsidian — set up in [Step 6](#step-6---second-brain-obsidian))* |
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
 | `/rswarm *write task here*` | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
+| `/w4wl4l` | Maximum attention to detail mode — word for word, line for line. No skipping, no summarizing, zero regard for credit burn |
 | `Ctrl+C` | Stop whatever is running or exit Claude |
 | `ccr` | Resume your last Claude conversation right where you left off |
 | `/resume` | Pick up right where you left off — reloads your last session's context |
@@ -1023,6 +1024,7 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 |---------|-------------|-------------|
 | `/rswarm do the thing` | Step 3 | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
+| `/w4wl4l` | Step 3 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing |
 | `/pretext <request>` | Step 4 | Text measurement and layout via @chenglou/pretext |
 
 > These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language.
