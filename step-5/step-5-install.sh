@@ -147,6 +147,46 @@ install_ytdlp_cli() {
 }
 
 # -----------------------------------------------------------------------------
+# Install whisper-cpp (local speech-to-text engine)
+# -----------------------------------------------------------------------------
+install_whisper_cpp() {
+    if command -v whisper-cpp &>/dev/null || command -v whisper &>/dev/null; then
+        success "whisper-cpp already installed"
+        return
+    fi
+
+    info "Installing whisper-cpp (local transcription engine)..."
+    if [ "$OS" = "mac" ]; then
+        brew install whisper-cpp || { soft_fail "whisper-cpp installation failed"; return; }
+    else
+        if command -v apt-get &>/dev/null; then
+            sudo apt-get install -y -qq whisper-cpp 2>/dev/null || {
+                info "whisper-cpp not in apt — building from source..."
+                if command -v cmake &>/dev/null && command -v g++ &>/dev/null; then
+                    git clone https://github.com/ggerganov/whisper.cpp.git /tmp/whisper-cpp-build 2>/dev/null \
+                        && cd /tmp/whisper-cpp-build && cmake -B build && cmake --build build --config Release \
+                        && sudo cp build/bin/whisper-cli /usr/local/bin/whisper-cpp 2>/dev/null \
+                        && cd - >/dev/null && rm -rf /tmp/whisper-cpp-build \
+                        || { soft_fail "whisper-cpp build failed"; return; }
+                else
+                    soft_fail "whisper-cpp requires cmake and g++ to build from source"
+                    return
+                fi
+            }
+        else
+            soft_fail "Could not install whisper-cpp — install manually"
+            return
+        fi
+    fi
+
+    if command -v whisper-cpp &>/dev/null || command -v whisper &>/dev/null; then
+        success "whisper-cpp installed"
+    else
+        soft_fail "whisper-cpp installation could not be verified"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Install Whisper MCP (local speech-to-text transcription)
 # -----------------------------------------------------------------------------
 install_whisper_mcp() {
@@ -242,6 +282,15 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    # whisper-cpp binary
+    if command -v whisper-cpp &>/dev/null || command -v whisper &>/dev/null; then
+        success "TEST: whisper-cpp installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: whisper-cpp not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     # Whisper MCP registered
     if claude mcp list 2>/dev/null | grep -q "whisper-mcp"; then
         success "TEST: Whisper MCP registered"
@@ -332,6 +381,7 @@ main() {
     install_youtube_transcript
     install_ytdlp_cli
     install_ytdlp_mcp
+    install_whisper_cpp
     install_whisper_mcp
     install_ffmpeg
     run_self_test

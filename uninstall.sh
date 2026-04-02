@@ -376,6 +376,20 @@ for cmd in cbrain cbraintg; do
     fi
 done
 
+# g2/g4 window tiling functions
+if grep -q 'g2()' "$SHELL_RC" 2>/dev/null; then
+    sed -i.bak '/# Ghostty window tiling/,/^}/d' "$SHELL_RC" 2>/dev/null || true
+    rm -f "${SHELL_RC}.bak"
+    # Clean up both function blocks
+    sed -i.bak '/g2()/,/^}/d' "$SHELL_RC" 2>/dev/null || true
+    rm -f "${SHELL_RC}.bak"
+    sed -i.bak '/g4()/,/^}/d' "$SHELL_RC" 2>/dev/null || true
+    rm -f "${SHELL_RC}.bak"
+    success "g2/g4 window tiling functions removed from $SHELL_RC"
+else
+    skip "g2/g4 window tiling (not found in $SHELL_RC)"
+fi
+
 # -----------------------------------------------------------------------------
 # Optional: Heavy dependencies
 # -----------------------------------------------------------------------------

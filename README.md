@@ -260,6 +260,8 @@ Or if you're already in a Claude session, paste this:
 | JetBrains Mono | Clean monospace font designed for code. Installed via Homebrew. |
 | Ghostty Config | Pre-configured with dark theme, tabbed interface, traffic light buttons, link clicking, and font settings. |
 | duti (Mac) | File association manager. Sets TextEdit as the default opener for text files so Cmd+Click works the way you'd expect. |
+| g2 (Mac) | Window tiling command. Type `g2` in your terminal to tile 2 Ghostty windows side by side, filling your screen. |
+| g4 (Mac) | Window tiling command. Type `g4` to tile 4 Ghostty windows in a 2x2 grid. Great for running multiple Claude sessions at once. |
 
 ### After Installing
 
@@ -684,7 +686,8 @@ Once you're inside the Claude session, paste this and hit Enter:
 | YouTube Transcript MCP | Pulls transcripts from any YouTube video. Free, no API key needed. Supports language selection, timestamps, and ad filtering. |
 | yt-dlp MCP | Downloads audio/video from Instagram Reels, TikTok, Twitter/X, and many other platforms. Used to grab audio for local transcription. |
 | yt-dlp CLI | The command-line downloader that powers the yt-dlp MCP. Installed via Homebrew (macOS) or your system package manager (Linux). |
-| Whisper MCP | Local speech-to-text transcription using OpenAI's Whisper. Runs entirely on your machine — no API keys, no cloud. Multiple model sizes available. |
+| whisper-cpp | The transcription engine that actually converts speech to text. Installed via Homebrew on Mac, built from source on Linux. |
+| Whisper MCP | Connects whisper-cpp to Claude so it can transcribe audio files on demand. Runs entirely on your machine — no API keys, no cloud. |
 | FFmpeg | Powerful command-line tool for video and audio processing. Used by Remotion for rendering and by Claude for media operations. |
 
 ### After Step 5
@@ -1074,8 +1077,12 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 6)* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected |
 | `ctg` | Skip-permissions + Telegram channel connected (any directory) |
+| `g2` | Tile 2 Ghostty windows side by side, filling your screen *(requires Ghostty — Bonus step, macOS only)* |
+| `g4` | Tile 4 Ghostty windows in a 2x2 grid *(requires Ghostty — Bonus step, macOS only)* |
 
 > **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
+>
+> **Note:** Until you set up Second Brain (Step 6), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
 
 ---
 

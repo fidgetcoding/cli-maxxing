@@ -243,6 +243,107 @@ configure_link_opener() {
 }
 
 # -----------------------------------------------------------------------------
+# Window tiling commands (g2, g4) — macOS only
+# -----------------------------------------------------------------------------
+install_window_tiling() {
+    if [ "$OS" != "mac" ]; then
+        info "Skipping window tiling commands (macOS only)"
+        return
+    fi
+
+    SHELL_RC="$HOME/.zshrc"
+    case "${SHELL:-/bin/bash}" in
+        */bash) SHELL_RC="$HOME/.bashrc" ;;
+    esac
+
+    if grep -q 'g2()' "$SHELL_RC" 2>/dev/null; then
+        success "Window tiling commands already installed (g2, g4)"
+        return
+    fi
+
+    info "Installing window tiling commands (g2, g4)..."
+    cat >> "$SHELL_RC" << 'TILING_EOF'
+
+# Ghostty window tiling — g2 (split), g4 (quad)
+g2() {
+  osascript <<'APPLESCRIPT'
+use framework "AppKit"
+tell application "Ghostty" to activate
+delay 0.3
+tell application "System Events" to tell process "Ghostty"
+  set winCount to count of windows
+  repeat (2 - winCount) times
+    keystroke "n" using command down
+    delay 0.5
+  end repeat
+  delay 0.3
+  set wins to every window
+  if (count of wins) < 2 then return
+  set mainScreen to current application's NSScreen's mainScreen()
+  set screenFrame to mainScreen's frame()
+  set visFrame to mainScreen's visibleFrame()
+  set fullH to (item 2 of item 2 of screenFrame) as integer
+  set visX to (item 1 of item 1 of visFrame) as integer
+  set visYBottom to (item 2 of item 1 of visFrame) as integer
+  set visW to (item 1 of item 2 of visFrame) as integer
+  set visH to (item 2 of item 2 of visFrame) as integer
+  set topY to fullH - visYBottom - visH
+  set halfW to visW div 2
+  set size of item 2 of wins to {halfW, visH}
+  set position of item 2 of wins to {visX, topY}
+  delay 0.1
+  set size of item 1 of wins to {halfW, visH}
+  set position of item 1 of wins to {visX + halfW, topY}
+  delay 0.1
+  perform action "AXRaise" of item 2 of wins
+end tell
+APPLESCRIPT
+}
+
+g4() {
+  osascript <<'APPLESCRIPT'
+use framework "AppKit"
+tell application "Ghostty" to activate
+delay 0.3
+tell application "System Events" to tell process "Ghostty"
+  set winCount to count of windows
+  repeat (4 - winCount) times
+    keystroke "n" using command down
+    delay 0.5
+  end repeat
+  delay 0.3
+  set wins to every window
+  if (count of wins) < 4 then return
+  set mainScreen to current application's NSScreen's mainScreen()
+  set screenFrame to mainScreen's frame()
+  set visFrame to mainScreen's visibleFrame()
+  set fullH to (item 2 of item 2 of screenFrame) as integer
+  set visX to (item 1 of item 1 of visFrame) as integer
+  set visYBottom to (item 2 of item 1 of visFrame) as integer
+  set visW to (item 1 of item 2 of visFrame) as integer
+  set visH to (item 2 of item 2 of visFrame) as integer
+  set topY to fullH - visYBottom - visH
+  set halfW to visW div 2
+  set halfH to visH div 2
+  set size of item 1 of wins to {halfW, halfH}
+  set position of item 1 of wins to {visX, topY}
+  delay 0.1
+  set size of item 2 of wins to {halfW, halfH}
+  set position of item 2 of wins to {visX + halfW, topY}
+  delay 0.1
+  set size of item 3 of wins to {halfW, halfH}
+  set position of item 3 of wins to {visX, topY + halfH}
+  delay 0.1
+  set size of item 4 of wins to {halfW, halfH}
+  set position of item 4 of wins to {visX + halfW, topY + halfH}
+end tell
+APPLESCRIPT
+}
+TILING_EOF
+    success "Window tiling commands installed (g2, g4)"
+}
+
+# -----------------------------------------------------------------------------
 # Summary
 # -----------------------------------------------------------------------------
 print_summary() {
@@ -259,6 +360,10 @@ print_summary() {
     echo "    Warp Dark color theme"
     echo "    Cmd+Click to open URLs in your browser"
     echo "    Cmd+Click to open file paths (text files open in TextEdit)"
+    if [ "$OS" = "mac" ]; then
+        echo "    g2 — tile 2 Ghostty windows side by side"
+        echo "    g4 — tile 4 Ghostty windows in a quad grid"
+    fi
     echo ""
     echo "  How to use it:"
     echo "    Open Ghostty from Spotlight (Cmd+Space, type Ghostty)"
@@ -293,6 +398,7 @@ main() {
     install_font
     configure_ghostty
     configure_link_opener
+    install_window_tiling
     print_summary
 }
 

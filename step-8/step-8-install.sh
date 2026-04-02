@@ -166,11 +166,137 @@ SETTINGS_EOF
 fi
 
 # =============================================================================
-# Self-Test
+# Health Check — verify all commands from previous steps
 # =============================================================================
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Running Self-Test${NC}"
+echo -e "${BLUE}  Running Health Check${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+
+# Detect shell RC
+case "${SHELL:-/bin/bash}" in
+    */zsh)  SHELL_RC="$HOME/.zshrc" ;;
+    */bash) SHELL_RC="$HOME/.bashrc" ;;
+    *)      SHELL_RC="$HOME/.bashrc" ;;
+esac
+
+HC_PASS=0
+HC_FAIL=0
+HC_ISSUES=""
+
+# --- Shell aliases ---
+for alias_check in \
+    "cskip:claude --dangerously-skip-permissions" \
+    "cc:claude" \
+    "ccr:claude --resume" \
+    "ccc:claude --continue" \
+    "ctg:claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official"; do
+    ALIAS_NAME="${alias_check%%:*}"
+    ALIAS_CMD="${alias_check#*:}"
+    if grep -q "alias ${ALIAS_NAME}=" "$SHELL_RC" 2>/dev/null; then
+        success "HEALTH: $ALIAS_NAME alias — configured"
+        HC_PASS=$((HC_PASS + 1))
+    else
+        warn "HEALTH: $ALIAS_NAME alias — missing, adding now..."
+        echo "alias ${ALIAS_NAME}='${ALIAS_CMD}'" >> "$SHELL_RC"
+        success "HEALTH: $ALIAS_NAME alias — fixed"
+        HC_PASS=$((HC_PASS + 1))
+    fi
+done
+
+# --- ~/.local/bin on PATH ---
+if grep -q '\.local/bin' "$SHELL_RC" 2>/dev/null; then
+    success "HEALTH: ~/.local/bin on PATH"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: ~/.local/bin not on PATH, adding now..."
+    echo "" >> "$SHELL_RC"
+    echo '# Local bin (cbrain, cbraintg)' >> "$SHELL_RC"
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$SHELL_RC"
+    success "HEALTH: ~/.local/bin PATH — fixed"
+    HC_PASS=$((HC_PASS + 1))
+fi
+
+# --- cbrain script ---
+if [ -x "$HOME/.local/bin/cbrain" ]; then
+    success "HEALTH: cbrain command — installed"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: cbrain not found — run Step 1 again to install"
+    HC_FAIL=$((HC_FAIL + 1))
+fi
+
+# --- cbraintg script ---
+if [ -x "$HOME/.local/bin/cbraintg" ]; then
+    success "HEALTH: cbraintg command — installed"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: cbraintg not found — run Step 1 again to install"
+    HC_FAIL=$((HC_FAIL + 1))
+fi
+
+# --- g2/g4 commands (macOS only) ---
+if [ "$(uname -s)" = "Darwin" ]; then
+    if grep -q 'g2()' "$SHELL_RC" 2>/dev/null; then
+        success "HEALTH: g2/g4 window tiling — configured"
+        HC_PASS=$((HC_PASS + 1))
+    else
+        warn "HEALTH: g2/g4 not found — run the Ghostty bonus step to install"
+        HC_FAIL=$((HC_FAIL + 1))
+    fi
+fi
+
+# --- No-flicker mode ---
+if grep -q 'CLAUDE_CODE_NO_FLICKER' "$SHELL_RC" 2>/dev/null; then
+    success "HEALTH: no-flicker mode — enabled"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: no-flicker mode not set — run Step 2 again to enable"
+    HC_FAIL=$((HC_FAIL + 1))
+fi
+
+# --- Memory hook ---
+if [ -f "$HOME/.claude/settings.json" ] && grep -q '"Stop"' "$HOME/.claude/settings.json" 2>/dev/null; then
+    success "HEALTH: memory auto-save hook — configured"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: memory hook not found — run Step 2 again to configure"
+    HC_FAIL=$((HC_FAIL + 1))
+fi
+
+# --- Claude Code ---
+if command -v claude &>/dev/null; then
+    success "HEALTH: Claude Code — installed"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: Claude Code not found — run Step 1 first"
+    HC_FAIL=$((HC_FAIL + 1))
+fi
+
+# --- jq ---
+if command -v jq &>/dev/null; then
+    success "HEALTH: jq — installed"
+    HC_PASS=$((HC_PASS + 1))
+else
+    warn "HEALTH: jq not found — run Step 2 first"
+    HC_FAIL=$((HC_FAIL + 1))
+fi
+
+echo ""
+echo "  Health check: $HC_PASS passed, $HC_FAIL issues found."
+if [ "$HC_FAIL" -gt 0 ]; then
+    echo ""
+    echo -e "  ${YELLOW}Some items need attention. Scroll up to see which steps to re-run.${NC}"
+    echo -e "  ${YELLOW}Or just launch cskip and ask Claude to fix them — it'll figure it out.${NC}"
+fi
+
+# =============================================================================
+# Self-Test — status line specifically
+# =============================================================================
+echo ""
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}  Running Status Line Test${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -195,16 +321,7 @@ else
     TEST_FAIL=$((TEST_FAIL + 1))
 fi
 
-# Test 3: jq available
-if command -v jq &>/dev/null; then
-    success "TEST: jq available (required by status line)"
-    TEST_PASS=$((TEST_PASS + 1))
-else
-    echo -e "${RED}[FAIL]${NC} TEST: jq not found (run Step 2 first)"
-    TEST_FAIL=$((TEST_FAIL + 1))
-fi
-
-# Test 4: Status line produces output
+# Test 3: Status line produces output
 TEST_OUTPUT=$(echo '{"model":{"display_name":"Test"},"context_window":{"used_percentage":10},"cost":{"total_duration_ms":5000},"workspace":{"current_dir":"/test"}}' | "$HOME/.claude/statusline.sh" 2>/dev/null)
 if [ -n "$TEST_OUTPUT" ]; then
     success "TEST: status line produces output — $TEST_OUTPUT"
@@ -219,7 +336,7 @@ echo "  $TEST_PASS tests passed, $TEST_FAIL failed."
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Step 8 Complete — Status Line Active${NC}"
+echo -e "${GREEN}  Step 8 Complete — Status Line + Health Check${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 echo "  Status line indicators:"
@@ -228,6 +345,9 @@ echo "    ⚡ Ruflo     — MCP server connected"
 echo "    🎨 UIPro     — design skill loaded"
 echo "    🐝 Swarm     — swarm active (during /rswarm)"
 echo "    🍯 Hive      — hive-mind active (during /rhive)"
+echo ""
+echo -e "  ${YELLOW}Important: Until you set up Second Brain (Step 6), use cskip${NC}"
+echo -e "  ${YELLOW}instead of cbrain. cbrain requires an Obsidian vault to exist.${NC}"
 echo ""
 echo "  Restart Claude Code to see your status line."
 echo ""
