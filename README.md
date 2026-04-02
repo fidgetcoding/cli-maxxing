@@ -13,7 +13,7 @@ Everything you need to start working with AI-powered development tools, installe
 | [Step 1](#step-1---get-claude-running) | Get Claude Running | Sets up the foundation on your machine | ~5 min |
 | [Bonus: Ghostty](#bonus---ghostty-terminal) | Ghostty Terminal | GPU-accelerated terminal with clickable links and tabs | ~2 min |
 | [Bonus: Arc Browser](#bonus---arc-browser) | Arc Browser | The browser for power users — fast, clean, no tab clutter | ~2 min |
-| [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, and utilities | ~3 min |
+| [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 3](#step-3---ruflo--context-hub) | Ruflo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [Step 4](#step-4---design-tools) | Design Tools | UI/UX skills + component generation | ~3 min |
 | [Step 5](#step-5---visual-media) | Visual Media | Remotion video creation + YouTube transcripts + Instagram/social transcription | ~5 min |
@@ -420,7 +420,23 @@ These are the tools that Claude will install for you:
 | fzf | This helps you find files and commands quickly. |
 | wget | This downloads files from the web. |
 | weasyprint | This converts HTML files to PDF. Used by Claude for generating documents. |
+| No-flicker mode | This enables fullscreen rendering in Claude Code. The screen stops jumping and flickering while Claude is working. Scroll speed is set to 3 (matches vim). |
 | Memory auto-save hook | This makes Claude automatically save important notes from your conversation when you end a session. You don't have to do anything. It just works in the background. |
+
+### What's no-flicker mode?
+
+Step 2 turns on fullscreen rendering in Claude Code. This is a research preview feature (requires Claude Code v2.1.89 or later, which Step 1 installs). Without it, the screen jumps and flashes while Claude is working — text scrolls past and the input box bounces around. With no-flicker mode on, the screen stays still. Your input box stays pinned to the bottom, and everything updates cleanly in place. It works by setting `CLAUDE_CODE_NO_FLICKER=1` in your shell profile.
+
+It also sets your scroll speed to 3, so scrolling through the conversation with your mouse wheel feels smooth. You can also scroll with PgUp/PgDn or Ctrl+Home/End. Click on collapsed tool results to expand them, and click URLs to open them.
+
+If you ever want to turn it off, open your `~/.zshrc` (or `~/.bashrc`) and delete these two lines:
+
+```
+export CLAUDE_CODE_NO_FLICKER=1
+export CLAUDE_CODE_SCROLL_SPEED=3
+```
+
+Then close and reopen your terminal. You can also set `CLAUDE_CODE_NO_FLICKER=0` to disable it temporarily without removing the lines.
 
 ### What's the memory hook?
 
@@ -1025,7 +1041,7 @@ Run the steps in this order:
 | 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
 | Bonus | Ghostty Terminal | GPU-accelerated terminal (optional) |
 | Bonus | Arc Browser | Power-user browser with sidebar tabs (optional, macOS) |
-| 2 | Dev Tools | Python, Pandoc, jq, ripgrep, etc. |
+| 2 | Dev Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic + Pretext |
 | 5 | Visual Media | Remotion + YouTube Transcripts + IG/Social Transcription + FFmpeg |
@@ -1120,6 +1136,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | IG/Social Transcription | Step 5 | Natural language — paste an Instagram, TikTok, or social media link | "Transcribe this reel: https://instagram.com/reel/..." |
 | Motion Calendar | Step 7 | Natural language — calendar, schedule, availability, events | "What's on my calendar today?" |
 | Notion | Step 7 | Natural language — pages, databases, knowledge management | "Search my Notion for the meeting notes" |
+| No-Flicker Mode | Step 2 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 | Obsidian | Step 6 | Natural language — anything about notes, vault, search, or knowledge management | "Search my vault for notes about machine learning" |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
@@ -1183,6 +1200,7 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 | Shift+Tab does nothing | Make sure you are inside an active Claude session. Try exiting and relaunching with `cskip` |
 | Swarm not responding | Run `npx @claude-flow/cli@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
+| `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
 | Obsidian vault not found | Tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
 | Shift+Return acts like Enter | Try Option+Enter as an alternative for multi-line input. Behavior may vary by terminal app. |
 

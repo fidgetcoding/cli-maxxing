@@ -338,6 +338,34 @@ else
     skip "Shell aliases (not found in $SHELL_RC)"
 fi
 
+# No-flicker mode env vars
+FLICKER_REMOVED=0
+for flicker_line in 'CLAUDE_CODE_NO_FLICKER' 'CLAUDE_CODE_SCROLL_SPEED' '# Claude Code — no-flicker'; do
+    if grep -q "$flicker_line" "$SHELL_RC" 2>/dev/null; then
+        sed -i.bak "/$flicker_line/d" "$SHELL_RC" 2>/dev/null || true
+        rm -f "${SHELL_RC}.bak"
+        FLICKER_REMOVED=$((FLICKER_REMOVED + 1))
+    fi
+done
+if [ "$FLICKER_REMOVED" -gt 0 ]; then
+    success "No-flicker mode ($FLICKER_REMOVED lines removed from $SHELL_RC)"
+else
+    skip "No-flicker mode (not found in $SHELL_RC)"
+fi
+
+# ~/.local/bin PATH entry
+if grep -q '# Local bin (cbrain, cbraintg)' "$SHELL_RC" 2>/dev/null; then
+    sed -i.bak '/# Local bin (cbrain, cbraintg)/d' "$SHELL_RC" 2>/dev/null || true
+    rm -f "${SHELL_RC}.bak"
+fi
+if grep -q '\.local/bin' "$SHELL_RC" 2>/dev/null; then
+    sed -i.bak '/\.local\/bin/d' "$SHELL_RC" 2>/dev/null || true
+    rm -f "${SHELL_RC}.bak"
+    success "~/.local/bin PATH entry removed from $SHELL_RC"
+else
+    skip "~/.local/bin PATH entry (not found in $SHELL_RC)"
+fi
+
 # cbrain and cbraintg commands
 for cmd in cbrain cbraintg; do
     if [ -f "$HOME/.local/bin/$cmd" ]; then

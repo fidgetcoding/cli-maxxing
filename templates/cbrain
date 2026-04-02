@@ -1,11 +1,21 @@
 #!/usr/bin/env bash
 # cbrain — Launch Claude Code in 2ndBrain Obsidian vault with full permissions
+for candidate in \
+    "$HOME/Desktop/WORK/OBSIDIAN/2ndBrain" \
+    "$HOME/Desktop/2ndBrain" \
+    "$HOME/Desktop/Second-Brain" \
+    "$HOME/Desktop/Vault" \
+    "$HOME/Documents/2ndBrain" \
+    "$HOME/Documents/Second-Brain"; do
+  if [ -d "$candidate" ]; then
+    VAULT="$candidate"
+    break
+  fi
+done
 
-VAULT="$HOME/Desktop/WORK/OBSIDIAN/2ndBrain"
-
-if [ ! -d "$VAULT" ]; then
-  echo "Error: 2ndBrain vault not found at $VAULT"
+if [ -z "${VAULT:-}" ]; then
+  echo "Error: Could not find your 2ndBrain vault."
+  echo "Run Step 6 first, or set VAULT env var: VAULT=~/path/to/vault cbrain"
   exit 1
 fi
-
 cd "$VAULT" && exec claude --dangerously-skip-permissions "$@"

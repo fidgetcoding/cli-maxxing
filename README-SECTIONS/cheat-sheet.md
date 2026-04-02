@@ -76,6 +76,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | 21st.dev Magic | Step 4 | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
 | Context Hub | Step 3 | Natural language — Claude writes code that calls external APIs | "Use the Stripe API to create a checkout" |
 | Remotion | Step 5 | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
+| No-Flicker Mode | Step 2 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 
 > **Key distinction:** Slash commands (`/rswarm`, `/rhive`, `/pretext`) require you to type the command. Everything in this table works by just talking to Claude naturally.

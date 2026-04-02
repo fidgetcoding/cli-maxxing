@@ -417,6 +417,15 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    # No-flicker mode
+    if grep -q 'CLAUDE_CODE_NO_FLICKER' "$SHELL_RC" 2>/dev/null; then
+        success "TEST: no-flicker mode — configured in $SHELL_RC"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: no-flicker mode — not found in $SHELL_RC"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     echo ""
     if [ "$TEST_FAIL" -eq 0 ]; then
         echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC}"
@@ -480,6 +489,32 @@ SETTINGS_EOF
 }
 
 # -----------------------------------------------------------------------------
+# No-flicker mode — fullscreen rendering for Claude Code
+# -----------------------------------------------------------------------------
+configure_no_flicker() {
+    FLICKER_CHANGED=false
+
+    if ! grep -q 'CLAUDE_CODE_NO_FLICKER' "$SHELL_RC" 2>/dev/null; then
+        info "Enabling no-flicker mode (fullscreen rendering)..."
+        echo "" >> "$SHELL_RC"
+        echo "# Claude Code — no-flicker fullscreen rendering" >> "$SHELL_RC"
+        echo "export CLAUDE_CODE_NO_FLICKER=1" >> "$SHELL_RC"
+        FLICKER_CHANGED=true
+    fi
+
+    if ! grep -q 'CLAUDE_CODE_SCROLL_SPEED' "$SHELL_RC" 2>/dev/null; then
+        echo "export CLAUDE_CODE_SCROLL_SPEED=3" >> "$SHELL_RC"
+        FLICKER_CHANGED=true
+    fi
+
+    if $FLICKER_CHANGED; then
+        success "No-flicker mode enabled in $SHELL_RC"
+    else
+        success "No-flicker mode already configured in $SHELL_RC"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Summary
 # -----------------------------------------------------------------------------
 print_summary() {
@@ -499,6 +534,10 @@ print_summary() {
     echo "    tree           $(command -v tree &>/dev/null && echo 'installed' || echo '—')"
     echo "    fzf            $(fzf --version 2>/dev/null | cut -d' ' -f1 || echo '—')"
     echo "    wget           $(command -v wget &>/dev/null && echo 'installed' || echo '—')"
+    echo ""
+    echo "  Configured:"
+    echo "    No-flicker     $(grep -q 'CLAUDE_CODE_NO_FLICKER' "$SHELL_RC" 2>/dev/null && echo 'enabled' || echo '—')"
+    echo "    Memory hook    $(grep -q '"Stop"' "$HOME/.claude/settings.json" 2>/dev/null && echo 'enabled' || echo '—')"
     echo ""
     if [ "$ERRORS" -gt 0 ]; then
         echo -e "  ${YELLOW}Warnings: $ERRORS non-critical tool(s) failed to install.${NC}"
@@ -536,6 +575,7 @@ main() {
     install_wget
     install_weasyprint
     configure_memory_hook
+    configure_no_flicker
     run_self_test
     print_summary
 }

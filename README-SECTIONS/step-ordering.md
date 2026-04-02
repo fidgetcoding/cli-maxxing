@@ -5,7 +5,7 @@ Run the steps in this order:
 | Step | Name | What it does |
 |------|------|-------------|
 | 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
-| 2 | Dev Tools | Python, Pandoc, jq, ripgrep, etc. |
+| 2 | Dev Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic + Pretext |
 | 5 | Visual Media | Remotion + FFmpeg + YouTube Transcripts |

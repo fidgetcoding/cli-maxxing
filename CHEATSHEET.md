@@ -110,6 +110,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | IG/Social Transcription | Step 5 | Natural language — paste an Instagram, TikTok, or social media link | "Transcribe this reel: https://instagram.com/reel/..." |
 | Motion Calendar | Step 7 | Natural language — calendar, schedule, availability, events | "What's on my calendar today?" |
 | Notion | Step 7 | Natural language — pages, databases, knowledge management | "Search my Notion for the meeting notes" |
+| No-Flicker Mode | Step 2 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 | Obsidian | Step 6 | Natural language — anything about notes, vault, search, or knowledge management | "Search my vault for notes about machine learning" |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
@@ -179,6 +180,7 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 | Shift+Tab does nothing | Make sure you are inside an active Claude session (not at a normal shell prompt) |
 | Swarm not responding | Run `npx @claude-flow/cli@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
+| `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
 | Obsidian vault not found | Tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
 | Shift+Return acts like Enter | Try Option+Enter as an alternative for multi-line input |
 
