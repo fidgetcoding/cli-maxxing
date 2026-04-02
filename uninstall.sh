@@ -220,7 +220,7 @@ for pkg in ruflo@latest agentic-flow@latest @aisuite/chub typescript; do
 done
 
 # Swarm skills
-for skill in rswarm rhive get-api-docs pretext w4w w4wl4l; do
+for skill in rswarm rhive get-api-docs pretext w4w; do
     if [ -d "$HOME/.claude/skills/$skill" ]; then
         rm -rf "$HOME/.claude/skills/$skill"
         success "Skill: /$skill"
@@ -243,7 +243,7 @@ fi
 echo ""
 echo -e "${BLUE}--- Step 2: Dev Tools ---${NC}"
 
-for tool in pandoc poppler jq ripgrep gh tree fzf wget; do
+for tool in pandoc poppler jq ripgrep gh tree fzf wget weasyprint; do
     if command -v "$tool" &>/dev/null || brew list "$tool" &>/dev/null 2>&1; then
         brew uninstall "$tool" 2>/dev/null || true
         success "brew: $tool"

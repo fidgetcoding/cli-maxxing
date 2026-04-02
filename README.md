@@ -347,6 +347,7 @@ These are the tools that Claude will install for you:
 | tree | This shows your folder structure visually. |
 | fzf | This helps you find files and commands quickly. |
 | wget | This downloads files from the web. |
+| weasyprint | This converts HTML files to PDF. Used by Claude for generating documents. |
 | Memory auto-save hook | This makes Claude automatically save important notes from your conversation when you end a session. You don't have to do anything. It just works in the background. |
 
 ### What's the memory hook?
@@ -1025,10 +1026,10 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 |---------|-------------|-------------|
 | `/rswarm do the thing` | Step 3 | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
-| `/w4w` | Step 3 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works as `/w4wl4l`, `w4w`, or `w4wl4l` (no slash needed) |
+| `/w4w` | Step 3 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
 | `/pretext <request>` | Step 4 | Text measurement and layout via @chenglou/pretext |
 
-> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` or `w4wl4l` anywhere in your message.
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message.
 
 ---
 
@@ -1165,7 +1166,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 - Claude Code + shell aliases (cskip, ctg, cc, ccr, ccc, cbrain, cbraintg)
 - All MCP servers (Ruflo, claude-flow, Magic, YouTube Transcript, yt-dlp, Whisper, Obsidian, Motion Calendar, Notion)
 - All skills (rswarm, rhive, w4w, get-api-docs, UI/UX Pro Max, Remotion, Pretext)
-- Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, ffmpeg, xlsx2csv, poppler)
+- Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler)
 - Whisper models (~/.whisper/)
 - Motion Calendar config (~/.motion-calendar-mcp/)
 - Ghostty config (the app itself is kept — only the config file installed by this setup is removed)

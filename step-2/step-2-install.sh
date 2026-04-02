@@ -3,7 +3,7 @@ set -uo pipefail
 
 # =============================================================================
 # Step 2 — Dev Tools
-# Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, gh, tree, fzf, wget
+# Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, gh, tree, fzf, wget, weasyprint
 # Run this in your terminal after completing Step 1
 # Usage: curl -fsSL <hosted-url>/step-2/step-2-install.sh | bash
 # =============================================================================
@@ -348,6 +348,32 @@ install_wget() {
 }
 
 # -----------------------------------------------------------------------------
+# weasyprint (HTML to PDF converter)
+# -----------------------------------------------------------------------------
+install_weasyprint() {
+    if command -v weasyprint &>/dev/null; then
+        success "weasyprint already installed"
+        return
+    fi
+
+    info "Installing weasyprint..."
+    if [ "$OS" = "mac" ]; then
+        brew install weasyprint || { soft_fail "weasyprint installation failed"; return; }
+    else
+        if command -v apt-get &>/dev/null; then
+            sudo apt-get install -y -qq weasyprint || { soft_fail "weasyprint installation failed"; return; }
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y weasyprint || { soft_fail "weasyprint installation failed"; return; }
+        else
+            soft_fail "Could not install weasyprint"
+            return
+        fi
+    fi
+
+    success "weasyprint installed"
+}
+
+# -----------------------------------------------------------------------------
 # Self-test
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -369,7 +395,8 @@ run_self_test() {
         "gh:GitHub CLI" \
         "tree:tree" \
         "fzf:fzf" \
-        "wget:wget"; do
+        "wget:wget" \
+        "weasyprint:weasyprint"; do
         cmd="${cmd_check%%:*}"
         name="${cmd_check##*:}"
         if command -v "$cmd" &>/dev/null; then
@@ -507,6 +534,7 @@ main() {
     install_tree
     install_fzf
     install_wget
+    install_weasyprint
     configure_memory_hook
     run_self_test
     print_summary
