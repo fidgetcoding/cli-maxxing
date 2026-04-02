@@ -306,7 +306,7 @@ Chrome is fine. It works. But it was designed in 2008 and it still feels like it
 - **Built-in ad blocking and tracker blocking.** No extensions needed. Pages load faster and you're not being surveilled by every ad network on the internet.
 - **Command bar (Cmd+T).** This replaces the traditional URL bar with something closer to Spotlight. Search your open tabs, bookmarks, history, and the web from one place. It's fast and it learns your habits.
 - **Little Arc.** Press a hotkey and get a tiny floating browser window for a quick search or link preview without leaving what you're doing. Dismiss it and you're right back.
-- **Profile switching by scrolling.** If you have multiple profiles (work, personal, client accounts), you can scroll between them instantly from the sidebar. No logging out, no "Choose a profile" screen, no waiting. You just flick between identities like switching Spaces. It's the fastest multi-account workflow in any browser.
+- **Fast profile switching.** If you have multiple profiles (work, personal, client accounts), you can switch between them instantly from the sidebar. No logging out, no "Choose a profile" screen, no waiting. You just click between identities the same way you switch Spaces. It's the fastest multi-account workflow in any browser.
 - **Automatic tab archiving.** Tabs you haven't looked at in 12 hours get archived automatically. They're not gone — you can find them — but they're not cluttering your sidebar. Your browser stays clean without you doing anything.
 - **It's Chromium under the hood.** All your Chrome extensions work. 1Password, React DevTools, Vimium, whatever you use — it all carries over.
 
@@ -354,7 +354,7 @@ Or if you're already in a Claude session, paste this:
 4. Press **Cmd+T** to open the command bar — this replaces the URL bar and it's way faster.
 5. Try **Cmd+S** to pin a tab to your sidebar.
 
-> **Note:** Arc is currently macOS-only. If you're on Linux, this step will be skipped automatically.
+> **Note:** Arc is available on macOS and Windows. This install script uses Homebrew, so it only runs on macOS. If you're on Linux, this step will be skipped automatically.
 
 ---
 
