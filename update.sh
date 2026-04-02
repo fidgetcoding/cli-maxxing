@@ -108,9 +108,10 @@ elif [ -f "$HOME/.bashrc" ]; then
 fi
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc, cbrain, cbraintg"
-echo "  Available skills:   /rswarm, /rhive, /pretext"
+echo "  Available skills:   /rswarm, /rhive, /w4w, /pretext"
 echo ""
-echo "  Note: Steps 6b, 6c, and 6d are interactive. If you've"
+echo "  Note: Steps 6b, 6c, 6d, and 7 are interactive. If you've"
 echo "  already completed them before, they just verify your setup."
-echo "  If you haven't, follow the prompts to import your data."
+echo "  If you haven't, follow the prompts to import your data"
+echo "  and choose your productivity tools."
 echo ""
