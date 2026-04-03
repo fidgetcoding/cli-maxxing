@@ -1009,7 +1009,7 @@ This step connects Claude to Telegram so you can message it from your phone. You
 | Component | What it does |
 |-----------|--------------|
 | Telegram Bot | Your personal bot created via @BotFather on Telegram |
-| Bot Token | Stored locally at `~/.claude/telegram-bot-token` |
+| Bot Token | Stored locally at `~/.claude/channels/telegram/.env` |
 | Access Policy | Controls who can message your bot (default: ask before accepting) |
 | `ctg` command | Launch Claude with Telegram from any directory (installed in Step 1) |
 | `cbraintg` command | Launch Claude with Telegram inside your 2ndBrain vault (installed in Step 1) |
