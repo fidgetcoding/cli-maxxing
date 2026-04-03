@@ -82,7 +82,9 @@ There are eight steps. Run them in order. Each one builds on the last.
 
 **[Step 7](#step-7---second-brain-obsidian)** sets up your personal knowledge management system in Obsidian. This is the biggest step but also the most rewarding. It's the transition from setup to daily use.
 
-**[Step 8](#step-8---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. After this, you're done.
+**[Step 8](#step-8---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also runs a final verification to make sure every command and tool from the cheat sheet is installed and working.
+
+After Step 8, head to **[You're Ready](#youre-ready)** — it tells you the one command you need going forward and what to do next.
 
 Between Steps 1 and 2, make sure to read the **[Keyboard + Command Cheat Sheet](#keyboard--command-cheat-sheet)** so you know how to type, navigate, and use hotkeys in your terminal.
 
