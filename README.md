@@ -155,10 +155,15 @@ These are the tools that get installed automatically when you run the command ab
 
 | Tool | What it does |
 |------|-------------|
+| Xcode CLT (Mac) / build-essential (Linux) | Build tools that other installers need. Runs automatically in the background. |
 | Homebrew (Mac) / apt or dnf (Linux) | This is a package manager. It installs other software for you. |
 | Git | This tracks and manages code changes. |
+| nvm | Node Version Manager — installs and manages Node.js versions. |
 | Node.js (v18+) | This runs JavaScript. Claude Code needs it to work. |
 | Claude Code | This is your AI coding assistant. The main tool you'll be using. |
+| Shell aliases | Shortcuts: `cskip`, `cc`, `ccr`, `ccc`, `ctg` — faster ways to launch Claude with different settings. |
+| cbrain | Launches Claude pointed at your Obsidian vault. Your daily driver after setup. |
+| cbraintg | Same as cbrain but with Telegram integration. |
 
 ### Shift+Tab — Toggle Permissions
 
@@ -533,6 +538,9 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 | Swarm Skill (`/rswarm`) | Type `/rswarm` followed by any task and Claude immediately launches 15 parallel agents to tackle it. A lead architect coordinates backend devs, testers, security auditors, and more — all working simultaneously. |
 | Mini Swarm Skill (`/rmini`) | Type `/rmini` followed by any task and Claude launches 5 focused agents — architect, developer, tester, reviewer, and researcher. Same parallel execution as `/rswarm`, just a tighter team for focused work. |
 | Hive Skill (`/rhive`) | Type `/rhive` followed by a goal and a queen agent takes full control. She decides what workers to spawn, how to coordinate them, and when the work is done. You set the goal and step back. |
+| Attention Skill (`/w4w`) | Word-for-word, line-for-line mode. Maximum attention to detail for critical tasks. |
+| TypeScript | Required by some Ruflo features. Installed globally. |
+| agentic-flow | Enables embeddings and advanced routing capabilities. |
 | Statusline | A real-time status bar that shows your active tools, model, session time, and context usage. When a swarm or hive is running, you'll see live indicators so you always know what's happening. |
 
 ### After Step 3
@@ -543,7 +551,7 @@ Your core tools are installed. Continue to Step 4 for design tools, Step 5 for v
 
 Claude Code can connect to MCP (Model Context Protocol) servers for extended capabilities. After running Step 3 (Ruflo), the MCP server is configured automatically.
 
-For manual MCP setup or troubleshooting, see the [Claude Code MCP documentation](https://docs.claude.ai/en/docs/mcp-servers).
+For manual MCP setup or troubleshooting, see the [Claude Code MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp-servers).
 
 #### Verify MCP Connection
 

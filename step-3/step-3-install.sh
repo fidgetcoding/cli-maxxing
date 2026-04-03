@@ -730,6 +730,15 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    # W4W skill (/w4w)
+    if [ -f "$HOME/.claude/skills/w4w/SKILL.md" ]; then
+        success "TEST: W4W skill (/w4w) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: W4W skill (/w4w) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     # Statusline
     if [ -f "$HOME/.claude/statusline.sh" ] && [ -x "$HOME/.claude/statusline.sh" ]; then
         success "TEST: Statusline script installed"
