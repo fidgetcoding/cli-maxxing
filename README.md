@@ -109,7 +109,7 @@ This is a quick reference for terminal hotkeys, typing basics, launching Claude,
 
 **[Open the full Cheat Sheet →](CHEATSHEET.md)**
 
-Here are the seven commands you'll use most:
+Here are the eight commands you'll use most:
 
 | Command | What it does |
 |---------|-------------|
@@ -1030,6 +1030,20 @@ Or manually:
 }
 ```
 3. Restart Claude Code
+
+### Verify Everything Works
+
+After the status line installs, run a quick check to make sure every command, skill, and tool from the setup was installed correctly.
+
+> [!IMPORTANT]
+> **Open a new `cskip` session and paste this:**
+> ```
+> Open the cheat sheet at CHEATSHEET.md in this repo and go through every command, skill, and tool listed there. For each one, verify it's installed and working on my machine. If anything is missing, broken, or not configured, fix it. Give me a summary of what passed and what you had to fix.
+> ```
+
+This tells Claude to cross-reference the cheatsheet against your actual system and fill in any gaps. It's the final sanity check — if a skill didn't install, an MCP didn't connect, or an alias didn't register, Claude will catch it and fix it right there.
+
+> **Note:** Use `cskip` for this step, not `cbrain`. The `cbrain` command requires your Obsidian vault to exist. If you haven't finished Step 7 yet, or if something went wrong during vault setup, `cbrain` will error out. `cskip` always works.
 
 ### After Step 8
 

@@ -125,7 +125,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Google Calendar | Add-on | Natural language — calendar events, meeting times, availability | "Find a free slot for a meeting tomorrow" |
 | Telegram | Add-on | Automatic when launched with `ctg` or `cbraintg` — reads and replies to Telegram messages | (messages arrive automatically from connected chats) |
 
-> **Key distinction:** Slash commands (`/rswarm`, `/rhive`, `/pretext`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+> **Key distinction:** Slash commands (`/rswarm`, `/rmini`, `/rhive`, `/pretext`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
 > **Add-on tools** are not part of the 8-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed.
 
