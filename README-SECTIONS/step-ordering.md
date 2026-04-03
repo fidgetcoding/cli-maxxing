@@ -5,10 +5,12 @@ Run the steps in this order:
 | Step | Name | What it does |
 |------|------|-------------|
 | 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
+| Bonus | Ghostty Terminal | GPU-accelerated terminal (optional) |
+| Bonus | Arc Browser | Power-user browser with sidebar tabs (optional, macOS) |
 | 2 | Dev Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic |
-| 5 | Visual Media | Remotion + FFmpeg + YouTube Transcripts |
+| 5 | Visual Media | Remotion + YouTube Transcripts + IG/Social Transcription + FFmpeg |
 | 6 | Productivity Tools | Motion Calendar + Notion (pick what you use) |
 | 7 | Second Brain | Obsidian vault setup + data import (7a-7d) |
 | **8** | **Status Line** | **Final config — status indicators, system health check** |
