@@ -64,7 +64,7 @@ HIVE=""
 HIVE_LOCK="/tmp/ruflo-hive-active"
 if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
   if pgrep -f "hive-mind|claude-flow.*hive|ruflo.*hive" >/dev/null 2>&1; then
-    HIVE="🍯 Hive"
+    HIVE="👑 Hive"
   else
     # Stale lock file — no hive processes running, clean up
     rm -f "$HIVE_LOCK" 2>/dev/null

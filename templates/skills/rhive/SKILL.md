@@ -18,7 +18,7 @@ The queen decides how many workers to spawn, what roles they need, how to coordi
 ## Execution Steps
 
 1. Read the user's goal (everything they typed after `/rhive`)
-2. **Signal status line**: Run `touch /tmp/ruflo-hive-active` via Bash to light up the 🍯 indicator
+2. **Signal status line**: Run `touch /tmp/ruflo-hive-active` via Bash to light up the 👑 indicator
 3. Initialize the hive-mind in ONE message:
    - Call `mcp__claude-flow__hive-mind_init` with consensus `raft`
    - Spawn a queen agent (hierarchical-coordinator type) via the Agent tool with `run_in_background: true`
@@ -31,7 +31,7 @@ The queen decides how many workers to spawn, what roles they need, how to coordi
      f. Instructions to present final synthesized output when complete
 4. After spawning the queen, STOP. Do not poll. Do not check status. The queen runs the show.
 5. When the queen returns results, present them to the user.
-6. **Clear status line**: Run `rm -f /tmp/ruflo-hive-active` via Bash to turn off the 🍯 indicator
+6. **Clear status line**: Run `rm -f /tmp/ruflo-hive-active` via Bash to turn off the 👑 indicator
 
 ## Queen Agent Behavior
 

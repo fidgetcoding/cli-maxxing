@@ -97,7 +97,8 @@ When these tools are active, you may see indicators in your Claude session:
 | ⚡ Ruflo | Ruflo MCP server is connected |
 | 🎨 UIPro | Design skill is loaded (always on after Step 4) |
 | 🐝 Swarm | Swarm is active (after `/rswarm`) — number shows agent count |
-| 🍯 Hive | Hive-mind is active (after `/rhive`) |
+| 🍯 Mini | Mini swarm is active (after `/rmini`) |
+| 👑 Hive | Hive-mind is active (after `/rhive`) |
 
 ---
 

@@ -44,7 +44,8 @@ Close and reopen Claude Code for the status line to take effect.
 | ⚡ Ruflo | claude-flow MCP server is running |
 | 🎨 UIPro | Always shown (global skill, always available) |
 | 🐝 Swarm | Active swarm session (with agent count if available) |
-| 🍯 Hive | Active hive-mind session |
+| 👑 Hive | Active hive-mind session |
+| 🍯 Mini | Active mini swarm session |
 
 ## Swarm/Hive Lock Files
 
