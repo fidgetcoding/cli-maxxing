@@ -147,6 +147,8 @@ This step is the foundation. It installs the minimum needed to get Claude Code w
 > curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-1/step-1-install.sh | bash
 > ```
 
+> **It will ask for your Mac password.** The script needs it to install system tools. When you see `Password:`, type your Mac login password and hit Enter. The install will pause until you do this. You won't see what you're typing — no characters, no dots, just a lock icon or a blank line. That's normal. Just type it and press Enter.
+
 ### What This Step Installs
 
 These are the tools that get installed automatically when you run the command above:
