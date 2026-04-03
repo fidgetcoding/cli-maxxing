@@ -118,7 +118,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Notion | Step 6 | Natural language — pages, databases, knowledge management | "Search my Notion for the meeting notes" |
 | No-Flicker Mode | Step 2 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
-| Obsidian | Step 7 | Natural language — anything about notes, vault, search, or knowledge management | "Search my vault for notes about machine learning" |
+| Obsidian | Add-on | Natural language — MCP add-on for vault access (notes, search, knowledge management) | "Search my vault for notes about machine learning" |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
 | Figma | Add-on | Natural language or paste a Figma URL — design-to-code, inspect designs | "Turn this Figma into React components" |
 | Excalidraw | Add-on | Natural language — diagrams, flowcharts, whiteboard sketches | "Draw a system architecture diagram" |
@@ -158,11 +158,11 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 
 | Command | What it does |
 |---------|-------------|
-| `npx @claude-flow/cli@latest doctor --fix` | Diagnose and fix Ruflo installation issues |
-| `npx @claude-flow/cli@latest daemon start` | Start the Ruflo background daemon |
-| `npx @claude-flow/cli@latest swarm status` | Check the status of any running swarm |
-| `npx @claude-flow/cli@latest memory search --query "..."` | Search your agent memory for past context |
-| `npx @claude-flow/cli@latest memory list` | List all stored memory entries |
+| `npx ruflo@latest doctor --fix` | Diagnose and fix Ruflo installation issues |
+| `npx ruflo@latest daemon start` | Start the Ruflo background daemon |
+| `npx ruflo@latest swarm status` | Check the status of any running swarm |
+| `npx ruflo@latest memory search --query "..."` | Search your agent memory for past context |
+| `npx ruflo@latest memory list` | List all stored memory entries |
 
 ---
 
@@ -184,7 +184,7 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 | `cskip` not recognized | Run `source ~/.zshrc` to reload your shell config |
 | Claude asks for login | Run `claude` once normally and complete the browser login flow |
 | Shift+Tab does nothing | Make sure you are inside an active Claude session (not at a normal shell prompt) |
-| Swarm not responding | Run `npx @claude-flow/cli@latest doctor --fix` to diagnose |
+| Swarm not responding | Run `npx ruflo@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
 | `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
 | Obsidian vault not found | Tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
