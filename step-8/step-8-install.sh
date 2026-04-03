@@ -75,13 +75,13 @@ fi
 # =============================================================================
 # Check Existing Configuration
 # =============================================================================
-TOKEN_FILE="$HOME/.claude/telegram-bot-token"
-CONFIG_DIR="$HOME/.claude/telegram"
+CONFIG_DIR="$HOME/.claude/channels/telegram"
+TOKEN_FILE="$CONFIG_DIR/.env"
 ACCESS_FILE="$CONFIG_DIR/access.json"
 SKIP_TOKEN=false
 
-if [ -f "$TOKEN_FILE" ]; then
-    EXISTING_TOKEN=$(cat "$TOKEN_FILE" 2>/dev/null)
+if [ -f "$TOKEN_FILE" ] && grep -q 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/null; then
+    EXISTING_TOKEN=$(grep 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/null | cut -d= -f2)
     # Mask the token for display
     if [ ${#EXISTING_TOKEN} -gt 12 ]; then
         MASKED="${EXISTING_TOKEN:0:4}...${EXISTING_TOKEN: -4}"
@@ -149,8 +149,8 @@ if [ "$SKIP_TOKEN" = false ]; then
 
     # Save token
     info "Saving bot token..."
-    mkdir -p "$HOME/.claude"
-    echo "$BOT_TOKEN" > "$TOKEN_FILE"
+    mkdir -p "$CONFIG_DIR"
+    echo "TELEGRAM_BOT_TOKEN=$BOT_TOKEN" > "$TOKEN_FILE"
     chmod 600 "$TOKEN_FILE"
     success "Token saved to $TOKEN_FILE (permissions: 600)"
 fi
@@ -211,7 +211,7 @@ fi
 
 # Test 2: Token format valid
 if [ -f "$TOKEN_FILE" ]; then
-    SAVED_TOKEN=$(cat "$TOKEN_FILE" 2>/dev/null)
+    SAVED_TOKEN=$(grep 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/null | cut -d= -f2)
     if [[ "$SAVED_TOKEN" =~ ^[0-9]+:[A-Za-z0-9_-]+$ ]]; then
         success "TEST: Token format is valid"
         TEST_PASS=$((TEST_PASS + 1))

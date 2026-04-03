@@ -64,16 +64,9 @@ fi
 echo ""
 echo -e "${BLUE}--- Step 8: Telegram ---${NC}"
 
-if [ -f "$HOME/.claude/telegram-bot-token" ]; then
-    rm -f "$HOME/.claude/telegram-bot-token"
-    success "Telegram bot token"
-else
-    skip "Telegram bot token (not found)"
-fi
-
-if [ -d "$HOME/.claude/telegram" ]; then
-    rm -rf "$HOME/.claude/telegram"
-    success "Telegram config directory"
+if [ -d "$HOME/.claude/channels/telegram" ]; then
+    rm -rf "$HOME/.claude/channels/telegram"
+    success "Telegram config directory (~/.claude/channels/telegram)"
 else
     skip "Telegram config directory (not found)"
 fi
