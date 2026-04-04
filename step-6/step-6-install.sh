@@ -141,12 +141,12 @@ install_motion_calendar() {
 
     # Write config
     mkdir -p "$HOME/.motion-calendar-mcp"
-    cat > "$HOME/.motion-calendar-mcp/.env" <<ENVEOF
-MOTION_API_KEY=${MOTION_API_KEY}
-FIREBASE_API_KEY=${FIREBASE_API_KEY}
-FIREBASE_REFRESH_TOKEN=${FIREBASE_REFRESH_TOKEN}
-MOTION_USER_ID=${MOTION_USER_ID}
-ENVEOF
+    {
+      printf 'MOTION_API_KEY=%s\n' "$MOTION_API_KEY"
+      printf 'FIREBASE_API_KEY=%s\n' "$FIREBASE_API_KEY"
+      printf 'FIREBASE_REFRESH_TOKEN=%s\n' "$FIREBASE_REFRESH_TOKEN"
+      printf 'MOTION_USER_ID=%s\n' "$MOTION_USER_ID"
+    } > "$HOME/.motion-calendar-mcp/.env"
 
     chmod 600 "$HOME/.motion-calendar-mcp/.env"
 

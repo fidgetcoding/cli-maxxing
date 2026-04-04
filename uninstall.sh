@@ -59,6 +59,19 @@ if [ -f "$HOME/.claude/settings.json" ]; then
 fi
 
 # -----------------------------------------------------------------------------
+# Step 9 — SafetyCheck
+# -----------------------------------------------------------------------------
+echo ""
+echo -e "${BLUE}--- Step 9: SafetyCheck ---${NC}"
+
+if [ -d "$HOME/.claude/skills/safetycheck" ]; then
+    rm -rf "$HOME/.claude/skills/safetycheck"
+    success "SafetyCheck skill (~/.claude/skills/safetycheck)"
+else
+    skip "SafetyCheck skill (not found)"
+fi
+
+# -----------------------------------------------------------------------------
 # Step 8 — Telegram
 # -----------------------------------------------------------------------------
 echo ""
