@@ -4,3 +4,20 @@
 .mcp.json
 CLAUDE.md
 .DS_Store
+
+# Environment / secrets
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+
+# Private keys and certificates
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+
+# Node (defensive — step scripts may install deps)
+node_modules/

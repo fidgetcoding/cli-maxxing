@@ -20,6 +20,7 @@ Everything you need to start working with AI-powered development tools, installe
 | [Step 6](#step-6---productivity-tools) | Productivity Tools | Motion Calendar + Notion (pick what you use) | ~5 min |
 | [Step 7](#step-7---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | ~30+ min |
 | [Step 8](#step-8---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
+| [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities | ~2 min |
 | [Final Step](#final-step---status-line) | Status Line | Final config — status indicators wired up | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
@@ -84,6 +85,8 @@ Run the steps in order. Each one builds on the last.
 **[Step 7](#step-7---second-brain-obsidian)** sets up your personal knowledge management system in Obsidian. This is the biggest step but also the most rewarding. It's the transition from setup to daily use.
 
 **[Step 8](#step-8---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected — messages show up in your session in real time. This step is completely optional; everything else works without it.
+
+**[Step 9](#step-9---safety-check)** installs a security auditing skill that lets Claude scan any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and more. Just point Claude at a project and ask it to run a safety check. It catches the stuff that slips through code review.
 
 **[Final Step](#final-step---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also runs a final verification to make sure every command and tool from the cheat sheet is installed and working.
 
@@ -1031,6 +1034,48 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 
 ---
 
+## Step 9 - Safety Check
+
+[Back to top](#quick-nav)
+
+This step installs a security auditing skill that lets Claude scan any project for vulnerabilities. Exposed API keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, insecure configurations — the stuff that slips through code review. You point Claude at a project and tell it to run a safety check. It does the rest.
+
+### What It Does
+
+The `/safetycheck` skill gives Claude a structured security audit framework. Instead of asking Claude to "look for security issues" and hoping for the best, this skill runs a systematic scan across the categories that actually matter:
+
+- **Exposed secrets.** API keys, tokens, passwords, and credentials hardcoded in source files or committed to git.
+- **Missing rate limiting.** Endpoints that accept unlimited requests without throttling.
+- **Input sanitization gaps.** User input that flows into queries, commands, or file paths without validation.
+- **Dependency vulnerabilities.** Known CVEs in your npm, pip, or other package dependencies.
+- **Insecure configurations.** CORS misconfigurations, debug mode left on in production, permissive file permissions, and more.
+
+This isn't a replacement for a full security audit. It's a first line of defense — the kind of check you should run before every deploy, every PR, every time you hand code off to someone else.
+
+### Run Step 9
+
+You should still have a Claude session open. If you closed it, open your terminal and type `cskip` to start a new Claude session.
+
+Once you're inside the Claude session, paste this and hit Enter:
+
+> [!IMPORTANT]
+> **Paste this into your Claude session:**
+> ```
+> run this command to install the safety check skill: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-9/step-9-install.sh)
+> ```
+
+### What This Step Installs
+
+| Component | What it does |
+|-----------|-------------|
+| Safety Check Skill (`/safetycheck`) | A Claude Code skill that runs structured security audits on any project — exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. |
+
+### After Step 9
+
+Open any project in Claude and type `/safetycheck` to run a security audit. Claude will scan the project and report what it finds, organized by severity. You can also just ask Claude to "run a safety check on this project" in plain English and the skill kicks in automatically.
+
+---
+
 ## Final Step - Status Line
 
 [Back to top](#quick-nav)
@@ -1106,7 +1151,7 @@ That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with a
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
 - All permissions skipped — Claude acts immediately, no approval prompts
-- Full access to everything: `/rswarm`, `/rmini`, `/rhive`, `/w4w`, Ruflo, Context Hub, Motion Calendar, Notion, Obsidian, design tools, video tools — all of it
+- Full access to everything: `/rswarm`, `/rmini`, `/rhive`, `/w4w`, `/safetycheck`, Ruflo, Context Hub, Motion Calendar, Notion, Obsidian, design tools, video tools — all of it
 - Your status line shows what's active at a glance
 
 **When to use something else:**
@@ -1136,9 +1181,10 @@ Run the steps in this order:
 | 6 | Productivity Tools | Motion Calendar + Notion (optional) |
 | 7 | Second Brain | Obsidian vault setup + data import (7a-7d) |
 | 8 | Telegram | Telegram bot setup — message Claude from your phone |
+| 9 | Safety Check | Security auditing — scan projects for exposed keys, vulnerabilities, and more |
 | **Final** | **Status Line** | **Final config — status indicators, system health check** |
 
-> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is interactive — it walks you through creating a bot and pasting your token. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
+> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is interactive — it walks you through creating a bot and pasting your token. Step 9 (Safety Check) installs a security auditing skill for scanning projects. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
 
 ---
 
@@ -1182,7 +1228,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 **What it removes:**
 - Claude Code + shell aliases (cskip, ctg, cc, ccr, ccc, cbrain, cbraintg)
 - All MCP servers (Ruflo, claude-flow, Magic, YouTube Transcript, yt-dlp, Whisper, Obsidian, Motion Calendar, Notion)
-- All skills (rswarm, rmini, rhive, w4w, get-api-docs, UI/UX Pro Max, Remotion)
+- All skills (rswarm, rmini, rhive, w4w, get-api-docs, UI/UX Pro Max, Remotion, safetycheck)
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler)
 - Whisper models (~/.whisper/)
 - Motion Calendar config (~/.motion-calendar-mcp/)

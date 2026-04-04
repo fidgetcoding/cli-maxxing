@@ -100,6 +100,12 @@ echo ""
 curl -fsSL "$BASE_URL/step-8/step-8-install.sh" | bash
 echo ""
 
+# Step 9 (SafetyCheck)
+echo -e "${YELLOW}>>> Running Step 9 — SafetyCheck${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-9/step-9-install.sh" | bash
+echo ""
+
 # Final Step (Status Line — wrap-up)
 echo -e "${YELLOW}>>> Running Final Step — Status Line${NC}"
 echo ""
@@ -120,7 +126,7 @@ elif [ -f "$HOME/.bashrc" ]; then
 fi
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc, cbrain, cbraintg"
-echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w"
+echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck"
 echo ""
 echo "  Note: Steps 7b, 7c, 7d, and 6 are interactive. If you've"
 echo "  already completed them before, they just verify your setup."
