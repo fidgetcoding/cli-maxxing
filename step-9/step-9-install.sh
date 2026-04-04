@@ -204,7 +204,7 @@ run_self_test() {
     fi
 
     # Test 5: Skill file contains all 8 checks
-    CHECK_COUNT=$(grep -c "^### Check" "$SKILL_FILE" 2>/dev/null || echo "0")
+    CHECK_COUNT=$(grep -c "^#\{2,4\} Check [0-9]" "$SKILL_FILE" 2>/dev/null || echo "0")
     if [ "$CHECK_COUNT" -ge 8 ]; then
         success "TEST: SKILL.md defines all 8 security checks"
         TEST_PASS=$((TEST_PASS + 1))
