@@ -20,7 +20,7 @@ Everything you need to start working with AI-powered development tools, installe
 | [Step 6](#step-6---productivity-tools) | Productivity Tools | Motion Calendar + Notion (pick what you use) | ~5 min |
 | [Step 7](#step-7---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | ~30+ min |
 | [Step 8](#step-8---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
-| [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities | ~2 min |
+| [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
 | [Final Step](#final-step---status-line) | Status Line | Final config — status indicators wired up | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
@@ -1038,17 +1038,27 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 
 [Back to top](#quick-nav)
 
-This step installs a security auditing skill that lets Claude scan any project for vulnerabilities. Exposed API keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, insecure configurations — the stuff that slips through code review. You point Claude at a project and tell it to run a safety check. It does the rest.
+This step installs a security auditing skill that lets Claude scan any project for vulnerabilities. Exposed API keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, insecure configurations — the stuff that slips through code review. For MCP projects, it automatically activates 12 additional checks covering tool poisoning, prompt injection vectors, transport security, authentication, and supply chain attacks. You point Claude at a project and tell it to run a safety check. It does the rest.
 
 ### What It Does
 
 The `/safetycheck` skill gives Claude a structured security audit framework. Instead of asking Claude to "look for security issues" and hoping for the best, this skill runs a systematic scan across the categories that actually matter:
 
-- **Exposed secrets.** API keys, tokens, passwords, and credentials hardcoded in source files or committed to git.
+**API Security (all projects):**
+- **Exposed secrets.** API keys, tokens, passwords hardcoded in source files, git history, or MCP config files.
 - **Missing rate limiting.** Endpoints that accept unlimited requests without throttling.
-- **Input sanitization gaps.** User input that flows into queries, commands, or file paths without validation.
-- **Dependency vulnerabilities.** Known CVEs in your npm, pip, or other package dependencies.
-- **Insecure configurations.** CORS misconfigurations, debug mode left on in production, permissive file permissions, and more.
+- **Input sanitization gaps.** User input flowing into queries, commands, file paths, or MCP tool handlers without validation.
+- **Dependency vulnerabilities.** Known CVEs in npm/pip packages, including MCP SDK version checks.
+- **Insecure configurations.** CORS misconfigurations, missing .gitignore entries, untracked secrets.
+
+**MCP Security (auto-activated for MCP projects):**
+- **Tool description integrity.** Hidden instructions, file path references, and injection markers in tool descriptions.
+- **Unicode smuggling.** Invisible Unicode characters used to hide malicious instructions from human reviewers.
+- **MCP transport security.** DNS rebinding vulnerabilities, HTTP vs HTTPS, known CVEs (CVE-2025-66414, CVE-2025-66416).
+- **MCP authentication.** Missing bearer auth on HTTP-based MCP servers.
+- **Supply chain hygiene.** `@latest` floating versions, rug-pull risk, unverified packages in MCP configs.
+- **Tool response sanitization.** Stack traces and raw errors leaking through tool results.
+- **Audit logging.** Missing structured logging for tool invocations.
 
 This isn't a replacement for a full security audit. It's a first line of defense — the kind of check you should run before every deploy, every PR, every time you hand code off to someone else.
 
@@ -1068,11 +1078,11 @@ Once you're inside the Claude session, paste this and hit Enter:
 
 | Component | What it does |
 |-----------|-------------|
-| Safety Check Skill (`/safetycheck`) | A Claude Code skill that runs structured security audits on any project — exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. |
+| Safety Check Skill (`/safetycheck`) | A Claude Code skill that runs 8 API security checks on any project, plus 12 MCP-specific checks when an MCP project is detected. Covers tool poisoning, prompt injection vectors, DNS rebinding CVEs, supply chain attacks, and more. |
 
 ### After Step 9
 
-Open any project in Claude and type `/safetycheck` to run a security audit. Claude will scan the project and report what it finds, organized by severity. You can also just ask Claude to "run a safety check on this project" in plain English and the skill kicks in automatically.
+Open any project in Claude and type `/safetycheck` to run a security audit. For standard projects, Claude runs 8 checks and reports findings by severity. For MCP projects, it automatically detects the project type and activates 12 additional MCP-specific checks. You can also ask Claude to "run a safety check" in plain English — the skill kicks in automatically.
 
 ---
 
@@ -1181,10 +1191,10 @@ Run the steps in this order:
 | 6 | Productivity Tools | Motion Calendar + Notion (optional) |
 | 7 | Second Brain | Obsidian vault setup + data import (7a-7d) |
 | 8 | Telegram | Telegram bot setup — message Claude from your phone |
-| 9 | Safety Check | Security auditing — scan projects for exposed keys, vulnerabilities, and more |
+| 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
 | **Final** | **Status Line** | **Final config — status indicators, system health check** |
 
-> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is interactive — it walks you through creating a bot and pasting your token. Step 9 (Safety Check) installs a security auditing skill for scanning projects. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
+> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is interactive — it walks you through creating a bot and pasting your token. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
 
 ---
 
