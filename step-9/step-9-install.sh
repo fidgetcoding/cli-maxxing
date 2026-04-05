@@ -203,13 +203,13 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
-    # Test 5: Skill file contains all 8 checks
-    CHECK_COUNT=$(grep -c "^#\{2,4\} Check [0-9]" "$SKILL_FILE" 2>/dev/null || echo "0")
-    if [ "$CHECK_COUNT" -ge 8 ]; then
-        success "TEST: SKILL.md defines all 8 security checks"
+    # Test 5: Skill file contains all 20 checks
+    CHECK_COUNT=$(grep -c "^#\{2,4\} Check [0-9][0-9]*" "$SKILL_FILE" 2>/dev/null || echo "0")
+    if [ "$CHECK_COUNT" -ge 20 ]; then
+        success "TEST: SKILL.md defines all 20 security checks"
         TEST_PASS=$((TEST_PASS + 1))
     else
-        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md only has $CHECK_COUNT/8 checks"
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md only has $CHECK_COUNT/20 checks"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -239,7 +239,7 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 9 Complete — /safetycheck Installed${NC}"
+    echo -e "${GREEN}  Step 9 Complete — /safetycheck Installed (20 checks)${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Installed:"
@@ -251,22 +251,37 @@ print_summary() {
     echo ""
     echo "  What it checks:"
     echo ""
-    echo "    1. Exposed API Keys        — hardcoded secrets + git history"
+    echo "    API Security (checks 1-8):"
+    echo "    1. Exposed API Keys        — hardcoded secrets, git history, MCP config"
     echo "    2. Rate Limiting            — endpoint protection middleware"
-    echo "    3. Input Sanitization       — eval, innerHTML, SQL injection"
+    echo "    3. Input Sanitization       — eval, innerHTML, SQL injection, tool handlers"
     echo "    4. RLS / Database Security  — parameterized queries, RLS policies"
-    echo "    5. Dependency Vulns         — npm audit, lockfile hygiene"
-    echo "    6. Gitignore Hygiene        — .env, *.pem, *.key coverage"
+    echo "    5. Dependency Vulns         — npm audit, MCP SDK CVEs, lockfile hygiene"
+    echo "    6. Gitignore Hygiene        — .env, *.pem, MCP config files"
     echo "    7. CI/CD & GitHub Security  — workflows, dependabot, SECURITY.md"
-    echo "    8. Error Handling           — raw error exposure to clients"
+    echo "    8. Error Handling           — raw error exposure, tool response leakage"
+    echo ""
+    echo "    MCP Security (checks 9-20, activated when MCP project detected):"
+    echo "    9.  Tool Description Integrity — injection markers, file paths, cross-tool refs"
+    echo "    10. Unicode Smuggling          — invisible chars, zero-width, tag characters"
+    echo "    11. Encoded Payloads           — Base64/hex in tool metadata"
+    echo "    12. MCP Transport Security     — HTTP vs HTTPS, DNS rebinding CVEs"
+    echo "    13. MCP Authentication         — bearer auth on HTTP MCP endpoints"
+    echo "    14. Token Scope & Lifecycle    — over-broad scopes, plaintext tokens"
+    echo "    15. Input Schema Validation    — tool schemas, additionalProperties"
+    echo "    16. Tool Response Sanitization — stack traces in tool results"
+    echo "    17. CORS / Origin Validation   — wildcard CORS on MCP endpoints"
+    echo "    18. Supply Chain & Config      — @latest pins, lockfile, .mcp.json hygiene"
+    echo "    19. Audit Logging              — structured logging, MCP notifications"
+    echo "    20. Rug-Pull Defense           — tool mutation, version pinning"
     echo ""
     if [ "$ERRORS" -gt 0 ]; then
         echo -e "  ${YELLOW}Warnings: $ERRORS non-critical issue(s) during install.${NC}"
         echo -e "  ${YELLOW}Scroll up to see details.${NC}"
         echo ""
     fi
-    echo -e "  ${YELLOW}Tip: Run /safetycheck in any project directory to get a${NC}"
-    echo -e "  ${YELLOW}severity-rated audit table with fix suggestions.${NC}"
+    echo -e "  ${YELLOW}Tip: Run /safetycheck in any project. MCP projects get${NC}"
+    echo -e "  ${YELLOW}12 additional security checks automatically.${NC}"
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
