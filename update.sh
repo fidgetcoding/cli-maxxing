@@ -117,18 +117,15 @@ echo -e "${GREEN}  Update complete. All steps are current.${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-# Reload shell config so new aliases (cskip, ctg, cc, ccr, ccc, cbrain, cbraintg) are active
-if [ -f "$HOME/.zshrc" ]; then
-    source "$HOME/.zshrc" 2>/dev/null || true
-elif [ -f "$HOME/.bashrc" ]; then
-    source "$HOME/.bashrc" 2>/dev/null || true
-fi
-
 echo "  Available commands: cskip, ctg, cc, ccr, ccc, cbrain, cbraintg"
 echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck"
 echo ""
-echo "  Note: Steps 7b, 7c, 7d, and 6 are interactive. If you've"
-echo "  already completed them before, they just verify your setup."
-echo "  If you haven't, follow the prompts to import your data"
-echo "  and choose your productivity tools."
+echo "  Note: Steps 6 and 8 require interactive input (API credentials"
+echo "  and Telegram bot token). They detected non-interactive mode and"
+echo "  were skipped. Run them directly in your terminal if needed:"
+echo ""
+echo "    Step 6: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
+echo "    Step 8: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)"
+echo ""
+echo "  Open a new terminal window for aliases to take effect."
 echo ""

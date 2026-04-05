@@ -119,40 +119,35 @@ if [ "$SKIP_TOKEN" = false ]; then
     echo "  Copy that token now."
     echo ""
 
-    # Prompt for token
-    while true; do
-        read -p "Paste your bot token here: " BOT_TOKEN
+    # Prompt for token — empty input skips setup
+    read -r -p "Paste your bot token here (press Enter to skip): " BOT_TOKEN
 
-        # Trim whitespace
-        BOT_TOKEN=$(echo "$BOT_TOKEN" | xargs)
+    # Trim whitespace
+    BOT_TOKEN=$(echo "$BOT_TOKEN" | xargs)
 
-        if [ -z "$BOT_TOKEN" ]; then
-            warn "Token cannot be empty. Try again."
-            continue
-        fi
-
+    if [ -z "$BOT_TOKEN" ]; then
+        echo ""
+        info "Telegram setup skipped. You can add your token later by re-running Step 8."
+        SKIP_TOKEN=true
+    else
         # Validate token format: digits, colon, alphanumeric + dash/underscore
         if [[ "$BOT_TOKEN" =~ ^[0-9]+:[A-Za-z0-9_-]+$ ]]; then
             success "Token format looks valid"
-            break
         else
             warn "Token format doesn't look right. Expected: 1234567890:ABC-DEF..."
             warn "Should be digits, a colon, then letters/numbers/dashes."
-            read -p "Try again? (Y/n): " RETRY
-            if [[ "$RETRY" =~ ^[Nn]$ ]]; then
-                fail "Aborted — no token saved."
-            fi
+            warn "Saving anyway — you can fix it later in $TOKEN_FILE"
         fi
-    done
 
-    echo ""
+        echo ""
 
-    # Save token
-    info "Saving bot token..."
-    mkdir -p "$CONFIG_DIR"
-    echo "TELEGRAM_BOT_TOKEN=$BOT_TOKEN" > "$TOKEN_FILE"
-    chmod 600 "$TOKEN_FILE"
-    success "Token saved to $TOKEN_FILE (permissions: 600)"
+        # Save token
+        info "Saving bot token..."
+        mkdir -p "$CONFIG_DIR"
+        echo "TELEGRAM_BOT_TOKEN=$BOT_TOKEN" > "$TOKEN_FILE"
+        chmod 600 "$TOKEN_FILE"
+        success "Token saved to $TOKEN_FILE (permissions: 600)"
+    fi
 fi
 
 # =============================================================================
