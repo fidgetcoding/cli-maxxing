@@ -69,6 +69,63 @@ else
     fi
 fi
 
+# -----------------------------------------------------------------------------
+# Post-install MCP verification — check configured paths actually exist
+# -----------------------------------------------------------------------------
+info "Verifying MCP configurations..."
+
+# Check Obsidian vault path in MCP config
+OBSIDIAN_MCP_LINE=$(claude mcp list 2>/dev/null | grep -i "obsidian" || true)
+if [ -n "$OBSIDIAN_MCP_LINE" ]; then
+    # The vault path was passed as an argument to obsidian-mcp during registration.
+    # Verify the vault path we just configured actually exists on disk.
+    if [ -d "$VAULT_PATH" ]; then
+        success "Obsidian MCP vault path verified: $VAULT_PATH exists"
+    else
+        warn "Obsidian MCP is configured but the vault path does not exist on disk: $VAULT_PATH"
+        echo ""
+        echo -e "    ${YELLOW}To fix this, remove and re-add the MCP with the correct path:${NC}"
+        echo "    claude mcp remove obsidian"
+        echo "    claude mcp add --scope user obsidian -- npx -y obsidian-mcp /path/to/your/vault"
+        echo ""
+    fi
+
+    # Verify the vault has the expected Zettelkasten structure
+    if [ -d "$VAULT_PATH/00-Inbox" ] && [ -d "$VAULT_PATH/03-Permanent" ]; then
+        success "Obsidian vault structure verified (00-Inbox, 03-Permanent exist)"
+    else
+        warn "Obsidian vault exists but may not have the expected folder structure."
+        echo "    Run Step 7a to create the Zettelkasten folders."
+    fi
+fi
+
+# Check for any other MCP servers that may have stale paths
+# (Motion Calendar uses .env, not a path arg, so check that separately)
+if claude mcp list 2>/dev/null | grep -q "motion-calendar"; then
+    if [ -f "$HOME/.motion-calendar-mcp/.env" ]; then
+        # Check if any required keys are empty
+        MOTION_EMPTY_KEYS=0
+        for key in MOTION_API_KEY FIREBASE_API_KEY FIREBASE_REFRESH_TOKEN MOTION_USER_ID; do
+            VAL=$(grep "^${key}=" "$HOME/.motion-calendar-mcp/.env" 2>/dev/null | cut -d= -f2)
+            if [ -z "$VAL" ]; then
+                MOTION_EMPTY_KEYS=$((MOTION_EMPTY_KEYS + 1))
+            fi
+        done
+        if [ "$MOTION_EMPTY_KEYS" -gt 0 ]; then
+            warn "Motion Calendar MCP has $MOTION_EMPTY_KEYS empty credential(s) in ~/.motion-calendar-mcp/.env"
+            echo "    Edit ~/.motion-calendar-mcp/.env and fill in the missing values."
+        else
+            success "Motion Calendar MCP credentials present"
+        fi
+    fi
+fi
+
+# Check Notion MCP token
+if claude mcp list 2>/dev/null | grep -q "notion"; then
+    # Notion token is passed as env var during mcp add — if the MCP is registered, the token was provided
+    success "Notion MCP registered"
+fi
+
 # Count current state
 INBOX_COUNT=$(find "$VAULT_PATH/00-Inbox" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
 FLEETING_COUNT=$(find "$VAULT_PATH/01-Fleeting" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')

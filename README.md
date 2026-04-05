@@ -19,7 +19,7 @@ Everything you need to start working with AI-powered development tools, installe
 | [Step 5](#step-5---visual-media) | Visual Media | Remotion video creation + YouTube transcripts + Instagram/social transcription | ~5 min |
 | [Step 6](#step-6---productivity-tools) | Productivity Tools | Motion Calendar + Notion (pick what you use) | ~5 min |
 | [Step 7](#step-7---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | ~30+ min |
-| [Step 8](#step-8---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
+| [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
 | [Final Step](#final-step---status-line) | Status Line | Final config — status indicators wired up | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
@@ -54,7 +54,7 @@ If you already know your way around a terminal and just want everything installe
 > curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh | bash
 > ```
 
-This includes both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Step 6 (Productivity Tools) and Step 8 (Telegram) will pause to ask for your input, so it's not completely hands-free. Everything else runs automatically.
+This includes both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Step 6 (Productivity Tools) requires interactive input for API credentials. Step 8 (Telegram) is optional — press Enter to skip it if you don't have a bot token yet. Everything else runs automatically.
 
 We recommend reading through the steps below first so you understand what each tool does — but the one-shot option is here if you want it.
 
@@ -850,8 +850,19 @@ Or just go to [obsidian.md/download](https://obsidian.md/download) and download 
 
 1. Open Obsidian. **How to find it:** On Mac, press **Cmd+Space** and type **Obsidian**. On Linux, look for "Obsidian" in your applications menu.
 2. Click **Create new vault**
-3. Name it something you'll remember. "2ndBrain" or "Second-Brain" or "Vault" all work fine.
-4. For the location, pick somewhere easy to find. We recommend your **Desktop** or a **Documents** folder. Don't bury it deep in some random directory.
+3. Name it something you'll remember. We recommend **"2ndBrain"** — the scripts and status line look for this name by default. "Second-Brain" or "Vault" also work.
+4. For the location, pick your **Desktop**. The scripts search these locations in order:
+   - `~/Desktop/WORK/OBSIDIAN/2ndBrain`
+   - `~/Desktop/2ndBrain` *(recommended for most people)*
+   - `~/Desktop/Second-Brain`
+   - `~/Desktop/Vault`
+   - `~/Documents/2ndBrain`
+   - `~/Documents/Second-Brain`
+
+   If your vault is somewhere else, set the `VAULT_PATH` environment variable before running Step 7:
+   ```bash
+   export VAULT_PATH=~/path/to/your/vault
+   ```
 5. Click **Create**
 
 Obsidian will open with an empty vault. That's perfect. Now Claude will set it up for you.
@@ -1105,6 +1116,8 @@ This is the wrap-up step. It installs a custom status line that shows you what's
 
 The status line also shows your current model, session duration, and context window usage.
 
+The brain indicator detects your vault by checking if your current working directory contains "2ndBrain", "Second-Brain", "Vault", or "MASTER" in the path — no configuration needed. It works regardless of where your vault lives.
+
 ### Run Final Step
 
 > [!IMPORTANT]
@@ -1141,6 +1154,65 @@ This tells Claude to cross-reference the cheatsheet against your actual system a
 ### After Final Step
 
 Setup is complete. Head to **[You're Ready](#youre-ready)** below for your daily command.
+
+---
+
+## Troubleshooting
+
+[Back to top](#quick-nav)
+
+### Telegram: pressing Enter skips setup
+
+This is intentional. If you press Enter without pasting a token, the script skips Telegram setup and continues. You can always re-run Step 8 later when you have your bot token ready.
+
+### Step 6 (Productivity Tools) skips when run through the update command
+
+Step 6 requires interactive input for API credentials. When run via `curl | bash` (including through the update command), it detects non-interactive mode and exits with instructions.
+
+**Fix:** Run Step 6 directly in your terminal:
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+```
+
+### Obsidian MCP returns internal errors
+
+After Step 7d installs the Obsidian MCP server, you might see "internal error" messages when Claude tries to use it. This is usually a temporary issue with the upstream `obsidian-mcp` package.
+
+**Fix:** Try these in order:
+1. Close and reopen your Claude session (`Ctrl+C`, then `cskip` or `cbrain`)
+2. Re-add the MCP server manually:
+   ```bash
+   claude mcp add --scope user obsidian -- npx -y obsidian-mcp ~/Desktop/2ndBrain
+   ```
+   (Replace with your actual vault path)
+3. If it still errors, Claude can read and write files in your vault directly — the Obsidian MCP is a convenience layer, not a hard requirement
+
+### `cbrain` says it can't find my vault
+
+The `cbrain` command searches a fixed list of common locations. If your vault isn't in one of those spots, set the `VAULT_PATH` environment variable:
+
+```bash
+export VAULT_PATH=~/path/to/your/vault
+cbrain
+```
+
+Or add it permanently to your `~/.zshrc`:
+```bash
+export VAULT_PATH="$HOME/path/to/your/vault"
+```
+
+### Status line doesn't show the brain indicator
+
+The brain indicator appears when your working directory contains "2ndBrain", "Second-Brain", "Vault", or "MASTER" in the path. If you named your vault something different, edit `~/.claude/statusline.sh` and update the detection pattern to include your vault name.
+
+### A step failed or something is missing
+
+Run the update command to re-run everything. It skips what's already installed and fills in any gaps:
+```bash
+curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh | bash
+```
+
+Or open a `cskip` session and describe the problem to Claude. It can diagnose and fix most issues on the spot.
 
 ---
 
@@ -1190,11 +1262,11 @@ Run the steps in this order:
 | 5 | Visual Media | Remotion + YouTube Transcripts + IG/Social Transcription + FFmpeg |
 | 6 | Productivity Tools | Motion Calendar + Notion (optional) |
 | 7 | Second Brain | Obsidian vault setup + data import (7a-7d) |
-| 8 | Telegram | Telegram bot setup — message Claude from your phone |
+| 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
 | **Final** | **Status Line** | **Final config — status indicators, system health check** |
 
-> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is interactive — it walks you through creating a bot and pasting your token. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
+> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is completely optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
 
 ---
 

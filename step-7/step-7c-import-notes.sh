@@ -57,9 +57,14 @@ fi
 VAULT_PATH="${VAULT_PATH:-}"
 if [ -z "$VAULT_PATH" ]; then
     for candidate in \
+        "$HOME/Desktop/WORK/OBSIDIAN/2ndBrain" \
+        "$HOME/Desktop/WORK/OBSIDIAN/Second-Brain" \
+        "$HOME/Desktop/OBSIDIAN/2ndBrain" \
+        "$HOME/Desktop/OBSIDIAN/Second-Brain" \
         "$HOME/Desktop/2ndBrain" \
         "$HOME/Desktop/Second-Brain" \
         "$HOME/Desktop/Vault" \
+        "$HOME/Documents/OBSIDIAN/2ndBrain" \
         "$HOME/Documents/2ndBrain" \
         "$HOME/Documents/Second-Brain"; do
         if [ -d "$candidate/00-Inbox" ]; then
@@ -68,7 +73,7 @@ if [ -z "$VAULT_PATH" ]; then
         fi
     done
     if [ -z "$VAULT_PATH" ]; then
-        FOUND=$(find "$HOME/Desktop" "$HOME/Documents" -maxdepth 3 -name "00-Inbox" -type d 2>/dev/null | head -1)
+        FOUND=$(find "$HOME/Desktop" "$HOME/Documents" -maxdepth 5 -name "00-Inbox" -type d 2>/dev/null | head -1)
         if [ -n "$FOUND" ]; then
             VAULT_PATH="$(dirname "$FOUND")"
         fi
