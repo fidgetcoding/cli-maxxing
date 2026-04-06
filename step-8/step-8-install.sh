@@ -120,7 +120,8 @@ if [ "$SKIP_TOKEN" = false ]; then
     echo ""
 
     # Prompt for token — empty input skips setup
-    read -r -p "Paste your bot token here (press Enter to skip): " BOT_TOKEN
+    read -rsp "Paste your bot token here (press Enter to skip): " BOT_TOKEN
+    echo ""
 
     # Trim whitespace
     BOT_TOKEN=$(echo "$BOT_TOKEN" | xargs)
