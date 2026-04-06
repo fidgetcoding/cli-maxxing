@@ -220,9 +220,9 @@ The `obsidian-mcp` npm package may return internal errors at runtime. This is an
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
-| Prerequisites | Checks claude, ctg alias, cbraintg | PASS |
+| Prerequisites | Checks claude, ctg script, cbraintg | PASS |
 | Existing config | No token file -- proceeds to prompt | PASS |
-| Token prompt (line 123) | Single `read -r -p` with skip message | PASS -- **BUG WAS FIXED** |
+| Token prompt (line 123) | Silent `read -rsp` with skip message (token hidden on paste) | PASS |
 | Empty input | Sets `SKIP_TOKEN=true`, continues | PASS |
 | Non-interactive (pipe) | `read` gets EOF, token is empty, skip path activates | PASS |
 

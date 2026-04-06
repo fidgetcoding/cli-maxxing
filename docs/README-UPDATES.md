@@ -117,15 +117,15 @@ After Step 7d installs the Obsidian MCP server, you might see "internal error" m
 
 ### `cbrain` says it can't find my vault
 
-The `cbrain` command searches a fixed list of common locations. If your vault isn't in one of these spots, set the `VAULT` environment variable:
+The `cbrain` command searches a fixed list of common locations. If your vault isn't in one of these spots, set the `VAULT_PATH` environment variable:
 
 ```bash
-VAULT=~/path/to/your/vault cbrain
+VAULT_PATH=~/path/to/your/vault cbrain
 ```
 
 Or add it permanently to your `~/.zshrc`:
 ```bash
-export VAULT="$HOME/path/to/your/vault"
+export VAULT_PATH="$HOME/path/to/your/vault"
 ```
 
 ### Status line doesn't show the brain emoji
