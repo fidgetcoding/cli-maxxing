@@ -39,7 +39,7 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | `cc` | Short alias for `claude` |
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
-| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 7)* |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Step 7 — Second Brain setup. Do not use until your vault exists.)* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected |
 | `ctg` | Skip-permissions + Telegram channel connected (any directory) |
 | `g2` | Tile 2 Ghostty windows side by side, filling your screen *(requires Ghostty — Bonus step, macOS only)* |
@@ -97,9 +97,10 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 | `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
 | `/w4w` | Step 3 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
 | `/safetycheck` | Step 9 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English |
+| `/gitfix` | Final Step | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality |
 
 
-> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/rmini` is the compact version of `/rswarm` — 5 agents instead of 15. `/safetycheck` also works in natural language.
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/rmini` is the compact version of `/rswarm` — 5 agents instead of 15. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme").
 
 ---
 

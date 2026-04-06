@@ -17,11 +17,11 @@ Everything you need to start working with AI-powered development tools, installe
 | [Step 3](#step-3---ruflo--context-hub) | Ruflo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [Step 4](#step-4---design-tools) | Design Tools | UI/UX skills + component generation | ~3 min |
 | [Step 5](#step-5---visual-media) | Visual Media | Remotion video creation + YouTube transcripts + Instagram/social transcription | ~5 min |
-| [Step 6](#step-6---productivity-tools) | Productivity Tools | Motion Calendar + Notion (pick what you use) | ~5 min |
+| [Step 6](#step-6---productivity-tools) | Productivity Tools | Motion Calendar + Notion + Granola + Google Calendar (pick what you use) | ~5 min |
 | [Step 7](#step-7---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | ~30+ min |
 | [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
-| [Final Step](#final-step---status-line) | Status Line | Final config — status indicators wired up | ~2 min |
+| [Final Step](#final-step---status-line) | Status Line + /gitfix | Final config — status indicators + /gitfix skill installed | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
 | [Staying Up to Date](#staying-up-to-date) | Update command | Re-run everything, catch new steps | |
@@ -80,7 +80,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 5](#step-5---visual-media)** gives Claude the ability to create videos programmatically using React, pull transcripts from any YouTube video, and download + transcribe content from Instagram Reels and other social platforms. Animations, captions, transitions, data visualizations — all generated from code. YouTube transcripts — just paste a link. Instagram Reels — paste a link and Claude downloads the audio and transcribes it locally.
 
-**[Step 6](#step-6---productivity-tools)** connects Claude to your productivity tools — your calendar and your notes. Pick the ones you use: Motion Calendar for seeing and managing your schedule, or Notion for your knowledge base. All optional, install only what you need.
+**[Step 6](#step-6---productivity-tools)** connects Claude to your productivity tools — your calendar, notes, and meetings. Pick the ones you use: Motion Calendar, Google Calendar, Notion, or Granola. All optional, install only what you need.
 
 **[Step 7](#step-7---second-brain-obsidian)** sets up your personal knowledge management system in Obsidian. This is the biggest step but also the most rewarding. It's the transition from setup to daily use.
 
@@ -88,7 +88,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 9](#step-9---safety-check)** installs a security auditing skill that lets Claude scan any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and more. Just point Claude at a project and ask it to run a safety check. It catches the stuff that slips through code review.
 
-**[Final Step](#final-step---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also runs a final verification to make sure every command and tool from the cheat sheet is installed and working.
+**[Final Step](#final-step---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also installs the `/gitfix` skill and runs a final verification to make sure every command and tool from the cheat sheet is installed and working.
 
 After the Final Step, head to **[You're Ready](#youre-ready)** — it tells you the one command you need going forward and what to do next.
 
@@ -167,9 +167,10 @@ These are the tools that get installed automatically when you run the command ab
 | nvm | Node Version Manager — installs and manages Node.js versions. |
 | Node.js (v18+) | This runs JavaScript. Claude Code needs it to work. |
 | Claude Code | This is your AI coding assistant. The main tool you'll be using. |
-| Shell aliases | Shortcuts: `cskip`, `cc`, `ccr`, `ccc`, `ctg` — faster ways to launch Claude with different settings. |
-| cbrain | Launches Claude pointed at your Obsidian vault. Your daily driver after setup. |
-| cbraintg | Same as cbrain but with Telegram integration. |
+| Shell aliases | Shortcuts: `cskip`, `cc`, `ccr`, `ccc` — faster ways to launch Claude with different settings. |
+| cbrain | Launches Claude pointed at your Obsidian vault. Your daily driver after Step 7. Do not use until your vault is set up. |
+| ctg | Launches Claude with Telegram connected from any directory. Includes a token check — exits cleanly if no token is configured. |
+| cbraintg | Same as cbrain but with Telegram integration. Includes the same token check as ctg. |
 
 ### Shift+Tab — Toggle Permissions
 
@@ -732,6 +733,7 @@ Once installed, these tools work through natural language. No commands to memori
 - *"Schedule a meeting called Team Sync tomorrow at 2pm"*
 - *"Search my Notion for the meeting notes from last week"*
 - *"Create a new page in Notion called Project Roadmap"*
+- *"What were the key points from my last meeting?"*
 
 Claude picks the right tool automatically based on what you ask. You never need to think about which MCP is handling it.
 
@@ -759,6 +761,25 @@ Built by [@notionhq](https://github.com/makenotion/notion-mcp-server) — the of
 
 > **Requires:** A free Notion account and an integration token. Go to [notion.so/profile/integrations](https://www.notion.so/profile/integrations), create a new integration named "Claude Code", select your workspace, and copy the token (starts with `ntn_`). Then share any pages you want Claude to access: on each page, click the `...` menu > **Connections** > add your integration. Claude can only see pages you explicitly share.
 
+### Granola
+
+[Granola](https://granola.ai) is an AI meeting notes app for Mac. This MCP connects Claude to your Granola library — all your meeting transcripts and notes, searchable through conversation.
+
+- **Meeting transcripts.** Ask Claude what was decided in a meeting, who said what, or what action items came out of it.
+- **Search across meetings.** Find notes from a specific person, project, or topic without digging through folders.
+- **Zero config.** No API keys needed — Granola handles auth through the app itself.
+
+> **Requires:** Granola installed and signed in on your Mac. Get it at [granola.ai](https://granola.ai).
+
+### Google Calendar
+
+Direct Google Calendar access via OAuth. Use this if you primarily live in Google Calendar rather than Motion.
+
+- **See your schedule.** Ask Claude what's on your calendar, check availability, or search for specific events.
+- **Create and manage events.** Add, update, or remove calendar events through conversation.
+
+> **Requires:** A Google account and ~5 minutes to create OAuth credentials in Google Cloud Console. The setup script walks you through it step by step.
+
 ### Run Step 6
 
 You should still have a Claude session open. If you closed it, open your terminal and type `cskip` to start a new Claude session.
@@ -777,10 +798,12 @@ Once you're inside the Claude session, paste this and hit Enter:
 |-----------|-------------|
 | Motion Calendar MCP | Full calendar access — events, availability, scheduling. Uses Motion's internal API for features the public API doesn't have. |
 | Notion MCP | Official Notion integration — pages, databases, search, content management. 22 tools. |
+| Granola MCP | Meeting transcript access — search and query your Granola meeting notes through conversation. |
+| Google Calendar MCP | Direct Google Calendar access via OAuth — events, availability, scheduling. |
 
 ### After Step 6
 
-You now have your productivity stack connected to Claude. Ask about your schedule, create tasks, search your Notion — all from your terminal. If you skipped any tools, you can always come back and re-run Step 6 to add them.
+You now have your productivity stack connected to Claude. Ask about your schedule, search your meeting notes, query your Notion — all from your terminal. If you skipped any tools, you can always come back and re-run Step 6 to add them.
 
 ---
 
@@ -1043,6 +1066,8 @@ This step connects Claude to Telegram so you can message it from your phone. You
 
 Open a new terminal and run `ctg` to launch Claude with Telegram connected. Inside your Claude session, tell it to pair your Telegram bot. Once paired, messages you send from Telegram will appear in your Claude session in real time. You can also use `cbraintg` to launch with both Telegram and your 2ndBrain vault loaded.
 
+> **If you see repeating `TELEGRAM_BOT_TOKEN required` warnings that won't stop:** Press **Ctrl+C** to exit. Your token isn't being detected — Claude Code keeps restarting the Telegram channel in a loop. Use `cskip` instead of `ctg` to continue setup, and troubleshoot Telegram separately later. See [Troubleshooting → Telegram: stuck in a warning loop](#telegram-stuck-in-a-warning-loop-after-setup).
+
 ---
 
 ## Step 9 - Safety Check
@@ -1101,9 +1126,11 @@ Open any project in Claude and type `/safetycheck` to run a security audit. For 
 
 [Back to top](#quick-nav)
 
-This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds.
+This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also installs the `/gitfix` skill.
 
 ### What It Sets Up
+
+**Status line indicators:**
 
 | Component | What it shows |
 |-----------|--------------|
@@ -1117,6 +1144,10 @@ This is the wrap-up step. It installs a custom status line that shows you what's
 The status line also shows your current model, session duration, and context window usage.
 
 The brain indicator detects your vault by checking if your current working directory contains "2ndBrain", "Second-Brain", "Vault", or "MASTER" in the path — no configuration needed. It works regardless of where your vault lives.
+
+**`/gitfix` skill:**
+
+Also installed here. Type `/gitfix` inside any Claude session when you want to do a full repo sync — it reads every install script, skill file, and documentation file in the repo, finds every gap between the code and the docs, and fixes all of it. Use it any time you make changes to a repo and need everything to reflect reality.
 
 ### Run Final Step
 
@@ -1164,6 +1195,19 @@ Setup is complete. Head to **[You're Ready](#youre-ready)** below for your daily
 ### Telegram: pressing Enter skips setup
 
 This is intentional. If you press Enter without pasting a token, the script skips Telegram setup and continues. You can always re-run Step 8 later when you have your bot token ready.
+
+### Telegram: stuck in a warning loop after setup
+
+If you launch Claude with `ctg` or `cbraintg` and see a stream of repeating messages like `telegram channel: TELEGRAM_BOT_TOKEN required` that never stops — your bot token isn't being detected.
+
+**What's happening:** Claude Code is trying to start the Telegram channel, the server exits immediately because there's no token, and then Claude Code restarts it — over and over. This creates an infinite loop of warning messages in your terminal.
+
+**Fix:**
+1. Press **Ctrl+C** to kill the session
+2. Continue with the remaining setup steps using `cskip` (no Telegram) instead of `ctg`
+3. Come back to Telegram troubleshooting later — type `cskip`, then ask Claude: *"My Telegram bot token isn't being detected — can you check my config at ~/.claude/channels/telegram/ and fix it?"*
+
+The most common cause is the token file being missing or in the wrong format. Re-running Step 8 (`bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)`) and re-entering your token usually resolves it.
 
 ### Step 6 (Productivity Tools) skips when run through the update command
 
@@ -1220,6 +1264,28 @@ Or open a `cskip` session and describe the problem to Claude. It can diagnose an
 
 [Back to top](#quick-nav)
 
+### Quick MCP Check
+
+Before you dive into `cbrain`, take 30 seconds to verify your MCP connections are live. Open a new terminal and run:
+
+```
+cskip
+```
+
+Once you're inside Claude, type:
+
+```
+/mcp
+```
+
+This shows every MCP server and its connection status. Everything you installed — Obsidian, Ruflo, Motion Calendar, Notion, Granola, design tools — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
+
+> "One of my MCP servers isn't connecting — can you troubleshoot it?"
+
+Claude will diagnose and fix it on the spot. Once everything is green, you're ready.
+
+---
+
 Everything is installed, configured, and wired together. From now on, this is the only command you need:
 
 > [!IMPORTANT]
@@ -1230,10 +1296,12 @@ Everything is installed, configured, and wired together. From now on, this is th
 
 That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with all permissions skipped. Your vault is your home base — every tool, skill, and MCP server you just installed is available the moment you type it.
 
+> **Haven't done Step 7 yet?** Use `cskip` instead of `cbrain` until your Second Brain vault is set up. `cbrain` requires the Obsidian vault to exist — it will error if you haven't created one. Once Step 7 is complete, switch to `cbrain` as your daily driver.
+
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
 - All permissions skipped — Claude acts immediately, no approval prompts
-- Full access to everything: `/rswarm`, `/rmini`, `/rhive`, `/w4w`, `/safetycheck`, Ruflo, Context Hub, Motion Calendar, Notion, Obsidian, design tools, video tools — all of it
+- Full access to everything: `/rswarm`, `/rmini`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`, Ruflo, Context Hub, Motion Calendar, Notion, Granola, Obsidian, design tools, video tools — all of it
 - Your status line shows what's active at a glance
 
 **When to use something else:**
@@ -1260,13 +1328,13 @@ Run the steps in this order:
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | UI/UX Pro Max + 21st.dev Magic |
 | 5 | Visual Media | Remotion + YouTube Transcripts + IG/Social Transcription + FFmpeg |
-| 6 | Productivity Tools | Motion Calendar + Notion (optional) |
+| 6 | Productivity Tools | Motion Calendar + Notion + Granola + Google Calendar (all optional — pick what you use) |
 | 7 | Second Brain | Obsidian vault setup + data import (7a-7d) |
 | 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
-| **Final** | **Status Line** | **Final config — status indicators, system health check** |
+| **Final** | **Status Line + /gitfix** | **Final config — status indicators, system health check, /gitfix skill** |
 
-> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is completely optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators to show what's active across all the tools you installed.
+> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is completely optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line + /gitfix) is the wrap-up — it wires your status indicators, installs the /gitfix skill, and runs a system health check.
 
 ---
 

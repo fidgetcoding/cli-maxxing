@@ -234,7 +234,6 @@ install_claude_code() {
     fi
     for alias_line in \
         "alias cskip='claude --dangerously-skip-permissions'" \
-        "alias ctg='claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official'" \
         "alias cc='claude'" \
         "alias ccr='claude --resume'" \
         "alias ccc='claude --continue'"; do
@@ -247,7 +246,13 @@ install_claude_code() {
     if [ "$ALIASES_ADDED" -gt 0 ]; then
         success "Added $ALIASES_ADDED new shortcut(s) to $SHELL_RC"
     else
-        success "All shortcuts already configured (cskip, ctg, cc, ccr, ccc)"
+        success "All shortcuts already configured (cskip, cc, ccr, ccc)"
+    fi
+
+    # Migrate old ctg alias → script (alias can't do token check; script can)
+    if grep -q 'alias ctg=' "$SHELL_RC" 2>/dev/null; then
+        sed -i.bak '/alias ctg=/d' "$SHELL_RC"
+        info "Removed old ctg alias from $SHELL_RC (replaced by ~/.local/bin/ctg)"
     fi
 
     # Add ~/.local/bin to PATH if not already present
@@ -288,11 +293,53 @@ CBRAIN_EOF
     chmod +x "$HOME/.local/bin/cbrain"
     success "cbrain command installed to ~/.local/bin/cbrain"
 
+    # Install ctg command (Telegram + skip-permissions, any directory)
+    info "Installing ctg command to ~/.local/bin..."
+    cat > "$HOME/.local/bin/ctg" << 'CTG_EOF'
+#!/usr/bin/env bash
+# ctg — Launch Claude Code with Telegram channel + dangerously-skip-permissions
+# Checks for a valid bot token before launching to avoid an infinite warning loop
+
+TOKEN_FILE="$HOME/.claude/channels/telegram/.env"
+
+if [ ! -f "$TOKEN_FILE" ] || ! grep -q 'TELEGRAM_BOT_TOKEN=.\+' "$TOKEN_FILE" 2>/dev/null; then
+  echo ""
+  echo "Telegram bot token not configured."
+  echo "Run Step 8 to set it up:"
+  echo ""
+  echo "  bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)"
+  echo ""
+  echo "Or use 'cskip' to launch Claude without Telegram."
+  echo ""
+  exit 1
+fi
+
+exec claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official "$@"
+CTG_EOF
+    chmod +x "$HOME/.local/bin/ctg"
+    success "ctg command installed to ~/.local/bin/ctg"
+
     # Install cbraintg command (cbrain + Telegram channel)
     info "Installing cbraintg command to ~/.local/bin..."
     cat > "$HOME/.local/bin/cbraintg" << 'CBRAINTG_EOF'
 #!/usr/bin/env bash
 # cbraintg — Launch Claude Code in 2ndBrain vault with full permissions + Telegram
+# Checks for a valid bot token before launching to avoid an infinite warning loop
+
+TOKEN_FILE="$HOME/.claude/channels/telegram/.env"
+
+if [ ! -f "$TOKEN_FILE" ] || ! grep -q 'TELEGRAM_BOT_TOKEN=.\+' "$TOKEN_FILE" 2>/dev/null; then
+  echo ""
+  echo "Telegram bot token not configured."
+  echo "Run Step 8 to set it up:"
+  echo ""
+  echo "  bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)"
+  echo ""
+  echo "Or use 'cbrain' to launch without Telegram."
+  echo ""
+  exit 1
+fi
+
 for candidate in \
     "$HOME/Desktop/WORK/OBSIDIAN/2ndBrain" \
     "$HOME/Desktop/2ndBrain" \
@@ -374,14 +421,14 @@ run_self_test() {
 
     # Shell aliases
     ALIAS_PASS=0
-    ALIAS_TOTAL=5
-    for alias_name in cskip ctg cc ccr ccc; do
+    ALIAS_TOTAL=4
+    for alias_name in cskip cc ccr ccc; do
         if grep -q "alias ${alias_name}=" "$SHELL_RC" 2>/dev/null; then
             ALIAS_PASS=$((ALIAS_PASS + 1))
         fi
     done
     if [ "$ALIAS_PASS" -eq "$ALIAS_TOTAL" ]; then
-        success "TEST: shell aliases — all $ALIAS_TOTAL configured (cskip, ctg, cc, ccr, ccc)"
+        success "TEST: shell aliases — all $ALIAS_TOTAL configured (cskip, cc, ccr, ccc)"
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: shell aliases — only $ALIAS_PASS/$ALIAS_TOTAL found in $SHELL_RC"
@@ -394,6 +441,15 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: cbrain command — not found or not executable"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # ctg command
+    if [ -x "$HOME/.local/bin/ctg" ]; then
+        success "TEST: ctg command — installed at ~/.local/bin/ctg"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: ctg command — not found or not executable"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
