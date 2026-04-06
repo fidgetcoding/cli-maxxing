@@ -118,7 +118,7 @@ echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━
 echo ""
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc, cbrain, cbraintg"
-echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck"
+echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck, /gitfix"
 echo ""
 echo "  Note: Steps 6 and 8 require interactive input (API credentials"
 echo "  and Telegram bot token). They detected non-interactive mode and"

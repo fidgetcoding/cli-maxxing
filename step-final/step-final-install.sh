@@ -342,6 +342,43 @@ if [ "$HC_FAIL" -gt 0 ]; then
 fi
 
 # =============================================================================
+# Install /gitfix skill
+# =============================================================================
+echo ""
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}  Installing /gitfix skill${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+
+GITFIX_DIR="$HOME/.claude/skills/gitfix"
+GITFIX_FILE="$GITFIX_DIR/SKILL.md"
+GITFIX_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/gitfix-skill/SKILL.md"
+
+mkdir -p "$GITFIX_DIR"
+
+if [ -f "$GITFIX_FILE" ]; then
+    info "Updating existing /gitfix skill..."
+else
+    info "Installing /gitfix skill..."
+fi
+
+if curl -fsSL "$GITFIX_URL" -o "$GITFIX_FILE" 2>/dev/null && [ -s "$GITFIX_FILE" ]; then
+    success "/gitfix skill installed at $GITFIX_FILE"
+else
+    warn "Download failed — attempting local fallback..."
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LOCAL_GITFIX="$(dirname "$SCRIPT_DIR")/gitfix-skill/SKILL.md"
+    if [ -f "$LOCAL_GITFIX" ]; then
+        cp "$LOCAL_GITFIX" "$GITFIX_FILE"
+        success "/gitfix skill installed from local copy"
+    else
+        warn "Could not install /gitfix skill — download and local fallback both failed"
+    fi
+fi
+
+echo ""
+
+# =============================================================================
 # Self-Test — status line specifically
 # =============================================================================
 echo ""
@@ -378,6 +415,15 @@ if [ -n "$TEST_OUTPUT" ]; then
     TEST_PASS=$((TEST_PASS + 1))
 else
     echo -e "${RED}[FAIL]${NC} TEST: status line produced no output"
+    TEST_FAIL=$((TEST_FAIL + 1))
+fi
+
+# Test 4: /gitfix skill installed
+if [ -s "$HOME/.claude/skills/gitfix/SKILL.md" ]; then
+    success "TEST: /gitfix skill installed at ~/.claude/skills/gitfix/SKILL.md"
+    TEST_PASS=$((TEST_PASS + 1))
+else
+    echo -e "${RED}[FAIL]${NC} TEST: /gitfix skill not found"
     TEST_FAIL=$((TEST_FAIL + 1))
 fi
 

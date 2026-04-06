@@ -3,7 +3,7 @@ set -uo pipefail
 
 # =============================================================================
 # Step 6 — Productivity Tools
-# Installs Motion Calendar and Notion MCP servers
+# Installs Motion Calendar, Notion, Granola, and Google Calendar MCP servers
 # Interactive — pick the tools you actually use
 # Run this in your terminal after completing Steps 1-5
 # =============================================================================
@@ -25,6 +25,8 @@ soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRO
 # Track what was installed this run
 INSTALLED_MOTION=false
 INSTALLED_NOTION=false
+INSTALLED_GRANOLA=false
+INSTALLED_GCAL=false
 # Track pre-existing installs (credentials managed outside ~/.motion-calendar-mcp/.env)
 MOTION_PREEXISTING=false
 
@@ -73,6 +75,14 @@ choose_tools() {
             CHOICES="$CHOICES 2"
             INSTALLED_NOTION=true
         fi
+        if claude mcp list 2>/dev/null | grep -q "granola" 2>/dev/null; then
+            CHOICES="$CHOICES 3"
+            INSTALLED_GRANOLA=true
+        fi
+        if claude mcp list 2>/dev/null | grep -q "google-calendar" 2>/dev/null; then
+            CHOICES="$CHOICES 4"
+            INSTALLED_GCAL=true
+        fi
 
         if [ -n "$CHOICES" ]; then
             info "Found already-installed tools — verifying configuration"
@@ -95,8 +105,10 @@ choose_tools() {
     echo ""
     echo "    1) Motion Calendar  — calendar events, availability, scheduling"
     echo "    2) Notion           — pages, databases, knowledge management"
+    echo "    3) Granola          — meeting transcripts and notes"
+    echo "    4) Google Calendar  — calendar events via Google OAuth"
     echo ""
-    read -rp "  Enter your choices (e.g. \"1 2\" for both, or \"2\" for just Notion): " CHOICES
+    read -rp "  Enter your choices (e.g. \"1 2\" for both, or \"3\" for just Granola): " CHOICES
     echo ""
 
     if [ -z "$CHOICES" ]; then
@@ -218,6 +230,110 @@ install_notion() {
 }
 
 # -----------------------------------------------------------------------------
+# Install Granola MCP
+# -----------------------------------------------------------------------------
+install_granola() {
+    info "Installing Granola MCP server..."
+
+    # Check if already registered
+    if claude mcp list 2>/dev/null | grep -q "granola"; then
+        success "Granola MCP already installed"
+        INSTALLED_GRANOLA=true
+        return
+    fi
+
+    echo ""
+    echo -e "${BLUE}  Granola is a meeting notes app. This MCP gives Claude${NC}"
+    echo -e "${BLUE}  access to your meeting transcripts and notes.${NC}"
+    echo ""
+    echo -e "${YELLOW}  Requires: Granola app installed and signed in on this Mac.${NC}"
+    echo -e "${YELLOW}  Get it at: https://granola.ai${NC}"
+    echo ""
+
+    # Register the MCP server (HTTP transport — Granola handles auth via the app)
+    claude mcp add --scope user --transport http granola https://mcp.granola.ai/mcp 2>/dev/null
+
+    # Verify
+    if claude mcp list 2>/dev/null | grep -q "granola"; then
+        success "Granola MCP installed"
+        INSTALLED_GRANOLA=true
+    else
+        soft_fail "Granola MCP installation could not be verified"
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# Install Google Calendar MCP
+# -----------------------------------------------------------------------------
+install_google_calendar() {
+    info "Installing Google Calendar MCP server..."
+
+    # Check if already registered
+    if claude mcp list 2>/dev/null | grep -q "google-calendar"; then
+        success "Google Calendar MCP already installed"
+        INSTALLED_GCAL=true
+        return
+    fi
+
+    echo ""
+    echo -e "${BLUE}  Google Calendar MCP requires OAuth credentials from Google Cloud.${NC}"
+    echo ""
+    echo "    1. Go to https://console.cloud.google.com"
+    echo "    2. Create a project (or select an existing one)"
+    echo "    3. Enable the Google Calendar API"
+    echo "       (APIs & Services > Library > search \"Google Calendar API\" > Enable)"
+    echo "    4. Go to APIs & Services > Credentials > Create Credentials > OAuth 2.0 Client ID"
+    echo "    5. Choose \"Desktop app\", name it \"Claude Code\""
+    echo "    6. Copy your Client ID and Client Secret"
+    echo ""
+    echo -e "${YELLOW}  Also add your Google account email as a test user:${NC}"
+    echo -e "${YELLOW}  APIs & Services > OAuth consent screen > Test users > Add users${NC}"
+    echo ""
+
+    read -sp "  Google OAuth Client ID: " GCAL_CLIENT_ID
+    echo " [saved]"
+    read -sp "  Google OAuth Client Secret: " GCAL_CLIENT_SECRET
+    echo " [saved]"
+    echo ""
+
+    if [ -z "$GCAL_CLIENT_ID" ] || [ -z "$GCAL_CLIENT_SECRET" ]; then
+        warn "Credentials left blank. Skipping Google Calendar setup."
+        warn "Re-run Step 6 when you have your credentials ready."
+        return
+    fi
+
+    # Write credentials file
+    mkdir -p "$HOME/.google-calendar-mcp"
+    {
+      printf 'GOOGLE_CLIENT_ID=%s\n' "$GCAL_CLIENT_ID"
+      printf 'GOOGLE_CLIENT_SECRET=%s\n' "$GCAL_CLIENT_SECRET"
+    } > "$HOME/.google-calendar-mcp/.env"
+    chmod 600 "$HOME/.google-calendar-mcp/.env"
+
+    # Register the MCP server
+    claude mcp add --scope user \
+        -e GOOGLE_CLIENT_ID="$GCAL_CLIENT_ID" \
+        -e GOOGLE_CLIENT_SECRET="$GCAL_CLIENT_SECRET" \
+        google-calendar -- npx -y google-calendar-mcp 2>/dev/null
+
+    # Verify
+    if claude mcp list 2>/dev/null | grep -q "google-calendar"; then
+        success "Google Calendar MCP installed"
+        INSTALLED_GCAL=true
+        echo ""
+        echo -e "${BLUE}  Final step — authorize Claude to access your calendar:${NC}"
+        echo ""
+        echo -e "    ${GREEN}npx google-calendar-mcp auth${NC}"
+        echo ""
+        echo "  A browser window will open. Sign in with your Google account"
+        echo "  and allow access. The token is stored locally."
+        echo ""
+    else
+        soft_fail "Google Calendar MCP installation could not be verified"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -270,6 +386,41 @@ run_self_test() {
         TEST_SKIP=$((TEST_SKIP + 1))
     fi
 
+    # Granola
+    if $INSTALLED_GRANOLA; then
+        if claude mcp list 2>/dev/null | grep -q "granola"; then
+            success "TEST: Granola MCP registered"
+            TEST_PASS=$((TEST_PASS + 1))
+        else
+            soft_fail "TEST: Granola MCP not registered"
+            TEST_FAIL=$((TEST_FAIL + 1))
+        fi
+    else
+        info "TEST: Granola — skipped (not selected)"
+        TEST_SKIP=$((TEST_SKIP + 1))
+    fi
+
+    # Google Calendar
+    if $INSTALLED_GCAL; then
+        if claude mcp list 2>/dev/null | grep -q "google-calendar"; then
+            success "TEST: Google Calendar MCP registered"
+            TEST_PASS=$((TEST_PASS + 1))
+        else
+            soft_fail "TEST: Google Calendar MCP not registered"
+            TEST_FAIL=$((TEST_FAIL + 1))
+        fi
+        if [ -f "$HOME/.google-calendar-mcp/.env" ]; then
+            success "TEST: Google Calendar credentials file exists"
+            TEST_PASS=$((TEST_PASS + 1))
+        else
+            soft_fail "TEST: Google Calendar credentials file not found"
+            TEST_FAIL=$((TEST_FAIL + 1))
+        fi
+    else
+        info "TEST: Google Calendar — skipped (not selected)"
+        TEST_SKIP=$((TEST_SKIP + 1))
+    fi
+
     echo ""
     if [ "$TEST_FAIL" -eq 0 ]; then
         echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC} ($TEST_SKIP skipped)"
@@ -304,6 +455,16 @@ print_summary() {
         INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
     fi
 
+    if $INSTALLED_GRANOLA; then
+        echo "  Granola           — meeting transcripts and notes"
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+    fi
+
+    if $INSTALLED_GCAL; then
+        echo "  Google Calendar   — calendar events via Google OAuth"
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+    fi
+
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
     else
@@ -320,6 +481,16 @@ print_summary() {
         if $INSTALLED_NOTION; then
             echo "    - Ask Claude to search or create Notion pages"
             echo "    - Ask Claude to query a Notion database"
+        fi
+
+        if $INSTALLED_GRANOLA; then
+            echo "    - Ask Claude \"what were the key points from my last meeting?\""
+            echo "    - Ask Claude to search your meeting notes"
+        fi
+
+        if $INSTALLED_GCAL; then
+            echo "    - Ask Claude \"what's on my Google Calendar this week?\""
+            echo "    - Ask Claude to create or find calendar events"
         fi
 
     fi
@@ -343,7 +514,7 @@ main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BLUE}  Step 6 — Productivity Tools${NC}"
-    echo -e "${BLUE}  Calendar, tasks, and notes — pick what you use • macOS + Linux${NC}"
+    echo -e "${BLUE}  Calendar, notes, and meetings — pick what you use • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -356,6 +527,8 @@ main() {
         case "$CHOICE" in
             1) if ! $INSTALLED_MOTION; then install_motion_calendar; else success "Motion Calendar already configured"; fi ;;
             2) if ! $INSTALLED_NOTION; then install_notion; else success "Notion already configured"; fi ;;
+            3) if ! $INSTALLED_GRANOLA; then install_granola; else success "Granola already configured"; fi ;;
+            4) if ! $INSTALLED_GCAL; then install_google_calendar; else success "Google Calendar already configured"; fi ;;
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done
