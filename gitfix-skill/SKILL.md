@@ -171,6 +171,8 @@ Do not produce the report until all fixes are applied. The report is the last th
 
 ### Phase 8 — Push to Live
 
+If the current directory is not a git repository, skip Phase 8 entirely — do not mention it.
+
 After the report is produced, check for unpushed commits:
 
 ```bash

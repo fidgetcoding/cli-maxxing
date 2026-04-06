@@ -112,7 +112,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 |------|-------------|-----------------|----------------|
 | UI/UX Pro Max | Step 4 | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
 | 21st.dev Magic | Step 4 | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
-| Context Hub | Step 3 | Natural language — Claude writes code that calls external APIs | "Use the Stripe API to create a checkout" |
+| Context Hub (`get-api-docs`) | Step 3 | Natural language — Claude writes code that calls external APIs | "Use the Stripe API to create a checkout" |
 | Remotion | Step 5 | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
 | YouTube Transcripts | Step 5 | Natural language — paste a YouTube link and ask for the transcript | "Get the transcript of this video: https://youtube.com/..." |
 | IG/Social Transcription | Step 5 | Natural language — paste an Instagram, TikTok, or social media link | "Transcribe this reel: https://instagram.com/reel/..." |
