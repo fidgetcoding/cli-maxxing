@@ -140,7 +140,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 
 ## Taste Skill — Variants & Knobs (creativity-maxxing)
 
-Installed by Step 4 via `npx skills add Leonxlnx/taste-skill`. The pack ships **7 variants** as separate skill folders under `~/.claude/skills/`. They're passive skills — Claude activates the right one based on what you ask for. You can also name a variant explicitly in your prompt ("use soft-skill", "redesign this with minimalist-skill") to force a specific style.
+Installed by creativity-maxxing via `npx skills add Leonxlnx/taste-skill`. The pack ships **7 variants** as separate skill folders under `~/.claude/skills/`. They're passive skills — Claude activates the right one based on what you ask for. You can also name a variant explicitly in your prompt ("use soft-skill", "redesign this with minimalist-skill") to force a specific style.
 
 | Variant | When Claude uses it | Example prompt |
 |---------|---------------------|----------------|
@@ -174,7 +174,7 @@ When these tools are active, you may see indicators in your Claude session:
 |-----------|---------|
 | 🧠 2ndBrain | Working inside your Obsidian vault |
 | ⚡ Ruflo | Ruflo MCP server is connected |
-| 🎨 UIPro | Design skill is loaded (always on after Step 4) |
+| 🎨 UIPro | Design skill is loaded (always on after creativity-maxxing) |
 | 🐝 Swarm | Swarm is active — shows agent count (after `/rswarm`) |
 | 🍯 Mini | Mini swarm is active — shows agent count (after `/rmini`) |
 | 👑 Hive | Hive-mind is active (after `/rhive`) |
@@ -205,7 +205,7 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 
 | Command | What it does |
 |---------|-------------|
-| `curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh \| bash` | Re-run all steps, skip what is installed, pick up anything new |
+| `bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)` | Re-run all steps, skip what is installed, pick up anything new |
 | `source ~/.zshrc` | Reload shell config to activate new aliases |
 | `claude update` | Update Claude Code itself to the latest version |
 | `brew update && brew upgrade` | Update Homebrew and all installed packages (macOS) |

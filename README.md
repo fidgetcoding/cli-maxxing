@@ -4,14 +4,15 @@ Everything you need to start working with AI-powered development tools, installe
 
 ## The Trilogy
 
-cli-maxxing is the foundation. Two companion repos extend it:
+This is one of three repos in the cli-maxxing stack:
 
-| Repo | What it adds |
+| Repo | What it does |
 |------|-------------|
-| [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) | Design tools (UI/UX Pro Max, Taste Skill, 21st.dev Magic) + video/audio production |
-| [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) | Obsidian PKM — vault setup, Claude history import, `cbrain`/`cbraintg` commands |
+| **`cli-maxxing`** | **This repo** — Foundation — Claude Code, shell aliases, Ruflo, dev tools, productivity MCPs |
+| [`creativity-maxxing`](https://github.com/lorecraft-io/creativity-maxxing) | Design skills + video/audio pipeline |
+| [`2ndbrain-maxxing`](https://github.com/lorecraft-io/2ndbrain-maxxing) | Obsidian PKM vault setup, cbrain/cbraintg commands |
 
-Install cli-maxxing first. The companions are optional and can be added in any order.
+Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be installed in either order after that.
 
 ## Quick Nav
 
@@ -168,7 +169,7 @@ This step is the foundation. It installs the minimum needed to get Claude Code w
 > [!IMPORTANT]
 > **Copy and paste this into Terminal, then hit Enter:**
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-1/step-1-install.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-1/step-1-install.sh)
 > ```
 
 > **It will ask for your Mac password.** The script needs it to install system tools. When you see `Password:`, type your Mac login password and hit Enter. The install will pause until you do this. You won't see what you're typing — no characters, no dots, just a lock icon or a blank line. That's normal. Just type it and press Enter.
@@ -277,14 +278,14 @@ You can run this from your terminal directly — no Claude session needed:
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-ghostty/bonus-ghostty.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-ghostty/bonus-ghostty.sh)
 > ```
 
 Or if you're already in a Claude session, paste this:
 
 > **Paste this into your Claude session:**
 > ```
-> run this command to install Ghostty: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-ghostty/bonus-ghostty.sh | bash
+> run this command to install Ghostty: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-ghostty/bonus-ghostty.sh)
 > ```
 
 ### What This Step Installs
@@ -367,14 +368,14 @@ You can run this from your terminal directly — no Claude session needed:
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-arc/bonus-arc.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-arc/bonus-arc.sh)
 > ```
 
 Or if you're already in a Claude session, paste this:
 
 > **Paste this into your Claude session:**
 > ```
-> run this command to install Arc: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-arc/bonus-arc.sh | bash
+> run this command to install Arc: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-arc/bonus-arc.sh)
 > ```
 
 ### What This Step Installs
@@ -434,7 +435,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install my dev tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/step-2-install.sh | bash
+> run this command to install my dev tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/step-2-install.sh)
 > ```
 
 
@@ -538,7 +539,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up Ruflo and Context Hub: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh | bash
+> run this command to set up Ruflo and Context Hub: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
 > ```
 
 
@@ -602,7 +603,7 @@ claude mcp add ruflo -- npx -y ruflo@latest
 >
 > Install it after completing this repo:
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh)
 > ```
 >
 > creativity-maxxing also includes Step 5 (Remotion, YouTube Transcripts, yt-dlp, Whisper, FFmpeg). You get both in one install.
@@ -619,7 +620,7 @@ claude mcp add ruflo -- npx -y ruflo@latest
 >
 > Install it after completing this repo:
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh)
 > ```
 >
 > creativity-maxxing also includes Step 4 (UI/UX Pro Max, Taste Skill, 21st.dev Magic). You get both in one install.
@@ -726,7 +727,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install productivity tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh | bash
+> run this command to install productivity tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
 > ```
 
 ### What This Step Installs
@@ -784,7 +785,7 @@ This step connects Claude to Telegram so you can message it from your phone. You
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up Telegram: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh | bash
+> run this command to set up Telegram: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
 > ```
 
 ### After Step 8
@@ -878,7 +879,7 @@ Also installed here. Type `/gitfix` inside any Claude session when you want to d
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up your status line: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-final/step-final-install.sh | bash
+> run this command to set up your status line: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-final/step-final-install.sh)
 > ```
 
 Or manually:
@@ -1074,7 +1075,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/uninstall.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/uninstall.sh)
 > ```
 
 **What it removes:**

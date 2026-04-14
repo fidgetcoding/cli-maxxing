@@ -146,7 +146,7 @@ When these tools are active, you may see indicators in your Claude session:
 |-----------|---------|
 | 🧠 2ndBrain | Working inside your Obsidian vault |
 | ⚡ Ruflo | Ruflo MCP server is connected |
-| 🎨 UIPro | Design skill is loaded (always on after Step 4) |
+| 🎨 UIPro | Design skill is loaded (always on after creativity-maxxing) |
 | 🐝 Swarm | Swarm is active — shows agent count (after `/rswarm`) |
 | 🍯 Mini | Mini swarm is active — shows agent count (after `/rmini`) |
 | 👑 Hive | Hive-mind is active (after `/rhive`) |

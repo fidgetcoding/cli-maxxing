@@ -2,7 +2,7 @@
 
 > **Note:** Steps 4, 5, and 7 have been extracted to companion repos. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) for those test walkthroughs.
 
-**Test scenario:** Fresh Mac, username `a test machine` (early tester), vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
+**Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
 **Test date:** 2026-04-05
 
@@ -222,4 +222,4 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 
 ### Test Verdict
 
-**ALL CRITICAL AND MEDIUM BUGS RESOLVED.** The install flow will complete successfully on a fresh Mac (username: `a test machine`, vault at `~/Desktop/2ndBrain`, no Telegram token) with no hangs, no missing indicators, and correct vault detection.
+**ALL CRITICAL AND MEDIUM BUGS RESOLVED.** The install flow will complete successfully on a fresh Mac (username: `testuser`, vault at `~/Desktop/2ndBrain`, no Telegram token) with no hangs, no missing indicators, and correct vault detection.
