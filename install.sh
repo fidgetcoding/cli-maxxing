@@ -4,8 +4,8 @@ set -uo pipefail
 # =============================================================================
 # CLI Maxxing — Install
 # Runs all non-interactive steps in order. Steps that are already installed
-# are skipped automatically. Steps that require interactive input (Step 6 and
-# Step 8) are noted at the end — run them separately in your terminal.
+# are skipped automatically. Steps that require interactive input (Step 6,
+# Step 8, and Step 10) are noted at the end — run them separately in your terminal.
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
 # =============================================================================
 
@@ -74,13 +74,16 @@ echo ""
 echo "  Available commands: cskip, ctg, cc, ccr, ccc"
 echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck, /gitfix, get-api-docs (auto-triggered)"
 echo ""
-echo "  Two steps require interactive input — run them separately:"
+echo "  Three steps require interactive input — run them separately:"
 echo ""
 echo "    Step 6 (Productivity Tools — Notion, Morgen, n8n, etc.):"
 echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
 echo ""
 echo "    Step 8 (Telegram — optional, skip if you don't have a bot token):"
 echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)"
+echo ""
+echo "    Step 10 (Developer Tools — GitHub MCP, optional, for devs):"
+echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)"
 echo ""
 echo "  Companion repos (install after this):"
 echo "    Design + media:  bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh)"

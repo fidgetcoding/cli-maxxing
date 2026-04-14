@@ -32,6 +32,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be 
 | [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) | Second Brain | Obsidian vault setup, Claude history import, `cbrain`/`cbraintg` commands | [separate repo](https://github.com/lorecraft-io/2ndbrain-maxxing) |
 | [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
+| [Step 10](#step-10---developer-tools) | Developer Tools *(optional)* | GitHub MCP — repos, issues, PRs, code search via Claude (requires PAT) | ~2 min |
 | [Final Step](#final-step---status-line) | Status Line + /gitfix | Final config — status indicators + /gitfix skill installed | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
@@ -75,6 +76,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/mai
 
 # Step 8 — Telegram (optional — press Enter to skip if you don't have a bot token yet)
 bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
+
+# Step 10 — Developer Tools (optional — GitHub MCP, skip if you don't need it)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)
 ```
 
 We recommend reading through the steps below first so you understand what each tool does — but the one-shot option is here if you want it.
@@ -106,6 +110,8 @@ Run the steps in order. Each one builds on the last.
 **[Step 8](#step-8---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected — messages show up in your session in real time. This step is completely optional; everything else works without it.
 
 **[Step 9](#step-9---safety-check)** installs a security auditing skill that lets Claude scan any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and more. Just point Claude at a project and ask it to run a safety check. It catches the stuff that slips through code review.
+
+**[Step 10](#step-10---developer-tools)** is for developers only — it installs the GitHub MCP so Claude can read and write your repos, issues, pull requests, and search code across your GitHub organizations. Requires a GitHub Personal Access Token. Skip it if you don't use GitHub with Claude.
 
 **[Final Step](#final-step---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also installs the `/gitfix` skill and runs a final verification to make sure every command and tool from the cheat sheet is installed and working.
 
@@ -845,6 +851,46 @@ Once you're inside the Claude session, paste this and hit Enter:
 ### After Step 9
 
 Open any project in Claude and type `/safetycheck` to run a security audit. For standard projects, Claude runs 8 checks and reports findings by severity. For MCP projects, it automatically detects the project type and activates 12 additional MCP-specific checks. You can also ask Claude to "run a safety check" in plain English — the skill kicks in automatically.
+
+---
+
+## Step 10 - Developer Tools
+
+[Back to top](#quick-nav)
+
+This step is for developers who want Claude to have direct access to their GitHub repositories, issues, pull requests, and code search. It's completely optional — skip it if you don't use GitHub with Claude, and everything else still works.
+
+### What It Installs
+
+The [GitHub MCP server](https://github.com/modelcontextprotocol/servers/tree/main/src/github) (`@modelcontextprotocol/server-github`) gives Claude a structured tool interface for reading and writing GitHub resources — repos, issues, PRs, files, code search, branches, commits. Once installed, you can ask Claude things like "list open PRs on lorecraft-io/cli-maxxing", "create an issue for this bug", or "search my repos for any file that uses `MORGEN_API_KEY`" and it'll just work.
+
+### Before You Run It
+
+You need a GitHub Personal Access Token (classic PAT). Create one at [github.com/settings/tokens/new](https://github.com/settings/tokens/new):
+
+- **Token name:** `claude-github-mcp`
+- **Expiration:** No expiration (or pick whatever you're comfortable with)
+- **Scopes:** check only `repo`, `read:org` (under `admin:org`), and `gist`
+
+Click **Generate token** and copy the `ghp_...` value. You'll paste it into the install script.
+
+### Run Step 10
+
+```
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)
+```
+
+The script prompts for your PAT, registers the GitHub MCP with Claude Code, and injects the token into your local MCP config only — nothing is written to disk outside of `~/.claude.json` (same place every other MCP credential lives).
+
+### What This Step Installs
+
+| Component | What it does |
+|-----------|-------------|
+| GitHub MCP (`@modelcontextprotocol/server-github`) | Claude Code MCP server that exposes GitHub API operations as tools — read/write repos, issues, PRs, code search, branches, commits. |
+
+### After Step 10
+
+Ask Claude to "list my open GitHub issues" or "create a PR on cli-maxxing" and the MCP tools kick in automatically. If you ever need to rotate the token, re-run Step 10 — it'll overwrite the entry in your MCP config.
 
 ---
 
