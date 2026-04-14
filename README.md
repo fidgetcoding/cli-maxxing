@@ -849,16 +849,15 @@ This is the wrap-up step. It installs a custom status line that shows you what's
 
 | Component | What it shows |
 |-----------|--------------|
-| 🧠 2ndBrain | You're working inside your Obsidian vault |
 | ⚡ Ruflo | The Ruflo MCP server is connected |
-| 🎨 UIPro | Design skill is loaded (always on after Step 4) |
+| 🎨 UIPro | Design skill is loaded (installed with [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)) |
 | 🐝 Swarm | A swarm is active (shows agent count during `/rswarm`) |
 | 🍯 Mini | A mini swarm is active (shows agent count during `/rmini`) |
 | 👑 Hive | A hive-mind is active (during `/rhive`) |
 
 The status line also shows your current model, session duration, and context window usage.
 
-The brain indicator detects your vault by checking if your current working directory contains "2ndBrain", "Second-Brain", "Vault", or "MASTER" in the path — no configuration needed. It works regardless of where your vault lives.
+> **2ndbrain-maxxing adds a 🧠 brain indicator** that lights up when you're working inside your Obsidian vault. It's part of [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)'s statusline patch.
 
 **`/gitfix` skill:**
 
@@ -941,9 +940,6 @@ See the [2ndbrain-maxxing troubleshooting guide](https://github.com/lorecraft-io
 
 See [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) — vault setup is handled there. If your vault exists but isn't found, set `VAULT_PATH=/path/to/your/vault cbrain`.
 
-### Status line doesn't show the brain indicator
-
-The brain indicator appears when your working directory contains "2ndBrain", "Second-Brain", "Vault", or "MASTER" in the path. If you named your vault something different, edit `~/.claude/statusline.sh` and update the detection pattern to include your vault name.
 
 ### A step failed or something is missing
 
