@@ -3,7 +3,7 @@ set -uo pipefail
 
 # =============================================================================
 # Step 6 — Productivity Tools
-# Installs Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, and GitHub
+# Installs Notion, Granola, n8n, Google Calendar, Morgen, and Motion Calendar
 # MCP servers. Interactive — pick the tools you actually use.
 # Obsidian MCP lives in Step 7 alongside the rest of the Obsidian vault setup.
 # Run this in your terminal after completing Steps 1-5.
@@ -30,7 +30,6 @@ INSTALLED_N8N=false
 INSTALLED_GCAL=false
 INSTALLED_MORGEN=false
 INSTALLED_MOTION=false
-INSTALLED_GITHUB=false
 # Pre-existing installs (credentials managed outside this script).
 # Only Motion tracks this because Motion persists credentials to a local .env
 # the self-test checks for; Morgen/Notion/n8n credentials live inside Claude's
@@ -98,10 +97,6 @@ choose_tools() {
             INSTALLED_MOTION=true
             MOTION_PREEXISTING=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "github" 2>/dev/null; then
-            CHOICES="$CHOICES 7"
-            INSTALLED_GITHUB=true
-        fi
 
         if [ -n "$CHOICES" ]; then
             info "Found already-installed tools — verifying configuration"
@@ -128,7 +123,6 @@ choose_tools() {
     echo "    4) Google Calendar  — calendar events via Google OAuth"
     echo "    5) Morgen           — unified calendar + tasks (recommended)"
     echo "    6) Motion Calendar  — Motion events, availability, scheduling"
-    echo "    7) GitHub           — repos, issues, PRs, code search (requires PAT)"
     echo ""
     echo -e "${YELLOW}  Note: Morgen (5) is the recommended calendar+task tool.${NC}"
     echo -e "${YELLOW}  Motion (6) and Google Calendar (4) are secondary —${NC}"
@@ -509,61 +503,6 @@ install_motion_calendar() {
 }
 
 # -----------------------------------------------------------------------------
-# Install GitHub MCP
-# -----------------------------------------------------------------------------
-install_github() {
-    info "Installing GitHub MCP server..."
-
-    if claude mcp list 2>/dev/null | grep -q "github"; then
-        success "GitHub MCP already installed"
-        INSTALLED_GITHUB=true
-        return
-    fi
-
-    echo ""
-    echo -e "${BLUE}  GitHub MCP gives Claude read/write access to your repos,${NC}"
-    echo -e "${BLUE}  issues, pull requests, and code search via the GitHub API.${NC}"
-    echo ""
-    echo -e "${BLUE}  You need a Personal Access Token (PAT). Create one at:${NC}"
-    echo -e "${BLUE}  https://github.com/settings/tokens/new${NC}"
-    echo ""
-    echo "    Suggested settings:"
-    echo "      - Token name: claude-github-mcp"
-    echo "      - Expiration: No expiration (or 1 year)"
-    echo "      - Scopes: repo, read:org, gist"
-    echo ""
-    echo -e "${YELLOW}  Use a classic token (not fine-grained) for full repo access.${NC}"
-    echo ""
-
-    read -sp "  GitHub Personal Access Token (ghp_...): " GITHUB_TOKEN
-    echo " [saved]"
-    echo ""
-
-    if [ -z "$GITHUB_TOKEN" ]; then
-        warn "No GitHub token provided. Skipping GitHub setup."
-        warn "Re-run Step 6 when you have a token ready."
-        return
-    fi
-
-    if [[ ! "$GITHUB_TOKEN" =~ ^gh[ps]_ ]]; then
-        warn "Token doesn't look like a GitHub PAT (expected ghp_ or ghs_ prefix)."
-        warn "Proceeding anyway — registration will fail if the token is invalid."
-        echo ""
-    fi
-
-    claude mcp add --scope user \
-        -e GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN" \
-        github -- npx -y @modelcontextprotocol/server-github 2>/dev/null
-
-    if claude mcp list 2>/dev/null | grep -q "github"; then
-        success "GitHub MCP installed"
-        INSTALLED_GITHUB=true
-    else
-        soft_fail "GitHub MCP installation could not be verified"
-    fi
-}
-
-# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -595,7 +534,6 @@ run_self_test() {
     if $INSTALLED_GCAL;     then check_registered "Google Calendar" "google-calendar"; else info "TEST: Google Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_MORGEN;   then check_registered "Morgen"          "morgen";          else info "TEST: Morgen — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_MOTION;   then check_registered "Motion Calendar" "motion-calendar"; else info "TEST: Motion Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_GITHUB;   then check_registered "GitHub"          "github";          else info "TEST: GitHub — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     # Credential-file checks for tools that persist a local .env
     if $INSTALLED_GCAL; then
@@ -649,7 +587,6 @@ print_summary() {
     if $INSTALLED_GCAL;     then echo "  Google Calendar   — calendar events via Google OAuth";                INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_MORGEN;   then echo "  Morgen            — unified calendar + tasks (single API key)";       INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_MOTION;   then echo "  Motion Calendar   — Motion events, availability, scheduling";         INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
-    if $INSTALLED_GITHUB;   then echo "  GitHub            — repos, issues, PRs, code search";                 INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
 
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
@@ -680,11 +617,6 @@ print_summary() {
         if $INSTALLED_MOTION; then
             echo "    - Ask Claude \"who on my team has a conflict at 3pm?\""
             echo "    - Ask Claude to search events across all your Motion calendars"
-        fi
-        if $INSTALLED_GITHUB; then
-            echo "    - Ask Claude to list open PRs or issues on any of your repos"
-            echo "    - Ask Claude to search code across your GitHub organizations"
-            echo "    - Ask Claude to create issues, review PRs, or push commits"
         fi
     fi
 
@@ -724,7 +656,6 @@ main() {
             4) if ! $INSTALLED_GCAL;    then install_google_calendar; else success "Google Calendar already configured"; fi ;;
             5) if ! $INSTALLED_MORGEN;  then install_morgen;          else success "Morgen already configured";          fi ;;
             6) if ! $INSTALLED_MOTION;  then install_motion_calendar; else success "Motion Calendar already configured"; fi ;;
-            7) if ! $INSTALLED_GITHUB;  then install_github;          else success "GitHub already configured";          fi ;;
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done
