@@ -275,31 +275,54 @@ use framework "AppKit"
 tell application "Ghostty" to activate
 delay 0.3
 tell application "System Events" to tell process "Ghostty"
+  -- Only create enough windows to reach exactly 2
   set winCount to count of windows
   repeat (2 - winCount) times
     keystroke "n" using command down
     delay 0.5
   end repeat
   delay 0.3
+
   set wins to every window
   if (count of wins) < 2 then return
+
+  -- Exit fullscreen on any window (size/position can't be set on fullscreen windows)
+  repeat with w in wins
+    try
+      if value of attribute "AXFullScreen" of w is true then
+        set value of attribute "AXFullScreen" of w to false
+        delay 0.6
+      end if
+    end try
+  end repeat
+
   set mainScreen to current application's NSScreen's mainScreen()
   set screenFrame to mainScreen's frame()
   set visFrame to mainScreen's visibleFrame()
+
   set fullH to (item 2 of item 2 of screenFrame) as integer
   set visX to (item 1 of item 1 of visFrame) as integer
   set visYBottom to (item 2 of item 1 of visFrame) as integer
   set visW to (item 1 of item 2 of visFrame) as integer
   set visH to (item 2 of item 2 of visFrame) as integer
+
   set topY to fullH - visYBottom - visH
   set halfW to visW div 2
-  set size of item 2 of wins to {halfW, visH}
-  set position of item 2 of wins to {visX, topY}
+
+  -- item 1 = newest window (right), item 2 = original window (left)
+  try
+    set size of item 2 of wins to {halfW, visH}
+    set position of item 2 of wins to {visX, topY}
+  end try
   delay 0.1
-  set size of item 1 of wins to {halfW, visH}
-  set position of item 1 of wins to {visX + halfW, topY}
+  try
+    set size of item 1 of wins to {halfW, visH}
+    set position of item 1 of wins to {visX + halfW, topY}
+  end try
   delay 0.1
-  perform action "AXRaise" of item 2 of wins
+  try
+    perform action "AXRaise" of item 2 of wins
+  end try
 end tell
 APPLESCRIPT
 }
@@ -310,36 +333,61 @@ use framework "AppKit"
 tell application "Ghostty" to activate
 delay 0.3
 tell application "System Events" to tell process "Ghostty"
+  -- Only create enough windows to reach exactly 4
   set winCount to count of windows
   repeat (4 - winCount) times
     keystroke "n" using command down
     delay 0.5
   end repeat
   delay 0.3
+
   set wins to every window
   if (count of wins) < 4 then return
+
+  -- Exit fullscreen on any window
+  repeat with w in wins
+    try
+      if value of attribute "AXFullScreen" of w is true then
+        set value of attribute "AXFullScreen" of w to false
+        delay 0.6
+      end if
+    end try
+  end repeat
+
   set mainScreen to current application's NSScreen's mainScreen()
   set screenFrame to mainScreen's frame()
   set visFrame to mainScreen's visibleFrame()
+
   set fullH to (item 2 of item 2 of screenFrame) as integer
   set visX to (item 1 of item 1 of visFrame) as integer
   set visYBottom to (item 2 of item 1 of visFrame) as integer
   set visW to (item 1 of item 2 of visFrame) as integer
   set visH to (item 2 of item 2 of visFrame) as integer
+
   set topY to fullH - visYBottom - visH
   set halfW to visW div 2
   set halfH to visH div 2
-  set size of item 1 of wins to {halfW, halfH}
-  set position of item 1 of wins to {visX, topY}
+
+  -- Size first, then position for reliable placement
+  try
+    set size of item 1 of wins to {halfW, halfH}
+    set position of item 1 of wins to {visX, topY}
+  end try
   delay 0.1
-  set size of item 2 of wins to {halfW, halfH}
-  set position of item 2 of wins to {visX + halfW, topY}
+  try
+    set size of item 2 of wins to {halfW, halfH}
+    set position of item 2 of wins to {visX + halfW, topY}
+  end try
   delay 0.1
-  set size of item 3 of wins to {halfW, halfH}
-  set position of item 3 of wins to {visX, topY + halfH}
+  try
+    set size of item 3 of wins to {halfW, halfH}
+    set position of item 3 of wins to {visX, topY + halfH}
+  end try
   delay 0.1
-  set size of item 4 of wins to {halfW, halfH}
-  set position of item 4 of wins to {visX + halfW, topY + halfH}
+  try
+    set size of item 4 of wins to {halfW, halfH}
+    set position of item 4 of wins to {visX + halfW, topY + halfH}
+  end try
 end tell
 APPLESCRIPT
 }

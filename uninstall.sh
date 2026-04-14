@@ -99,26 +99,11 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# Step 6 — Productivity Tools (Motion Calendar, Notion)
+# Step 6 — Productivity Tools
+# (Notion, Obsidian, Granola, n8n, Google Calendar, Morgen, Motion Calendar)
 # -----------------------------------------------------------------------------
 echo ""
 echo -e "${BLUE}--- Step 6: Productivity Tools ---${NC}"
-
-# Motion Calendar MCP
-if claude mcp list 2>/dev/null | grep -qi "motion-calendar" 2>/dev/null; then
-    claude mcp remove motion-calendar 2>/dev/null || true
-    success "Motion Calendar MCP"
-else
-    skip "Motion Calendar MCP (not found)"
-fi
-
-# Motion Calendar config
-if [ -d "$HOME/.motion-calendar-mcp" ]; then
-    rm -rf "$HOME/.motion-calendar-mcp"
-    success "Motion Calendar config (~/.motion-calendar-mcp)"
-else
-    skip "Motion Calendar config (not found)"
-fi
 
 # Notion MCP
 if claude mcp list 2>/dev/null | grep -qi "notion" 2>/dev/null; then
@@ -136,6 +121,14 @@ else
     skip "Granola MCP (not found)"
 fi
 
+# n8n MCP (user's own n8n instance — HTTP transport, no local config)
+if claude mcp list 2>/dev/null | grep -qi "n8n" 2>/dev/null; then
+    claude mcp remove n8n 2>/dev/null || true
+    success "n8n MCP"
+else
+    skip "n8n MCP (not found)"
+fi
+
 # Google Calendar MCP
 if claude mcp list 2>/dev/null | grep -qi "google-calendar" 2>/dev/null; then
     claude mcp remove google-calendar 2>/dev/null || true
@@ -150,6 +143,30 @@ if [ -d "$HOME/.google-calendar-mcp" ]; then
     success "Google Calendar config (~/.google-calendar-mcp)"
 else
     skip "Google Calendar config (not found)"
+fi
+
+# Morgen MCP (credentials live in Claude's MCP config, no local .env)
+if claude mcp list 2>/dev/null | grep -qi "morgen" 2>/dev/null; then
+    claude mcp remove morgen 2>/dev/null || true
+    success "Morgen MCP"
+else
+    skip "Morgen MCP (not found)"
+fi
+
+# Motion Calendar MCP
+if claude mcp list 2>/dev/null | grep -qi "motion-calendar" 2>/dev/null; then
+    claude mcp remove motion-calendar 2>/dev/null || true
+    success "Motion Calendar MCP"
+else
+    skip "Motion Calendar MCP (not found)"
+fi
+
+# Motion Calendar config
+if [ -d "$HOME/.motion-calendar-mcp" ]; then
+    rm -rf "$HOME/.motion-calendar-mcp"
+    success "Motion Calendar config (~/.motion-calendar-mcp)"
+else
+    skip "Motion Calendar config (not found)"
 fi
 
 # -----------------------------------------------------------------------------
