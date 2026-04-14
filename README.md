@@ -2,6 +2,17 @@
 
 Everything you need to start working with AI-powered development tools, installed in the right order with one command per step.
 
+## The Trilogy
+
+cli-maxxing is the foundation. Two companion repos extend it:
+
+| Repo | What it adds |
+|------|-------------|
+| [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) | Design tools (UI/UX Pro Max, Taste Skill, 21st.dev Magic) + video/audio production |
+| [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) | Obsidian PKM — vault setup, Claude history import, `cbrain`/`cbraintg` commands |
+
+Install cli-maxxing first. The companions are optional and can be added in any order.
+
 ## Quick Nav
 
 | | Section | What it does | Time |
@@ -15,10 +26,9 @@ Everything you need to start working with AI-powered development tools, installe
 | [Bonus: Arc Browser](#bonus---arc-browser) | Arc Browser | The browser for power users — fast, clean, no tab clutter | ~2 min |
 | [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 3](#step-3---ruflo--context-hub) | Ruflo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
-| [Step 4](#step-4---design-tools) | Design Tools | UI/UX Pro Max + Taste Skill (7 variants) + 21st.dev Magic | ~3 min |
-| [Step 5](#step-5---visual-media) | Visual Media | Remotion video creation + YouTube transcripts + Instagram/social transcription | ~5 min |
+| [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) | Design + Media | UI/UX Pro Max, Taste Skill, 21st.dev Magic, Remotion, yt-dlp, Whisper, FFmpeg | [separate repo](https://github.com/lorecraft-io/creativity-maxxing) |
 | [Step 6](#step-6---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion (pick what you use; Morgen recommended) | ~5 min |
-| [Step 7](#step-7---second-brain-obsidian) | Second Brain (Obsidian) | Personal knowledge management system | ~30+ min |
+| [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) | Second Brain | Obsidian vault setup, Claude history import, `cbrain`/`cbraintg` commands | [separate repo](https://github.com/lorecraft-io/2ndbrain-maxxing) |
 | [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
 | [Final Step](#final-step---status-line) | Status Line + /gitfix | Final config — status indicators + /gitfix skill installed | ~2 min |
@@ -76,13 +86,11 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 3](#step-3---ruflo--context-hub)** is where you set up Ruflo and Context Hub. Ruflo is the multi-agent orchestration layer that turns Claude into a full team of AI agents. Context Hub stops Claude from hallucinating when writing code that calls APIs.
 
-**[Step 4](#step-4---design-tools)** gives Claude professional design skills, anti-slop taste skills (7 variants from Leonxlnx), and a library of production-ready UI components.
+**[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)** adds professional design skills and a full video/audio production pipeline. Install it after this repo.
 
-**[Step 5](#step-5---visual-media)** gives Claude the ability to create videos programmatically using React, pull transcripts from any YouTube video, and download + transcribe content from Instagram Reels and other social platforms. Animations, captions, transitions, data visualizations — all generated from code. YouTube transcripts — just paste a link. Instagram Reels — paste a link and Claude downloads the audio and transcribes it locally.
+**[Step 6](#step-6---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, and workflows. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), or Motion Calendar. All optional, install only what you need.
 
-**[Step 6](#step-6---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, and workflows. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), or Motion Calendar. All optional, install only what you need. (Obsidian MCP ships with Step 7, alongside the vault setup.)
-
-**[Step 7](#step-7---second-brain-obsidian)** sets up your personal knowledge management system in Obsidian. This is the biggest step but also the most rewarding. It's the transition from setup to daily use.
+**[2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)** sets up your Obsidian PKM vault and installs `cbrain`/`cbraintg` commands. Install it after this repo.
 
 **[Step 8](#step-8---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected — messages show up in your session in real time. This step is completely optional; everything else works without it.
 
@@ -123,7 +131,7 @@ Here are the commands you'll use most:
 | Command | What it does |
 |---------|-------------|
 | `cskip` | Start with all permissions skipped (fastest, no prompts) |
-| `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires Obsidian — set up in [Step 7](#step-7---second-brain-obsidian))* |
+| `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing))* |
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
 | `/rswarm *write task here*` | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `/rmini *write task here*` | Launch a compact 5-agent swarm — same power, tighter team. Describe your task after `/rmini` |
@@ -168,7 +176,7 @@ These are the tools that get installed automatically when you run the command ab
 | Node.js (v18+) | This runs JavaScript. Claude Code needs it to work. |
 | Claude Code | This is your AI coding assistant. The main tool you'll be using. |
 | Shell aliases | Shortcuts: `cskip`, `cc`, `ccr`, `ccc` — faster ways to launch Claude with different settings. |
-| cbrain | Launches Claude pointed at your Obsidian vault. Your daily driver after Step 7. Do not use until your vault is set up. |
+| cbrain | Launches Claude pointed at your Obsidian vault. Your daily driver after setting up [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing). Do not use until your vault is set up. |
 | ctg | Launches Claude with Telegram connected from any directory. Includes a token check — exits cleanly if no token is configured. |
 | cbraintg | Same as cbrain but with Telegram integration. Includes the same token check as ctg. |
 
@@ -552,7 +560,7 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 
 ### After Step 3
 
-Your core tools are installed. Continue to Step 4 for design tools, Step 5 for visual media, and Step 6 for your productivity tools. Or open a new `cskip` session and try something ambitious. Ruflo kicks in automatically when the task calls for it.
+Your core tools are installed. Continue to Step 6 for productivity tools. For design tools and video/audio production, install [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing). For your Obsidian knowledge base, install [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing). Or open a new `cskip` session and try something ambitious. Ruflo kicks in automatically when the task calls for it.
 
 ### MCP Server Setup
 
@@ -578,91 +586,16 @@ claude mcp add ruflo -- npx -y ruflo@latest
 
 [Back to top](#quick-nav)
 
-This step supercharges how Claude handles anything visual. It installs three tools that make Claude dramatically better at building user interfaces, web pages, apps, and anything design-related: UI/UX Pro Max for design intelligence, Taste Skill (7 variants) for anti-slop premium output, and 21st.dev Magic for production-ready components.
-
-### UI/UX Pro Max Skill
-
-Built by [@nextlevelbuilder](https://github.com/nextlevelbuilder) ([repo](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)). This is an open-source design intelligence engine that gives Claude professional-level UI/UX knowledge.
-
-Without this skill, Claude generates generic-looking interfaces. With it, Claude has access to:
-
-- **161 industry-specific design rules.** Claude knows how a fintech dashboard should look different from a fitness app or a restaurant website.
-- **67 UI styles.** Glassmorphism, Brutalism, Dark Mode, Neumorphism, and more. You can just say the style you want and Claude nails it.
-- **161 color palettes and 57 font pairings.** No more default blues and grays. Claude picks cohesive, professional color schemes and typography.
-- **99 UX guidelines.** Accessibility, responsive layouts, user flow patterns. Claude doesn't just make things look good, it makes things that actually work.
-- **13 tech stacks supported.** React, Vue, Flutter, SwiftUI, Tailwind, and more. The skill adapts to whatever you're building with.
-
-You don't have to tell Claude to "use the UI/UX skill." It activates automatically whenever you ask for anything design-related. Just describe what you want and Claude will generate a complete design system before writing a single line of code.
-
-### Taste Skill (7 variants)
-
-Built by [@Leonxlnx](https://github.com/Leonxlnx/taste-skill) ([site](https://tasteskill.dev)). A collection of seven specialized design skills that stop AI from generating boring, generic "slop" frontend code. Where UI/UX Pro Max teaches Claude *what* good design looks like in general, Taste Skill teaches Claude *how* to make every generated interface feel premium by default — proper spacing, original layouts, real motion, anti-repetition rules.
-
-Installed in one command as a pack of seven variants — each becomes its own skill folder under `~/.claude/skills/`:
-
-- **taste-skill** — the main skill. Premium frontend rules covering layout, typography, color, spacing, and motion. Has three tunable knobs (DESIGN_VARIANCE, MOTION_INTENSITY, VISUAL_DENSITY — each 1-10) you can edit in the `SKILL.md` file to dial in exactly how experimental, animated, or dense the output should be.
-- **redesign-skill** — for upgrading existing projects. Audits the current design for generic AI patterns first, then fixes the problems. Use this when you're editing a project that's already built.
-- **soft-skill** — expensive, soft UI look. Premium fonts, whitespace, depth, smooth spring animations. Think high-end Apple-esque.
-- **output-skill** — anti-laziness. Stops Claude from writing placeholder comments, skipping code blocks, or leaving outputs half-finished. Use this whenever you catch Claude hedging.
-- **minimalist-skill** — clean editorial style. Monochrome, crisp borders, inspired by Notion and Linear.
-- **brutalist-skill** *(beta)* — raw mechanical interfaces fusing Swiss typographic print with CRT terminal aesthetics. For portfolios, editorial sites, data-heavy dashboards that need to feel like declassified blueprints.
-- **stitch-skill** — Google Stitch-compatible semantic design rules. Generates a `DESIGN.md` you can export for other tooling.
-
-Claude picks the right variant automatically based on your prompt, but you can force one by naming it in your ask: *"redesign this landing page with soft-skill"*, *"use minimalist-skill for the dashboard"*.
-
-Install command (the setup script runs this for you):
-
-```bash
-npx skills add Leonxlnx/taste-skill --yes --global
-```
-
-> **No slash commands.** Taste Skill is passive — no `/taste-skill`-style trigger. It activates automatically on design work. To disable it for a specific prompt, tell Claude: *"skip taste-skill, just give me raw HTML."*
-
-### 21st.dev Magic MCP
-
-Built by the team at [@21st-dev](https://github.com/21st-dev) ([site](https://21st.dev)). This connects Claude to a massive library of production-ready UI components.
-
-While the UI/UX Pro Max Skill handles the design thinking, 21st.dev Magic handles the actual components. Claude can pull from a library of pre-built, beautifully designed React components and assemble them into whatever you're building.
-
-- **Production-ready components.** Not rough prototypes. These are polished, responsive, accessible components you can ship.
-- **Huge library.** Buttons, cards, modals, navigation, forms, dashboards, and more. Claude picks the right ones for your design.
-- **Works right inside Claude.** Once connected, Claude just uses the components automatically when building UI.
-
-**Setting up 21st.dev requires a free account.** The script will install the MCP connection, but you'll also need to do this:
-
-1. Go to [21st.dev](https://21st.dev) and create a free account. No payment needed to start.
-2. Once logged in, go to the [Magic MCP setup page](https://21st.dev/magic-chat?mcp_section=true) and follow their instructions. They'll give you a command to run.
-3. If the auto-install didn't connect it, the setup page will walk you through it.
-
-### Run Step 4
-
-You should still have a Claude session open. If you closed it, open your terminal and type `cskip` to start a new Claude session.
-
-Once you're inside the Claude session, paste this and hit Enter:
-
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
+> **This step has moved.**
+>
+> Design tools (UI/UX Pro Max, Taste Skill, and 21st.dev Magic) are now part of **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)**.
+>
+> Install it after completing this repo:
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh | bash
 > ```
-> run this command to install design tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-4/step-4-install.sh | bash
-> ```
-
-
-### After the script runs, set up 21st.dev
-
-The UI/UX Pro Max Skill installs automatically. But 21st.dev needs you to create an account:
-
-1. Go to [21st.dev](https://21st.dev)
-2. Sign up for free (no payment required)
-3. Go to the [Magic MCP setup page](https://21st.dev/magic-chat?mcp_section=true) and follow their instructions. They'll give you a command to paste in your terminal.
-4. Once connected, Claude will automatically use their component library when building UI.
-
-### What This Step Installs
-
-| Component | What it does |
-|-----------|-------------|
-| UI/UX Pro Max Skill | This gives Claude professional design intelligence. 161 design rules, 67 styles, 161 palettes, 57 font pairings, 99 UX guidelines. |
-| Taste Skill (7 variants) | Anti-slop frontend design rules — main `taste-skill` plus 6 variants (redesign, soft, output, minimalist, brutalist, stitch). Installed via `npx skills add Leonxlnx/taste-skill`. Passive — activates automatically on design work. |
-| 21st.dev Magic MCP | This connects Claude to a library of production-ready UI components it can use when building interfaces. |
+>
+> creativity-maxxing also includes Step 5 (Remotion, YouTube Transcripts, yt-dlp, Whisper, FFmpeg). You get both in one install.
 
 ---
 
@@ -670,78 +603,16 @@ The UI/UX Pro Max Skill installs automatically. But 21st.dev needs you to create
 
 [Back to top](#quick-nav)
 
-This step gives Claude the ability to create videos programmatically using React, pull transcripts from any YouTube video, and download + transcribe audio from Instagram Reels and other social platforms — all locally on your machine. Instead of editing video in a timeline tool, you describe what you want and Claude writes code that generates the video. Animations, captions, transitions, data visualizations, 3D content — all from code. Need a transcript? Just paste a YouTube or Instagram link.
-
-### Remotion
-
-Built by [@remotion-dev](https://github.com/remotion-dev) ([site](https://remotion.dev)). Remotion is a framework for creating videos using React. You write React components and Remotion renders them into actual video files.
-
-This is not screen recording or template filling. It's real programmatic video creation:
-
-- **React-based video.** Every frame is a React component. If you can build it in React, you can turn it into a video.
-- **Animations and transitions.** Spring animations, easing curves, scene transitions, text animations — all built in.
-- **Captions and subtitles.** Automatic caption generation and styling, synced to audio.
-- **Audio and sound.** Import audio, control volume, trim, adjust speed and pitch, add sound effects, visualize audio as waveforms or spectrum bars.
-- **3D content.** Three.js and React Three Fiber integration for 3D scenes in your videos.
-- **Charts and data viz.** Bar charts, pie charts, line charts, stock charts — animated and rendered as video.
-- **Maps.** Animated Mapbox maps in your videos.
-- **FFmpeg integration.** Trim videos, detect silence, process audio — the heavy-duty video operations.
-- **Parametric videos.** Define a schema and generate different versions of the same video with different data.
-
-The Remotion skill teaches Claude best practices, patterns, and techniques for all of these. Claude doesn't just know about Remotion — it knows the right way to use it.
-
-### YouTube Transcripts
-
-Built by [@kimtaeyoon83](https://github.com/kimtaeyoon83/mcp-server-youtube-transcript). This MCP server pulls transcripts from any YouTube video — no API key, no paid service, completely free.
-
-- **Just paste a link.** Give Claude a YouTube URL and ask for the transcript. That's it.
-- **Language support.** Request transcripts in any available language with automatic fallback.
-- **Timestamps.** Include or exclude timestamps in the output.
-- **Ad filtering.** Sponsorship and ad segments are stripped out automatically.
-- **Works with Shorts.** YouTube Shorts URLs and bare video IDs work too.
-
-This is useful for research, content repurposing, note-taking, summarizing videos, or feeding video content into your Second Brain.
-
-### Instagram + Social Media Transcription
-
-This gives Claude the ability to transcribe audio from Instagram Reels, TikToks, Twitter/X videos, and other social platforms — completely locally on your machine. It works by combining two tools behind the scenes: [yt-dlp](https://github.com/yt-dlp/yt-dlp) (a widely-used open-source media downloader) handles the downloading, and [Whisper](https://github.com/jwulff/whisper-mcp) (OpenAI's speech-to-text model) handles the transcription. No API keys, no cloud services.
-
-- **Paste any link.** Instagram Reels, TikToks, Twitter/X posts, Facebook videos — if the platform is supported, Claude can download it.
-- **Local transcription.** Audio is transcribed on your machine using OpenAI's Whisper model. Nothing leaves your computer.
-- **Multiple models.** The default is base, which is a good balance of speed and accuracy. You can also use tiny (fastest), small, medium, or large (most accurate) if you need to.
-- **First run downloads the model.** The first time you transcribe, Claude downloads the Whisper model (~148 MB for base). After that, there's no download wait.
-- **Output formats.** Plain text, timestamped, or structured JSON.
-
-The flow is simple: paste a link → Claude downloads the audio → Whisper transcribes it → you get the text. Works great for capturing ideas from Reels, transcribing interviews, pulling quotes, or feeding social content into your Second Brain.
-
-### Run Step 5
-
-You should still have a Claude session open. If you closed it, open your terminal and type `cskip` to start a new Claude session.
-
-Once you're inside the Claude session, paste this and hit Enter:
-
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
+> **This step has moved.**
+>
+> Visual media tools (Remotion, YouTube Transcripts, yt-dlp, Whisper, and FFmpeg) are now part of **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)**.
+>
+> Install it after completing this repo:
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh | bash
 > ```
-> run this command to install visual media tools: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh | bash
-> ```
-
-
-### What This Step Installs
-
-| Component | What it does |
-|-----------|-------------|
-| Remotion Skills | Teaches Claude best practices for programmatic video creation with React — animations, transitions, captions, audio, 3D, charts, and more. |
-| YouTube Transcript MCP | Pulls transcripts from any YouTube video. Free, no API key needed. Supports language selection, timestamps, and ad filtering. |
-| yt-dlp MCP | Downloads audio/video from Instagram Reels, TikTok, Twitter/X, and many other platforms. Used to grab audio for local transcription. |
-| yt-dlp CLI | The command-line downloader that powers the yt-dlp MCP. Installed via Homebrew (macOS) or your system package manager (Linux). |
-| whisper-cpp | The transcription engine that actually converts speech to text. Installed via Homebrew on Mac (binary: `whisper-cli`), built from source on Linux. |
-| Whisper MCP | Connects whisper-cpp to Claude so it can transcribe audio files on demand. Runs entirely on your machine — no API keys, no cloud. |
-| FFmpeg | Powerful command-line tool for video and audio processing. Used by Remotion for rendering and by Claude for media operations. |
-
-### After Step 5
-
-You're now set up for visual media creation. Ask Claude to create a Remotion project and describe the video you want. Claude will scaffold the project, write the components, and you can render the output. You can also paste any YouTube link and ask Claude for the transcript — it'll pull it automatically. For Instagram Reels, TikToks, or other social media, just paste the link and ask Claude to transcribe it. The first time, it'll download the Whisper model (~148 MB), then there's no download wait after that.
+>
+> creativity-maxxing also includes Step 4 (UI/UX Pro Max, Taste Skill, 21st.dev Magic). You get both in one install.
 
 ---
 
@@ -772,7 +643,7 @@ Step 6 installs six optional tools in this order:
 
 > **Calendar recommendation:** Morgen (5) is the recommended default calendar + task tool. It unifies Google, Outlook, iCloud, and native tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary — install them only if you specifically need direct access to those accounts.
 >
-> **Obsidian MCP?** That lives in Step 7 (Second Brain), not here. Step 7 installs the Obsidian app, sets up your vault structure, AND registers `obsidian-mcp` with Claude Code — the MCP registration happens in **step 7d (wire-vault)** after the vault exists. If you already have a vault and just want the MCP, you can re-run `step-7d-wire-vault.sh` in isolation.
+> **Obsidian MCP?** That lives in [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing), not here. Install 2ndbrain-maxxing after this repo completes — it handles vault setup AND registers the Obsidian MCP with Claude Code.
 
 ### Notion
 
@@ -861,235 +732,21 @@ Once you're inside the Claude session, paste this and hit Enter:
 
 ### After Step 6
 
-You now have your productivity stack connected to Claude. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. If you skipped any tools, you can always come back and re-run Step 6 to add them. For the Obsidian MCP and vault access, continue to Step 7.
+You now have your productivity stack connected to Claude. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. If you skipped any tools, you can always come back and re-run Step 6 to add them. For the Obsidian MCP and vault access, install [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing).
 
 ---
 
-## Step 7 - Second Brain (Obsidian)
+## Step 7 — Second Brain (Obsidian)
 
 [Back to top](#quick-nav)
 
-This is the biggest step. It sets up your personal knowledge management system, a "Second Brain" that captures, connects, and retrieves everything you know and everything you're working on. This step takes real time. Don't rush it.
+> **This step has moved.** See [lorecraft-io/2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing).
 
-> **Heads up:** This step has multiple parts (7a through 7d). Each one is its own script. Take them one at a time.
+2ndbrain-maxxing sets up your Obsidian knowledge base, imports your Claude conversation history, and installs `cbrain`/`cbraintg` commands. Install it after completing cli-maxxing.
 
-### What is a Second Brain?
-
-Your brain is great at having ideas. It's terrible at storing them. You read an article, have an insight, learn something useful, and a week later it's gone. A Second Brain is a system outside your head that captures all of that, organizes it, and makes it findable later. Instead of trying to remember everything, you write it down in a structured way and let the system do the remembering for you.
-
-This isn't just note-taking. It's building a personal knowledge base that grows smarter over time. Every note you add connects to other notes. Over months and years, you end up with a web of knowledge that's uniquely yours.
-
-### What is Obsidian?
-
-[Obsidian](https://obsidian.md) is a free note-taking app that stores everything as plain text files on your computer. No cloud lock-in, no subscription required, your notes are just files in a folder. But the magic is in how Obsidian connects them.
-
-Every note can link to any other note using `[[wikilinks]]`. You type `[[` and start typing a concept, and Obsidian lets you link to it. Over time, these links create a web of connected knowledge that you can actually visualize.
-
-### What is Zettelkasten?
-
-Zettelkasten is a German word that means "slip box." It's a method for organizing knowledge that was invented by a sociologist named Niklas Luhmann who used it to write over 70 books and 400 academic papers. The core idea is simple:
-
-- **One idea per note.** Each note captures a single concept, written in your own words.
-- **Link everything.** Every note connects to related notes. The value isn't in any single note, it's in the connections between them.
-- **Let structure emerge.** You don't start with a rigid folder hierarchy. You start by writing notes and linking them, and the structure reveals itself over time.
-
-Obsidian is the perfect tool for Zettelkasten because it makes linking effortless and lets you see your entire knowledge web as a visual graph.
-
-### The Node Graph
-
-This is the part that clicks for most people. Obsidian has a graph view that shows every note as a dot and every link as a line between dots. When you first start, it's a handful of scattered points. But as you add notes and link them, clusters form. You can literally see which topics are deeply connected and which ones are isolated. It's your knowledge, visualized.
-
-The more you link, the more useful it gets. Claude will help you create these links automatically.
-
-### What You're About to Set Up
-
-The folder structure we use is based on Zettelkasten principles:
-
-| Folder | What goes in it |
-|--------|----------------|
-| **00-Inbox** | Raw captures. URLs, quick thoughts, anything unprocessed. This is your dumping ground. |
-| **01-Fleeting** | Quick ideas and thoughts, lightly formatted. Shower thoughts, observations, things you want to remember. |
-| **02-Literature** | Notes from articles, videos, books, podcasts. Summarized in your own words with a source link. |
-| **03-Permanent** | Refined, atomic notes. One clear concept per note, written as if explaining to someone else. Densely linked. These are the core of your knowledge graph. |
-| **04-MOC** | Maps of Content. Index notes that group and link related permanent notes. Think of these as tables of contents for topic areas. |
-| **05-Templates** | Note templates for each type above. Claude uses these when creating new notes. |
-| **06-Assets** | Images, PDFs, attachments. Anything that isn't a text note. |
-| **07-Projects** | Active projects. Each one gets its own folder with an index note. If you use Claude Projects, you can mirror your Claude project names here. |
-
-### Step 7a - Install Obsidian + Create Your Vault
-
-This part installs Obsidian on your machine and has Claude set up the full folder structure for you.
-
-**First, install Obsidian:**
-
-- **Mac:** Press **Cmd+Space**, type **Terminal**, and run: `brew install --cask obsidian`
-- **Linux:** `sudo snap install obsidian` or `sudo flatpak install obsidian` or download from [obsidian.md](https://obsidian.md)
-
-Or just go to [obsidian.md/download](https://obsidian.md/download) and download it directly.
-
-**Then, open Obsidian and create your vault:**
-
-1. Open Obsidian. **How to find it:** On Mac, press **Cmd+Space** and type **Obsidian**. On Linux, look for "Obsidian" in your applications menu.
-2. Click **Create new vault**
-3. Name it something you'll remember. We recommend **"2ndBrain"** — the scripts and status line look for this name by default. "Second-Brain" or "Vault" also work.
-4. For the location, pick your **Desktop**. The scripts search these locations in order:
-   - `~/Desktop/WORK/OBSIDIAN/2ndBrain`
-   - `~/Desktop/2ndBrain` *(recommended for most people)*
-   - `~/Desktop/Second-Brain`
-   - `~/Desktop/Vault`
-   - `~/Documents/2ndBrain`
-   - `~/Documents/Second-Brain`
-
-   If your vault is somewhere else, set the `VAULT_PATH` environment variable before running Step 7:
-   ```bash
-   export VAULT_PATH=~/path/to/your/vault
-   ```
-5. Click **Create**
-
-Obsidian will open with an empty vault. That's perfect. Now Claude will set it up for you.
-
-**Open your terminal, run cskip, and paste this:**
-
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
-> ```
-> run this command to set up my Second Brain vault structure: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7a-setup-vault.sh | bash
-> ```
-
-
-Claude will ask you where your vault is located, then:
-
-- Create all the Zettelkasten folders (00-Inbox through 07-Projects)
-- Drop in ready-to-use **note templates** for each note type (Fleeting, Literature, Permanent, MOC) so Claude and you always create notes in a consistent format
-- Create the **CLAUDE.md** file that teaches Claude how to work with your vault going forward (linking conventions, frontmatter standards, tagging rules, note types)
-- Set up the **WebFetch workflow** so Claude knows how to capture content from URLs into your vault (it pulls the page, creates a Literature Note, extracts permanent notes, and links everything)
-- Set up a **sync automation script** you can run later to keep things tidy
-
-### Step 7b - Import Your Claude History
-
-Before importing your other notes, let's get your Claude conversation history in first. This helps because some people name their vault project folders after their Claude Projects, and having that data available makes the whole organization process smoother.
-
-**Download your Claude data:**
-
-1. Go to [claude.ai](https://claude.ai) in your browser
-2. Click your profile icon (bottom left)
-3. Go to **Settings**
-4. Go to **Privacy**
-5. Click **Download my data** and select **All time** for the date range
-6. Click **Request download**
-7. Check your email. Anthropic will send you a download link. This can take a few minutes.
-8. Download the zip file and save it somewhere easy to find (like your Desktop)
-
-**Once you have the zip file, go back to your cskip session and paste this:**
-
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
-> ```
-> run this command to import my Claude history into my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7b-import-claude.sh | bash
-> ```
-
-
-Claude will ask you where the zip file is, then:
-
-- Parse your conversations and sort them into the right vault folders
-- Create **project folders** in `07-Projects/` based on your Claude Projects (you can name them whatever you want, Claude will ask)
-- Generate a **project index note** for each project with a knowledge base summary and conversation log links
-- Convert conversation highlights into **literature notes** in `02-Literature/`
-- Extract key concepts into **permanent notes** in `03-Permanent/`
-- Start building **bidirectional links** between related projects and notes
-
-> **Using a different AI?** If you're coming from ChatGPT, Gemini, Copilot, or any other AI tool, you can run the same process with your data. Most AI platforms let you export your conversation history — look for a "Download my data" or "Export" option in your account settings. Save the export to ~/Downloads/, then tell Claude where it is and ask it to parse your conversations into the vault the same way. The script above is built for Claude's export format, but Claude can read and organize conversations from any AI tool once you point it at the files.
-
-### Step 7c - Import Your Existing Notes
-
-Now let's get the rest of your notes in. If you have notes in Apple Notes, Google Keep, Notion, Evernote, or any other app, this step helps you export them and bring them into your vault.
-
-**For Apple Notes (Mac):**
-
-1. Download [Apple Notes Exporter](https://apps.apple.com/us/app/exporter/id1099120373) from the App Store. This is a free app that exports your Apple Notes as files Claude can read.
-2. **How to find it after downloading:** Check your Downloads folder. On Mac, press **Cmd+Space** and type the app name. On Linux, check your applications menu.
-3. Open it, select the notes you want to export, and save them to a folder you can find easily.
-
-**For other apps (Notion, Evernote, Google Keep, OneNote):**
-- Most note apps have an export feature somewhere in their settings. Export as markdown if possible, HTML if not.
-- Save everything to a single folder.
-
-**Once you have your exported notes in a folder, go back to your cskip session and paste this:**
-
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
-> ```
-> run this command to import my notes into my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7c-import-notes.sh | bash
-> ```
-
-
-Claude will ask you where your exported notes are, what format they're in, and then:
-
-- **Convert files to markdown** using Pandoc (installed in Step 2). This handles Word docs (.docx), PowerPoint (.pptx), Excel spreadsheets (.xlsx), and HTML files. Everything becomes clean, linkable markdown.
-- **Validate every file.** Claude checks for corrupt, empty, or fake files (like a .pdf that's actually an empty text file) and flags them.
-- **Move everything into the Inbox** for processing in Step 7d.
-- **Ask you how you want to organize things.** Claude will have a conversation with you about what folders make sense for your notes, what categories you care about, and how you want things grouped. This isn't one-size-fits-all. Your vault should reflect how your brain works.
-
-### Step 7d - Wire It All Up
-
-This is where the magic happens. Claude goes through everything in your vault and connects it all together. This is the stuff that would take you hours to do manually. Claude does it in minutes.
-
-What Claude will do:
-- **Process your Inbox.** Sort raw captures into Fleeting, Literature, or Permanent notes based on what they are.
-- **Create wikilinks.** Find related concepts across your notes and link them together with `[[wikilinks]]`. Claude looks at every note and asks "what else in this vault relates to this?" Then it creates the links.
-- **Fix bidirectional links.** Make sure if Note A links to Note B, Note B also links back to Note A. This is critical for the graph to work properly.
-- **Build Maps of Content.** Create MOC index notes that group related permanent notes by topic. These are like tables of contents for different areas of your knowledge.
-- **Create project index notes.** Each project in `07-Projects/` gets an index note with a summary, knowledge base links, and conversation log references.
-- **Convert tables to bullet lists.** Obsidian's graph view doesn't detect wikilinks that are inside markdown tables. Claude converts them to bullet lists so every link shows up in the graph.
-- **Validate files.** Catch any corrupt, empty, or misplaced files and flag them for you.
-- **Add frontmatter.** Every note gets proper YAML frontmatter (title, date, type, tags, source, related) so Obsidian can filter and search them.
-- **Set up the sync script.** A simple script you can run anytime to re-process your Inbox, fix broken links, and keep your vault tidy.
-
-> [!IMPORTANT]
-> **Paste this into your Claude session:**
-> ```
-> run this command to wire up my vault: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7d-wire-vault.sh | bash
-> ```
-
-
-After this runs, open Obsidian and click the **graph view** icon (it looks like a network of dots, in the left sidebar). You'll see your entire knowledge base visualized as connected nodes. The more you add and link over time, the more powerful this becomes.
-
-**Connecting to GitHub (optional but recommended):**
-
-If you have GitHub repos, Claude can connect them to your vault. This means if information isn't in your notes, Claude can fall back to checking your actual code repos. Tell Claude your GitHub username or org name and it will map your repos to project folders. You need to be logged into GitHub CLI first (run `gh auth login` if you haven't).
-
-**Claude does the heavy lifting here.** The whole point of this setup is that you don't have to manually organize, link, or categorize anything. You dump things into the Inbox, and Claude (or you working with Claude) processes them into the right places. The system gets smarter as it grows.
-
-> **This step takes the longest.** Depending on how many notes and Claude conversations you have, this could take 30+ minutes. Let Claude work. You can watch it go or come back when it's done.
-
-### Step 7 Troubleshooting
-
-If things don't look right, here are the most common issues and how to fix them. You can ask Claude to fix any of these for you.
-
-**Notes aren't showing connections in the graph:**
-- Open the graph view in Obsidian (left sidebar, looks like connected dots). If you see a bunch of isolated dots with no lines between them, your notes don't have wikilinks yet. Tell Claude: "Create wikilinks between related notes in my vault."
-- Take a screenshot of the graph and share it with Claude. Claude can see what's connected and what's not.
-
-**Wikilinks inside tables aren't showing in the graph:**
-- This is a known Obsidian limitation. Links inside markdown tables are invisible to the graph. Tell Claude: "Convert all wikilinks inside tables to bullet lists in my vault." This was an issue we hit during our own setup.
-
-**Bidirectional links are broken:**
-- If Note A links to Note B but Note B doesn't link back, the graph is incomplete. Tell Claude: "Fix all bidirectional links in my vault. If A links to B, make sure B links back to A."
-
-**Some files failed to convert:**
-- If Pandoc couldn't convert a file, it might be corrupt or in an unexpected format. Tell Claude: "Validate all files in my vault and flag anything that's corrupt or failed to convert."
-- We caught a fake PDF during our own setup (a file with a .pdf extension that was actually empty). Claude will catch these.
-
-**Frontmatter is missing on some notes:**
-- If notes don't have the YAML frontmatter block at the top, Obsidian can't filter or categorize them properly. Tell Claude: "Add proper frontmatter to any notes in my vault that are missing it."
-
-**The Inbox is still full after running 7d:**
-- Claude might have been conservative about categorizing some notes. Tell Claude: "Process everything remaining in my Inbox. Sort each note into the appropriate folder and create links."
-
-**You want to reorganize folders or rename projects:**
-- Just tell Claude. For example: "Rename the project folder WAGMI to WAGMI-HQ and update all links." Claude handles the renaming and fixes every reference.
-
-**General rule:** If something looks off, take a screenshot and show it to Claude. Or just describe the problem. Claude can read your vault, find the issue, and fix it. That's the whole point of this setup.
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/2ndbrain-maxxing/main/install.sh)
+```
 
 ---
 
@@ -1097,7 +754,7 @@ If things don't look right, here are the most common issues and how to fix them.
 
 [Back to top](#quick-nav)
 
-This step connects Claude to Telegram so you can message it from your phone. You create a bot on Telegram using @BotFather (free, takes about 2 minutes), then the script configures it locally. After setup, you can send Claude messages, photos, and files from anywhere — your phone, tablet, or any device with Telegram installed. The `ctg` command (already installed in Step 1) launches Claude with Telegram connected, and `cbraintg` does the same but also opens your 2ndBrain vault. This step is optional but makes Claude accessible from your pocket.
+This step connects Claude to Telegram so you can message it from your phone. You create a bot on Telegram using @BotFather (free, takes about 2 minutes), then the script configures it locally. After setup, you can send Claude messages, photos, and files from anywhere — your phone, tablet, or any device with Telegram installed. The `ctg` command (already installed in Step 1) launches Claude with Telegram connected, and `cbraintg` does the same but also opens your 2ndBrain vault (requires [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)). This step is optional but makes Claude accessible from your pocket.
 
 ### What It Sets Up
 
@@ -1238,7 +895,7 @@ After the status line installs, run a quick check to make sure every command, sk
 
 This tells Claude to cross-reference the cheatsheet against your actual system and fill in any gaps. It's the final sanity check — if a skill didn't install, an MCP didn't connect, or an alias didn't register, Claude will catch it and fix it right there.
 
-> **Note:** Use `cskip` for this step, not `cbrain`. The `cbrain` command requires your Obsidian vault to exist. If you haven't finished Step 7 yet, or if something went wrong during vault setup, `cbrain` will error out. `cskip` always works.
+> **Note:** Use `cskip` for this step, not `cbrain`. The `cbrain` command requires your Obsidian vault to exist. If you haven't run 2ndbrain-maxxing yet, or if something went wrong during vault setup, `cbrain` will error out. `cskip` always works.
 
 ### After Final Step
 
@@ -1278,30 +935,11 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/mai
 
 ### Obsidian MCP returns internal errors
 
-After Step 7d installs the Obsidian MCP server, you might see "internal error" messages when Claude tries to use it. This is usually a temporary issue with the upstream `obsidian-mcp` package.
-
-**Fix:** Try these in order:
-1. Close and reopen your Claude session (`Ctrl+C`, then `cskip` or `cbrain`)
-2. Re-add the MCP server manually:
-   ```bash
-   claude mcp add --scope user obsidian -- npx -y obsidian-mcp ~/Desktop/2ndBrain
-   ```
-   (Replace with your actual vault path)
-3. If it still errors, Claude can read and write files in your vault directly — the Obsidian MCP is a convenience layer, not a hard requirement
+See the [2ndbrain-maxxing troubleshooting guide](https://github.com/lorecraft-io/2ndbrain-maxxing#troubleshooting). The Obsidian MCP is installed and configured by 2ndbrain-maxxing.
 
 ### `cbrain` says it can't find my vault
 
-The `cbrain` command searches a fixed list of common locations. If your vault isn't in one of those spots, set the `VAULT_PATH` environment variable:
-
-```bash
-export VAULT_PATH=~/path/to/your/vault
-cbrain
-```
-
-Or add it permanently to your `~/.zshrc`:
-```bash
-export VAULT_PATH="$HOME/path/to/your/vault"
-```
+See [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) — vault setup is handled there. If your vault exists but isn't found, set `VAULT_PATH=/path/to/your/vault cbrain`.
 
 ### Status line doesn't show the brain indicator
 
@@ -1336,7 +974,7 @@ Once you're inside Claude, type:
 /mcp
 ```
 
-This shows every MCP server and its connection status. Everything you installed — Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Google Calendar, Obsidian (from Step 7), design tools — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
+This shows every MCP server and its connection status. Everything you installed — Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Google Calendar, Obsidian (from 2ndbrain-maxxing), design tools (from creativity-maxxing) — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
 
 > "One of my MCP servers isn't connecting — can you troubleshoot it?"
 
@@ -1354,7 +992,7 @@ Everything is installed, configured, and wired together. From now on, this is th
 
 That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with all permissions skipped. Your vault is your home base — every tool, skill, and MCP server you just installed is available the moment you type it.
 
-> **Haven't done Step 7 yet?** Use `cskip` instead of `cbrain` until your Second Brain vault is set up. `cbrain` requires the Obsidian vault to exist — it will error if you haven't created one. Once Step 7 is complete, switch to `cbrain` as your daily driver.
+> **Haven't run 2ndbrain-maxxing yet?** Use `cskip` instead of `cbrain` until your Second Brain vault is set up. `cbrain` requires the Obsidian vault to exist — it will error if you haven't created one. Once [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) is complete, switch to `cbrain` as your daily driver.
 
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
@@ -1384,15 +1022,15 @@ Run the steps in this order:
 | Bonus | Arc Browser | Power-user browser with sidebar tabs (optional, macOS) |
 | 2 | Dev Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
-| 4 | Design Tools | UI/UX Pro Max + Taste Skill (7 variants) + 21st.dev Magic |
-| 5 | Visual Media | Remotion + YouTube Transcripts + IG/Social Transcription + FFmpeg |
+| 4 | Design Tools | → **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)** (UI/UX Pro Max, Taste Skill, 21st.dev Magic) |
+| 5 | Visual Media | → **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)** (Remotion, YouTube Transcripts, yt-dlp, Whisper, FFmpeg) |
 | 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar (all optional — pick what you use; Morgen recommended) |
-| 7 | Second Brain | Obsidian vault setup + data import (7a-7d) |
+| 7 | Second Brain | → **[2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)** (Obsidian vault setup, Claude history import, `cbrain`/`cbraintg`) |
 | 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
 | **Final** | **Status Line + /gitfix** | **Final config — status indicators, system health check, /gitfix skill** |
 
-> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 7 (Second Brain) is the biggest step with four sub-parts (7a-7d). Step 8 (Telegram) is completely optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line + /gitfix) is the wrap-up — it wires your status indicators, installs the /gitfix skill, and runs a system health check.
+> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Steps 4 and 5 are handled by [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing). Step 7 (Second Brain) is handled by [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing). Step 8 (Telegram) is completely optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line + /gitfix) is the wrap-up — it wires your status indicators, installs the /gitfix skill, and runs a system health check.
 
 ---
 
@@ -1435,8 +1073,8 @@ If you need to remove everything installed by this setup, the uninstall script r
 
 **What it removes:**
 - Claude Code + shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and scripts (`ctg`, `cbrain`, `cbraintg` in `~/.local/bin/`)
-- All MCP servers (Ruflo, Magic, YouTube Transcript, yt-dlp, Whisper, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Obsidian)
-- All skills (rswarm, rmini, rhive, w4w, get-api-docs, gitfix, UI/UX Pro Max, Taste Skill pack, Remotion, safetycheck)
+- All MCP servers (Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar) — Magic, YouTube Transcript, yt-dlp, Whisper, and Obsidian are managed by the companion repos
+- All skills (rswarm, rmini, rhive, w4w, get-api-docs, gitfix, safetycheck) — UI/UX Pro Max, Taste Skill pack, and Remotion are managed by creativity-maxxing
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler)
 - Whisper models (~/.whisper/)
 - Motion Calendar config (~/.motion-calendar-mcp/)
