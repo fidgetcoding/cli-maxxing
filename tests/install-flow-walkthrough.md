@@ -1,6 +1,6 @@
 # CLI-MAXXING Install Flow Walkthrough -- Regression Test
 
-**Test scenario:** Fresh Mac, username `a test machine` (a tester), vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
+**Test scenario:** Fresh Mac, username `a test machine` (early tester), vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
 **Test date:** 2026-04-05
 
@@ -91,7 +91,7 @@
 **Old code:** `grep -qiE "OBSIDIAN/(2ndBrain|MASTER)"`
 **Current code:** `grep -qiE "(2ndBrain|MASTER|Second-Brain|Vault)"`
 
-The `OBSIDIAN/` prefix requirement has been removed. The pattern now matches any path containing `2ndBrain`, `MASTER`, `Second-Brain`, or `Vault`. a tester's vault at `~/Desktop/2ndBrain` will correctly trigger the brain indicator.
+The `OBSIDIAN/` prefix requirement has been removed. The pattern now matches any path containing `2ndBrain`, `MASTER`, `Second-Brain`, or `Vault`. The vault at `~/Desktop/2ndBrain` will correctly trigger the brain indicator.
 
 **Verified in all 3 locations:**
 - `step-3/step-3-install.sh` line 530
@@ -171,7 +171,7 @@ Installs 6 optional productivity MCPs. Obsidian MCP lives in Step 7d (alongside 
 | Create CLAUDE.md | Vault instructions | PASS |
 | Register in Obsidian | Writes to `~/Library/Application Support/obsidian/obsidian.json` | PASS |
 
-**Notes:** On first run for a tester, no `.obsidian` dir exists. Script correctly defaults to `~/Desktop/2ndBrain` and creates the full structure including `.obsidian/app.json`. Subsequent runs find the vault via the `.obsidian` directory.
+**Notes:** On first run on the first run, no `.obsidian` dir exists. Script correctly defaults to `~/Desktop/2ndBrain` and creates the full structure including `.obsidian/app.json`. Subsequent runs find the vault via the `.obsidian` directory.
 
 ---
 
@@ -327,4 +327,4 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 
 ### Test Verdict
 
-**ALL CRITICAL AND MEDIUM BUGS RESOLVED.** The install flow will complete successfully on a tester's machine (username: `a test machine`, vault at `~/Desktop/2ndBrain`, no Telegram token) with no hangs, no missing indicators, and correct vault detection.
+**ALL CRITICAL AND MEDIUM BUGS RESOLVED.** The install flow will complete successfully on a fresh Mac (username: `a test machine`, vault at `~/Desktop/2ndBrain`, no Telegram token) with no hangs, no missing indicators, and correct vault detection.
