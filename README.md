@@ -56,15 +56,25 @@ Install cli-maxxing first. The companions are optional and can be added in any o
 
 [Back to top](#quick-nav)
 
-If you already know your way around a terminal and just want everything installed at once, you can run the full setup in one shot. This runs every step in order, skips anything already installed, and picks up anything new.
+If you already know your way around a terminal and just want everything installed at once:
 
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```
-> curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
 > ```
 
-This includes both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Step 6 (Productivity Tools) requires interactive input for API credentials. Step 8 (Telegram) is optional — press Enter to skip it if you don't have a bot token yet. Everything else runs automatically.
+This runs Steps 1, 2, 3, 9, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
+
+**Steps that need interactive input** run separately after the above:
+
+```bash
+# Step 6 — Productivity Tools (Notion, Morgen, n8n, etc.)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+
+# Step 8 — Telegram (optional — press Enter to skip if you don't have a bot token yet)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
+```
 
 We recommend reading through the steps below first so you understand what each tool does — but the one-shot option is here if you want it.
 
@@ -945,7 +955,7 @@ See [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) — vau
 
 Run the update command to re-run everything. It skips what's already installed and fills in any gaps:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh | bash
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)
 ```
 
 Or open a `cskip` session and describe the problem to Claude. It can diagnose and fix most issues on the spot.
@@ -1047,9 +1057,9 @@ This command re-runs every step, skips anything already installed, and picks up 
 Open your terminal and run `cskip` to start a Claude session, then paste the update command. Or if you prefer, just paste it directly into your terminal without Claude.
 
 > [!IMPORTANT]
-> **Paste this into your Claude session (or your terminal directly):**
+> **Paste this into your terminal:**
 > ```
-> run this update command: curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh | bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)
 > ```
 
 
