@@ -39,7 +39,7 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | `cc` | Short alias for `claude` |
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
-| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires Obsidian — Step 7)* |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires vault setup — see [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing))* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected |
 | `ctg` | Skip-permissions + Telegram channel connected (any directory) |
 | `g2` | Tile 2 Ghostty windows side by side, filling your screen *(requires Ghostty — Bonus step, macOS only)* |
@@ -47,7 +47,7 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 
 > **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
 >
-> **Note:** Until you set up Second Brain (Step 7), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
+> **Note:** Until you set up Second Brain ([2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
 
 ## What is auto-approve mode?
 
@@ -110,20 +110,20 @@ These activate on their own when Claude detects a relevant task via natural lang
 
 | Tool | Installed in | How it activates | Example prompt |
 |------|-------------|-----------------|----------------|
-| UI/UX Pro Max | Step 4 | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
-| Taste Skill (7 variants) | Step 4 | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-skill", "redesign this with soft-skill" | "Build a premium landing page" · "Redesign this dashboard with taste-skill" |
-| 21st.dev Magic | Step 4 | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
+| UI/UX Pro Max | creativity-maxxing | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
+| Taste Skill (7 variants) | creativity-maxxing | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-skill", "redesign this with soft-skill" | "Build a premium landing page" · "Redesign this dashboard with taste-skill" |
+| 21st.dev Magic | creativity-maxxing | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
 | Context Hub | Step 3 | Natural language — Claude writes code that calls external APIs | "Use the Stripe API to create a checkout" |
-| Remotion | Step 5 | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
-| YouTube Transcripts | Step 5 | Natural language — paste a YouTube link and ask for the transcript | "Get the transcript of this video: https://youtube.com/..." |
-| IG/Social Transcription | Step 5 | Natural language — paste an Instagram, TikTok, or social media link | "Transcribe this reel: https://instagram.com/reel/..." |
+| Remotion | creativity-maxxing | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
+| YouTube Transcripts | creativity-maxxing | Natural language — paste a YouTube link and ask for the transcript | "Get the transcript of this video: https://youtube.com/..." |
+| IG/Social Transcription | creativity-maxxing | Natural language — paste an Instagram, TikTok, or social media link | "Transcribe this reel: https://instagram.com/reel/..." |
 | Notion | Step 6 | Natural language — pages, databases, knowledge management | "Search my Notion for the meeting notes" |
 | Granola | Step 6 | Natural language — meeting transcripts and notes | "What did we cover in my last meeting?" |
 | n8n (your own) | Step 6 | Natural language — trigger and inspect your own n8n workflows | "Run my lead-qualification workflow on this email" |
 | Google Calendar | Step 6 | Natural language — direct Google Calendar access (secondary — use if Morgen not installed) | "What's on my Google calendar this week?" |
 | Morgen *(recommended)* | Step 6 | Natural language — unified calendar + tasks across Google/Outlook/iCloud/native | "What's on my calendar this week?" · "Add a task called 'Review contracts' due Friday" |
 | Motion Calendar | Step 6 | Natural language — Motion-specific features (teammate visibility, full event search) | "Who on my team has a conflict at 3pm?" |
-| Obsidian | Step 7 | Natural language — read/write/search a local Obsidian vault (registered during Step 7d) | "Search my vault for notes about machine learning" |
+| Obsidian | 2ndbrain-maxxing | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)) | "Search my vault for notes about machine learning" |
 | No-Flicker Mode | Step 2 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 | Telegram | Step 8 | Automatic when launched with `ctg` or `cbraintg` — reads and replies to Telegram messages | (messages arrive automatically from connected chats) |
@@ -194,7 +194,7 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 | Swarm not responding | Run `npx ruflo@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
 | `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
-| Obsidian vault not found | Tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
+| Obsidian vault not found | Vault setup lives in [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing). Once set up, tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
 | Shift+Return acts like Enter | Try Option+Enter as an alternative for multi-line input |
 
 ---
