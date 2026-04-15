@@ -76,7 +76,7 @@ echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck, /gitfix
 echo ""
 echo "  Three steps require interactive input — run them separately:"
 echo ""
-echo "    Step 6 (Productivity Tools — Notion, Morgen, n8n, etc.):"
+echo "    Step 6 (Productivity Tools — Notion, Morgen, n8n, Playwright, etc.):"
 echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
 echo ""
 echo "    Step 8 (Telegram — optional, skip if you don't have a bot token):"

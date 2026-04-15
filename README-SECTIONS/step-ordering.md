@@ -10,7 +10,7 @@ Run the steps in this order:
 | 2 | Dev Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | — | [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) | Design + Media (UI/UX Pro Max, Taste Skill, 21st.dev Magic, Remotion, yt-dlp, Whisper) |
-| 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar (all optional — pick what you use; Morgen recommended) |
+| 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright (all optional — pick what you use; Morgen recommended) |
 | — | [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) | Obsidian vault setup + cbrain/cbraintg commands |
 | 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |

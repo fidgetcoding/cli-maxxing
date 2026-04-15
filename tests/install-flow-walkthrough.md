@@ -106,23 +106,24 @@ The `OBSIDIAN/` prefix requirement has been removed. The pattern now matches any
 
 **File:** `step-6/step-6-install.sh`
 
-Installs 6 optional productivity MCPs. Obsidian MCP has moved to [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing), NOT here.
+Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing), NOT here.
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
 | Non-interactive mode | Detects pipe (`[ ! -t 0 ]`), auto-detects already-installed MCPs, re-enters only the `"already installed"` guards; if nothing found, prints "run directly" instructions and exits cleanly | PASS |
-| Interactive menu | Numbered 1-6: Notion, Granola, n8n, GCal, Morgen, Motion. Morgen (5) flagged as recommended default | PASS |
+| Interactive menu | Numbered 1-7: Notion, Granola, n8n, GCal, Morgen, Motion, Playwright. Morgen (5) flagged as recommended default | PASS |
 | (1) Notion | Prompts for integration token, registers via `-e NOTION_TOKEN=...` | PASS |
 | (2) Granola | Registers HTTP transport to `https://mcp.granola.ai/mcp` (no credentials — Granola app handles auth) | PASS |
 | (3) n8n | Prompts for user's own n8n instance URL + optional Bearer token, registers via `--transport http` with `-H "Authorization: Bearer …"` if provided | PASS |
 | (4) Google Calendar | Prompts for OAuth Client ID + Secret, writes `~/.google-calendar-mcp/.env` (chmod 700 dir / 600 file), registers with `-e GOOGLE_CLIENT_ID=... -e GOOGLE_CLIENT_SECRET=...` | PASS |
 | (5) Morgen *(recommended)* | Prompts for API key + optional IANA timezone, registers via `-e MORGEN_API_KEY=... -e MORGEN_TIMEZONE=...`. No local `.env` — credentials live in Claude Code's MCP config | PASS |
 | (6) Motion Calendar | Prompts for Motion API key, Firebase API key, Firebase refresh token, Motion user ID. Writes `~/.motion-calendar-mcp/.env` (chmod 700/600). Registers via `claude mcp add motion-calendar` | PASS |
+| (7) Playwright | No credentials required. Registers Microsoft's official `@playwright/mcp` via `claude mcp add playwright -- npx -y @playwright/mcp@latest`. Chromium binaries auto-download on first use. | PASS |
 | Obsidian | NOT in this repo — see 2ndbrain-maxxing | N/A |
-| Self-test | `check_registered` covers all 6 tools, verifies Motion + GCal `.env` files exist for their respective installs | PASS |
+| Self-test | `check_registered` covers all 7 tools, verifies Motion + GCal `.env` files exist for their respective installs | PASS |
 | Summary | Prints tool-count + "what you can do now" hints per installed tool | PASS |
 
-**Notes:** When run via `update.sh` (pipe), correctly auto-detects already-registered MCPs and exits after verification without prompting. First-time users must run directly in terminal for credential input. Morgen is promoted as the default calendar+task tool; Motion and Google Calendar are documented as secondary (install only for specific features the primary tool doesn't cover).
+**Notes:** When run via `update.sh` (pipe), correctly auto-detects already-registered MCPs and exits after verification without prompting. First-time users must run directly in terminal for credential input. Morgen is promoted as the default calendar+task tool; Motion and Google Calendar are documented as secondary (install only for specific features the primary tool doesn't cover). Playwright is the only MCP in Step 6 with no credential prompts — it registers directly and downloads its own browser binaries on first use.
 
 ---
 

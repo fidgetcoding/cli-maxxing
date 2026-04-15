@@ -86,7 +86,7 @@ fi
 
 # -----------------------------------------------------------------------------
 # Step 6 — Productivity Tools
-# (Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar)
+# (Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright)
 # -----------------------------------------------------------------------------
 echo ""
 echo -e "${BLUE}--- Step 6: Productivity Tools ---${NC}"
@@ -153,6 +153,14 @@ if [ -d "$HOME/.motion-calendar-mcp" ]; then
     success "Motion Calendar config (~/.motion-calendar-mcp)"
 else
     skip "Motion Calendar config (not found)"
+fi
+
+# Playwright MCP (Microsoft official — no local config, no credentials)
+if claude mcp list 2>/dev/null | grep -qi "playwright" 2>/dev/null; then
+    claude mcp remove playwright 2>/dev/null || true
+    success "Playwright MCP"
+else
+    skip "Playwright MCP (not found)"
 fi
 
 # -----------------------------------------------------------------------------

@@ -3,8 +3,8 @@ set -uo pipefail
 
 # =============================================================================
 # Step 6 — Productivity Tools
-# Installs Notion, Granola, n8n, Google Calendar, Morgen, and Motion Calendar
-# MCP servers. Interactive — pick the tools you actually use.
+# Installs Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar,
+# and Playwright MCP servers. Interactive — pick the tools you actually use.
 # Obsidian MCP lives in Step 7 alongside the rest of the Obsidian vault setup.
 # Run this in your terminal after completing Steps 1-5.
 # =============================================================================
@@ -30,6 +30,7 @@ INSTALLED_N8N=false
 INSTALLED_GCAL=false
 INSTALLED_MORGEN=false
 INSTALLED_MOTION=false
+INSTALLED_PLAYWRIGHT=false
 # Pre-existing installs (credentials managed outside this script).
 # Only Motion tracks this because Motion persists credentials to a local .env
 # the self-test checks for; Morgen/Notion/n8n credentials live inside Claude's
@@ -97,6 +98,10 @@ choose_tools() {
             INSTALLED_MOTION=true
             MOTION_PREEXISTING=true
         fi
+        if claude mcp list 2>/dev/null | grep -q "playwright" 2>/dev/null; then
+            CHOICES="$CHOICES 7"
+            INSTALLED_PLAYWRIGHT=true
+        fi
 
         if [ -n "$CHOICES" ]; then
             info "Found already-installed tools — verifying configuration"
@@ -123,15 +128,19 @@ choose_tools() {
     echo "    4) Google Calendar  — calendar events via Google OAuth"
     echo "    5) Morgen           — unified calendar + tasks (recommended)"
     echo "    6) Motion Calendar  — Motion events, availability, scheduling"
+    echo "    7) Playwright       — browser automation for web apps with no API"
     echo ""
     echo -e "${YELLOW}  Note: Morgen (5) is the recommended calendar+task tool.${NC}"
     echo -e "${YELLOW}  Motion (6) and Google Calendar (4) are secondary —${NC}"
     echo -e "${YELLOW}  install them only if you specifically need those accounts.${NC}"
     echo ""
+    echo -e "${BLUE}  Playwright (7) is Microsoft's official browser automation MCP.${NC}"
+    echo -e "${BLUE}  Use case: log into web apps that have no API. No credentials.${NC}"
+    echo ""
     echo -e "${BLUE}  Looking for Obsidian MCP? It ships with Step 7 (Second Brain),${NC}"
     echo -e "${BLUE}  alongside the Obsidian app install and vault setup.${NC}"
     echo ""
-    read -rp "  Enter your choices (e.g. \"1 5\" or just \"5\"): " CHOICES
+    read -rp "  Enter your choices (e.g. \"1 5 7\" or just \"5\"): " CHOICES
     echo ""
 
     if [ -z "$CHOICES" ]; then
@@ -503,6 +512,46 @@ install_motion_calendar() {
 }
 
 # -----------------------------------------------------------------------------
+# Install Playwright MCP (Microsoft's official browser automation)
+# -----------------------------------------------------------------------------
+install_playwright() {
+    info "Installing Playwright MCP server..."
+
+    if claude mcp list 2>/dev/null | grep -q "playwright"; then
+        success "Playwright MCP already installed"
+        INSTALLED_PLAYWRIGHT=true
+        return
+    fi
+
+    echo ""
+    echo -e "${BLUE}  Playwright MCP is Microsoft's official browser automation${NC}"
+    echo -e "${BLUE}  server. It runs a separate Chromium instance (NOT your own${NC}"
+    echo -e "${BLUE}  browser) and uses accessibility-tree snapshots instead of${NC}"
+    echo -e "${BLUE}  pixels — Claude reads structured DOM, not guessed images.${NC}"
+    echo ""
+    echo -e "${BLUE}  Best use case: letting Claude log into and operate web apps${NC}"
+    echo -e "${BLUE}  that have no public API (e.g. Higgsfield, niche SaaS).${NC}"
+    echo ""
+    echo -e "${YELLOW}  Note: Playwright MCP is NOT a security boundary.${NC}"
+    echo -e "${YELLOW}  Treat pages Claude loads through it like any browser session.${NC}"
+    echo -e "${YELLOW}  First run auto-downloads Chromium (~hundreds of MB).${NC}"
+    echo ""
+    echo -e "${BLUE}  Package: @playwright/mcp (published by Microsoft)${NC}"
+    echo -e "${BLUE}  Source:  https://github.com/microsoft/playwright-mcp${NC}"
+    echo ""
+
+    # No credentials needed — register directly.
+    claude mcp add playwright -- npx -y @playwright/mcp@latest 2>/dev/null
+
+    if claude mcp list 2>/dev/null | grep -q "playwright"; then
+        success "Playwright MCP installed"
+        INSTALLED_PLAYWRIGHT=true
+    else
+        soft_fail "Playwright MCP installation could not be verified"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -534,6 +583,7 @@ run_self_test() {
     if $INSTALLED_GCAL;     then check_registered "Google Calendar" "google-calendar"; else info "TEST: Google Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_MORGEN;   then check_registered "Morgen"          "morgen";          else info "TEST: Morgen — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_MOTION;   then check_registered "Motion Calendar" "motion-calendar"; else info "TEST: Motion Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_PLAYWRIGHT; then check_registered "Playwright"    "playwright";      else info "TEST: Playwright — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     # Credential-file checks for tools that persist a local .env
     if $INSTALLED_GCAL; then
@@ -587,6 +637,7 @@ print_summary() {
     if $INSTALLED_GCAL;     then echo "  Google Calendar   — calendar events via Google OAuth";                INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_MORGEN;   then echo "  Morgen            — unified calendar + tasks (single API key)";       INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_MOTION;   then echo "  Motion Calendar   — Motion events, availability, scheduling";         INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_PLAYWRIGHT; then echo "  Playwright        — browser automation for web apps with no API (Microsoft @playwright/mcp)"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
 
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
@@ -617,6 +668,10 @@ print_summary() {
         if $INSTALLED_MOTION; then
             echo "    - Ask Claude \"who on my team has a conflict at 3pm?\""
             echo "    - Ask Claude to search events across all your Motion calendars"
+        fi
+        if $INSTALLED_PLAYWRIGHT; then
+            echo "    - Ask Claude to log into a web app that has no API and automate it"
+            echo "    - Ask Claude to navigate a site, fill forms, and read the DOM"
         fi
     fi
 
@@ -656,6 +711,7 @@ main() {
             4) if ! $INSTALLED_GCAL;    then install_google_calendar; else success "Google Calendar already configured"; fi ;;
             5) if ! $INSTALLED_MORGEN;  then install_morgen;          else success "Morgen already configured";          fi ;;
             6) if ! $INSTALLED_MOTION;  then install_motion_calendar; else success "Motion Calendar already configured"; fi ;;
+            7) if ! $INSTALLED_PLAYWRIGHT; then install_playwright;   else success "Playwright already configured";     fi ;;
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done
