@@ -25,13 +25,6 @@ echo -e "${BLUE}  Connect Claude to Telegram — message Claude from your phone$
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-# Detect shell RC
-case "${SHELL:-/bin/bash}" in
-    */zsh)  SHELL_RC="$HOME/.zshrc" ;;
-    */bash) SHELL_RC="$HOME/.bashrc" ;;
-    *)      SHELL_RC="$HOME/.bashrc" ;;
-esac
-
 # =============================================================================
 # Prerequisites
 # =============================================================================

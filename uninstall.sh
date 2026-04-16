@@ -344,14 +344,12 @@ else
 fi
 
 # ctg command (~/.local/bin script) — cbrain/cbraintg are managed by 2ndbrain-maxxing
-for cmd in ctg; do
-    if [ -f "$HOME/.local/bin/$cmd" ]; then
-        rm -f "$HOME/.local/bin/$cmd"
-        success "$cmd command"
-    else
-        skip "$cmd command (not found)"
-    fi
-done
+if [ -f "$HOME/.local/bin/ctg" ]; then
+    rm -f "$HOME/.local/bin/ctg"
+    success "ctg command"
+else
+    skip "ctg command (not found)"
+fi
 
 # g2/g4 window tiling functions
 if grep -q 'g2()' "$SHELL_RC" 2>/dev/null; then
