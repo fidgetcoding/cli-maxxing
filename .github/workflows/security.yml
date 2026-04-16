@@ -19,6 +19,7 @@ jobs:
   shellcheck-strict:
     name: ShellCheck (error severity)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - name: Run ShellCheck at error severity
@@ -31,6 +32,7 @@ jobs:
   secret-scan:
     name: Secret scanning
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
         with:
@@ -49,6 +51,7 @@ jobs:
   download-url-check:
     name: Verify pinned download URLs are reachable
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - name: Check SKILL_URL in step-9
