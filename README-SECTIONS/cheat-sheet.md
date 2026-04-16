@@ -94,13 +94,21 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 |---------|-------------|-------------|
 | `/rswarm do the thing` | Step 3 | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
 | `/rmini do the thing` | Step 3 | Launch a compact 5-agent swarm — same power, tighter team |
+| `/rswarm1 <task>` | Step 3 | 15-agent swarm with light extended thinking (~4k budget per agent) — `Think.` appended to every Agent prompt |
+| `/rswarm2 <task>` | Step 3 | 15-agent swarm with hard/deep thinking (~10k budget per agent) — `Think hard.` appended |
+| `/rswarm3 <task>` | Step 3 | 15-agent swarm with harder/deeper thinking (~31k budget per agent) — `Think harder.` appended |
+| `/rswarmmax <task>` | Step 3 | 15-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
+| `/rmini1 <task>` | Step 3 | 5-agent swarm with light extended thinking (~4k budget per agent) — `Think.` appended |
+| `/rmini2 <task>` | Step 3 | 5-agent swarm with hard/deep thinking (~10k budget per agent) — `Think hard.` appended |
+| `/rmini3 <task>` | Step 3 | 5-agent swarm with harder/deeper thinking (~31k budget per agent) — `Think harder.` appended |
+| `/rminimax <task>` | Step 3 | 5-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
 | `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
 | `/w4w` | Step 3 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
 | `/safetycheck` | Step 9 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English |
 | `/gitfix` | Final Step | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality |
 
 
-> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/rmini` is the compact version of `/rswarm` — 5 agents instead of 15. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme"). Slash commands: `/rswarm`, `/rmini`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix` — all require you to type the command (or its natural-language equivalent where noted).
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/rmini` is the compact version of `/rswarm` — 5 agents instead of 15. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme"). Slash commands: `/rswarm`, `/rswarm1`–`/rswarmmax`, `/rmini`, `/rmini1`–`/rminimax`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix` — all require you to type the command (or its natural-language equivalent where noted).
 
 ---
 
@@ -133,7 +141,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Excalidraw | Add-on | Natural language — diagrams, flowcharts, whiteboard sketches | "Draw a system architecture diagram" |
 | Gamma | Add-on | Natural language — presentations, documents, webpages | "Create a pitch deck for my startup" |
 
-> **Key distinction:** Slash commands (`/rswarm`, `/rmini`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+> **Key distinction:** Slash commands (`/rswarm`, `/rswarm1`–`/rswarmmax`, `/rmini`, `/rmini1`–`/rminimax`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
 > **Add-on tools** are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed.
 

@@ -197,7 +197,7 @@ for pkg in ruflo@latest agentic-flow@latest @aisuite/chub typescript; do
 done
 
 # Swarm skills
-for skill in rswarm rmini rhive get-api-docs w4w gitfix; do
+for skill in rswarm rswarm1 rswarm2 rswarm3 rswarmmax rmini rmini1 rmini2 rmini3 rminimax rhive get-api-docs w4w gitfix; do
     if [ -d "$HOME/.claude/skills/$skill" ]; then
         rm -rf "$HOME/.claude/skills/$skill"
         success "Skill: /$skill"

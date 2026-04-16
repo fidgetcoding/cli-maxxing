@@ -534,6 +534,24 @@ Step 3 also installs three slash commands that let you launch multi-agent swarms
 
 - **`/rhive <goal>`** — Launches a queen agent that autonomously manages everything. You describe the goal, the queen decides how to break it down, what workers to spawn, and how to coordinate them. Use this when you want to set a direction and step back.
 
+#### Swarm tiers — extended thinking
+
+Subagents inherit the parent session's model (Opus stays Opus) but do **not** inherit its extended-thinking setting. The `/effort` slider does not tether to spawned agents, so the only way to get deep thinking inside a swarm is to bake a trigger phrase into each Agent's prompt. That's what these tier variants do:
+
+| Tier | Mini (5 agents) | Swarm (15 agents) | Trigger appended | Thinking budget |
+|------|-----------------|-------------------|------------------|-----------------|
+| 0    | `/rmini`        | `/rswarm`         | *(none)*         | 0               |
+| 1    | `/rmini1`       | `/rswarm1`        | `Think.`         | ~4k             |
+| 2    | `/rmini2`       | `/rswarm2`        | `Think hard.`    | ~10k            |
+| 3    | `/rmini3`       | `/rswarm3`        | `Think harder.`  | ~31k            |
+| max  | `/rminimax`     | `/rswarmmax`      | `Ultrathink.`    | ~32k (max)      |
+
+Natural-language aliases also work: "hard"/"deep" → tier 2, "harder"/"deeper" → tier 3, "max"/"mega"/"ultra" → max.
+
+Base `/rswarm` and `/rmini` are unchanged — the tier variants are purely additive. Use `/rminimax` for architecture reasoning or hairy debugging where you want a small team thinking hard; use `/rmini2` for routine feature work that still benefits from a bit of deliberation; reach for `/rswarm3` or `/rswarmmax` when you need 15 agents each chewing on a problem at full depth.
+
+All 10 commands enforce Opus-only (never Haiku or Sonnet) and all share the same `/tmp/ruflo-{swarm,mini}-active` signal files, so the statusline indicators (🐝 for `/rswarm*`, 🍯 for `/rmini*`) fire for every tier.
+
 All three skills signal the statusline so you can see live indicators while agents are working.
 
 ### Run Step 3
@@ -1078,7 +1096,7 @@ That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with a
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
 - All permissions skipped — Claude acts immediately, no approval prompts
-- Full access to everything: `/rswarm`, `/rmini`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`, Ruflo, Context Hub, Morgen, Motion Calendar, Notion, Obsidian, Granola, n8n, design tools, video tools — all of it
+- Full access to everything: `/rswarm` (+ tiers `1`/`2`/`3`/`max`), `/rmini` (+ tiers `1`/`2`/`3`/`max`), `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`, Ruflo, Context Hub, Morgen, Motion Calendar, Notion, Obsidian, Granola, n8n, design tools, video tools — all of it
 - Your status line shows what's active at a glance
 
 **When to use something else:**

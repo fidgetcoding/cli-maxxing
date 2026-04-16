@@ -83,6 +83,7 @@ echo ""
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc"
 echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck, /gitfix, get-api-docs (auto-triggered)"
+echo "  Swarm tiers:        /rswarm{1,2,3,max}, /rmini{1,2,3,max} — 1=think, 2=think hard, 3=think harder, max=ultrathink"
 echo "  Design + media:     github.com/lorecraft-io/creativity-maxxing"
 echo "  Second Brain:       github.com/lorecraft-io/2ndbrain-maxxing"
 echo ""

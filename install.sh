@@ -73,6 +73,7 @@ echo ""
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc"
 echo "  Available skills:   /rswarm, /rmini, /rhive, /w4w, /safetycheck, /gitfix, get-api-docs (auto-triggered)"
+echo "  Swarm tiers:        /rswarm{1,2,3,max}, /rmini{1,2,3,max} — 1=think, 2=think hard, 3=think harder, max=ultrathink"
 echo ""
 echo "  Three steps require interactive input — run them separately:"
 echo ""

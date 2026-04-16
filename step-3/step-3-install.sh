@@ -460,6 +460,438 @@ Adapt agent assignments to the task — if the task is research-heavy, shift rol
 RMINI_EOF
     success "Mini swarm skill (/rmini) installed"
 
+    # --- /rmini1 skill ---
+    RMINI1_DIR="$HOME/.claude/skills/rmini1"
+    mkdir -p "$RMINI1_DIR"
+    cat > "$RMINI1_DIR/SKILL.md" << 'RMINI1_EOF'
+---
+name: rmini1
+description: "Launch a compact 5-agent Ruflo swarm with light extended thinking (~4k token budget per agent). Natural-language triggers: light thinking, simple reasoning, mini swarm with thinking."
+---
+
+# Ruflo Mini Swarm — Tier 1 (think)
+
+When this skill is invoked, IMMEDIATELY launch a 5-agent swarm with light extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rmini1`)
+2. **Signal status line**: Run `echo 5 > /tmp/ruflo-mini-active` via Bash to light up the 🍯 indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 5, strategy `specialized`
+   - Spawn ALL 5 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Think.` as the last line of every Agent `prompt` to activate extended thinking (~4k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-mini-active` via Bash to turn off the 🍯 indicator
+
+## The 5 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Primary Dev | Core implementation — frontend or backend depending on task |
+| 3 | tester | Test Engineer | Unit, integration, and edge case tests |
+| 4 | reviewer | Code Reviewer | Quality, patterns, best practices, security check |
+| 5 | researcher | Researcher | Background research, prior art, docs lookup |
+
+Adapt agent assignments to the task — if the task is research-heavy, shift roles accordingly. But ALWAYS spawn 5.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Think.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RMINI1_EOF
+    success "Mini swarm tier 1 (/rmini1) installed"
+
+    # --- /rmini2 skill ---
+    RMINI2_DIR="$HOME/.claude/skills/rmini2"
+    mkdir -p "$RMINI2_DIR"
+    cat > "$RMINI2_DIR/SKILL.md" << 'RMINI2_EOF'
+---
+name: rmini2
+description: "Launch a compact 5-agent Ruflo swarm with hard/deep extended thinking (~10k token budget per agent). Natural-language triggers: think hard, think deep, hard reasoning, deep analysis, medium thinking mini swarm."
+---
+
+# Ruflo Mini Swarm — Tier 2 (think hard / think deep)
+
+When this skill is invoked, IMMEDIATELY launch a 5-agent swarm with hard/deep extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rmini2`)
+2. **Signal status line**: Run `echo 5 > /tmp/ruflo-mini-active` via Bash to light up the 🍯 indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 5, strategy `specialized`
+   - Spawn ALL 5 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Think hard.` as the last line of every Agent `prompt` to activate extended thinking (~10k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-mini-active` via Bash to turn off the 🍯 indicator
+
+## The 5 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Primary Dev | Core implementation — frontend or backend depending on task |
+| 3 | tester | Test Engineer | Unit, integration, and edge case tests |
+| 4 | reviewer | Code Reviewer | Quality, patterns, best practices, security check |
+| 5 | researcher | Researcher | Background research, prior art, docs lookup |
+
+Adapt agent assignments to the task — if the task is research-heavy, shift roles accordingly. But ALWAYS spawn 5.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Think hard.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RMINI2_EOF
+    success "Mini swarm tier 2 (/rmini2) installed"
+
+    # --- /rmini3 skill ---
+    RMINI3_DIR="$HOME/.claude/skills/rmini3"
+    mkdir -p "$RMINI3_DIR"
+    cat > "$RMINI3_DIR/SKILL.md" << 'RMINI3_EOF'
+---
+name: rmini3
+description: "Launch a compact 5-agent Ruflo swarm with harder/deeper extended thinking (~31k token budget per agent). Natural-language triggers: think harder, think deeper, harder reasoning, deeper analysis, heavy thinking mini swarm."
+---
+
+# Ruflo Mini Swarm — Tier 3 (think harder / think deeper)
+
+When this skill is invoked, IMMEDIATELY launch a 5-agent swarm with harder/deeper extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rmini3`)
+2. **Signal status line**: Run `echo 5 > /tmp/ruflo-mini-active` via Bash to light up the 🍯 indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 5, strategy `specialized`
+   - Spawn ALL 5 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Think harder.` as the last line of every Agent `prompt` to activate extended thinking (~31k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-mini-active` via Bash to turn off the 🍯 indicator
+
+## The 5 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Primary Dev | Core implementation — frontend or backend depending on task |
+| 3 | tester | Test Engineer | Unit, integration, and edge case tests |
+| 4 | reviewer | Code Reviewer | Quality, patterns, best practices, security check |
+| 5 | researcher | Researcher | Background research, prior art, docs lookup |
+
+Adapt agent assignments to the task — if the task is research-heavy, shift roles accordingly. But ALWAYS spawn 5.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Think harder.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RMINI3_EOF
+    success "Mini swarm tier 3 (/rmini3) installed"
+
+    # --- /rminimax skill ---
+    RMINIMAX_DIR="$HOME/.claude/skills/rminimax"
+    mkdir -p "$RMINIMAX_DIR"
+    cat > "$RMINIMAX_DIR/SKILL.md" << 'RMINIMAX_EOF'
+---
+name: rminimax
+description: "Launch a compact 5-agent Ruflo swarm at MAX extended thinking budget (ultrathink, ~32k tokens per agent). Natural-language triggers: ultrathink, megathink, max thinking, maximum reasoning, deepest analysis, mini swarm max."
+---
+
+# Ruflo Mini Swarm — Tier Max (ultrathink)
+
+When this skill is invoked, IMMEDIATELY launch a 5-agent swarm at MAX extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rminimax`)
+2. **Signal status line**: Run `echo 5 > /tmp/ruflo-mini-active` via Bash to light up the 🍯 indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 5, strategy `specialized`
+   - Spawn ALL 5 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Ultrathink.` as the last line of every Agent `prompt` to activate MAX extended thinking (~32k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-mini-active` via Bash to turn off the 🍯 indicator
+
+## The 5 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Primary Dev | Core implementation — frontend or backend depending on task |
+| 3 | tester | Test Engineer | Unit, integration, and edge case tests |
+| 4 | reviewer | Code Reviewer | Quality, patterns, best practices, security check |
+| 5 | researcher | Researcher | Background research, prior art, docs lookup |
+
+Adapt agent assignments to the task — if the task is research-heavy, shift roles accordingly. But ALWAYS spawn 5.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Ultrathink.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RMINIMAX_EOF
+    success "Mini swarm max (/rminimax) installed"
+
+    # --- /rswarm1 skill ---
+    RSWARM1_DIR="$HOME/.claude/skills/rswarm1"
+    mkdir -p "$RSWARM1_DIR"
+    cat > "$RSWARM1_DIR/SKILL.md" << 'RSWARM1_EOF'
+---
+name: rswarm1
+description: "Launch a full 15-agent Ruflo swarm with light extended thinking (~4k token budget per agent). Natural-language triggers: light thinking, simple reasoning, full swarm with thinking."
+---
+
+# Ruflo Advanced Swarm — Tier 1 (think)
+
+When this skill is invoked, IMMEDIATELY launch a 15-agent swarm with light extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rswarm1`)
+2. **Signal status line**: Run `echo 15 > /tmp/ruflo-swarm-active` via Bash to light up the swarm indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized`
+   - Spawn ALL 15 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Think.` as the last line of every Agent `prompt` to activate extended thinking (~4k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-swarm-active` via Bash to turn off the swarm indicator
+
+## The 15 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Backend Dev 1 | Core backend implementation |
+| 3 | coder | Backend Dev 2 | Secondary backend / services |
+| 4 | coder | Frontend Dev | UI / frontend implementation |
+| 5 | backend-dev | DB Engineer | Schema, queries, data layer |
+| 6 | tester | Test Engineer 1 | Unit + integration tests |
+| 7 | tester | Test Engineer 2 | E2E + edge case tests |
+| 8 | security-auditor | Security Auditor | Vulnerability scanning, input validation, secrets check |
+| 9 | performance-engineer | Perf Engineer | Bottleneck analysis, optimization |
+| 10 | reviewer | Code Reviewer | Quality, patterns, best practices |
+| 11 | researcher | Researcher | Background research, prior art, docs lookup |
+| 12 | analyst | Code Analyst | Architecture assessment, dependency analysis |
+| 13 | coder | DevOps Engineer | CI/CD, deployment, infrastructure |
+| 14 | coder | Technical Writer | Documentation, README, usage guides |
+| 15 | tester | QA Coordinator | Final validation, cross-agent consistency check |
+
+Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But ALWAYS spawn 15.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Think.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RSWARM1_EOF
+    success "Full swarm tier 1 (/rswarm1) installed"
+
+    # --- /rswarm2 skill ---
+    RSWARM2_DIR="$HOME/.claude/skills/rswarm2"
+    mkdir -p "$RSWARM2_DIR"
+    cat > "$RSWARM2_DIR/SKILL.md" << 'RSWARM2_EOF'
+---
+name: rswarm2
+description: "Launch a full 15-agent Ruflo swarm with hard/deep extended thinking (~10k token budget per agent). Natural-language triggers: think hard, think deep, hard reasoning, deep analysis, medium thinking full swarm."
+---
+
+# Ruflo Advanced Swarm — Tier 2 (think hard / think deep)
+
+When this skill is invoked, IMMEDIATELY launch a 15-agent swarm with hard/deep extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rswarm2`)
+2. **Signal status line**: Run `echo 15 > /tmp/ruflo-swarm-active` via Bash to light up the swarm indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized`
+   - Spawn ALL 15 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Think hard.` as the last line of every Agent `prompt` to activate extended thinking (~10k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-swarm-active` via Bash to turn off the swarm indicator
+
+## The 15 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Backend Dev 1 | Core backend implementation |
+| 3 | coder | Backend Dev 2 | Secondary backend / services |
+| 4 | coder | Frontend Dev | UI / frontend implementation |
+| 5 | backend-dev | DB Engineer | Schema, queries, data layer |
+| 6 | tester | Test Engineer 1 | Unit + integration tests |
+| 7 | tester | Test Engineer 2 | E2E + edge case tests |
+| 8 | security-auditor | Security Auditor | Vulnerability scanning, input validation, secrets check |
+| 9 | performance-engineer | Perf Engineer | Bottleneck analysis, optimization |
+| 10 | reviewer | Code Reviewer | Quality, patterns, best practices |
+| 11 | researcher | Researcher | Background research, prior art, docs lookup |
+| 12 | analyst | Code Analyst | Architecture assessment, dependency analysis |
+| 13 | coder | DevOps Engineer | CI/CD, deployment, infrastructure |
+| 14 | coder | Technical Writer | Documentation, README, usage guides |
+| 15 | tester | QA Coordinator | Final validation, cross-agent consistency check |
+
+Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But ALWAYS spawn 15.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Think hard.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RSWARM2_EOF
+    success "Full swarm tier 2 (/rswarm2) installed"
+
+    # --- /rswarm3 skill ---
+    RSWARM3_DIR="$HOME/.claude/skills/rswarm3"
+    mkdir -p "$RSWARM3_DIR"
+    cat > "$RSWARM3_DIR/SKILL.md" << 'RSWARM3_EOF'
+---
+name: rswarm3
+description: "Launch a full 15-agent Ruflo swarm with harder/deeper extended thinking (~31k token budget per agent). Natural-language triggers: think harder, think deeper, harder reasoning, deeper analysis, heavy thinking full swarm."
+---
+
+# Ruflo Advanced Swarm — Tier 3 (think harder / think deeper)
+
+When this skill is invoked, IMMEDIATELY launch a 15-agent swarm with harder/deeper extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rswarm3`)
+2. **Signal status line**: Run `echo 15 > /tmp/ruflo-swarm-active` via Bash to light up the swarm indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized`
+   - Spawn ALL 15 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Think harder.` as the last line of every Agent `prompt` to activate extended thinking (~31k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-swarm-active` via Bash to turn off the swarm indicator
+
+## The 15 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Backend Dev 1 | Core backend implementation |
+| 3 | coder | Backend Dev 2 | Secondary backend / services |
+| 4 | coder | Frontend Dev | UI / frontend implementation |
+| 5 | backend-dev | DB Engineer | Schema, queries, data layer |
+| 6 | tester | Test Engineer 1 | Unit + integration tests |
+| 7 | tester | Test Engineer 2 | E2E + edge case tests |
+| 8 | security-auditor | Security Auditor | Vulnerability scanning, input validation, secrets check |
+| 9 | performance-engineer | Perf Engineer | Bottleneck analysis, optimization |
+| 10 | reviewer | Code Reviewer | Quality, patterns, best practices |
+| 11 | researcher | Researcher | Background research, prior art, docs lookup |
+| 12 | analyst | Code Analyst | Architecture assessment, dependency analysis |
+| 13 | coder | DevOps Engineer | CI/CD, deployment, infrastructure |
+| 14 | coder | Technical Writer | Documentation, README, usage guides |
+| 15 | tester | QA Coordinator | Final validation, cross-agent consistency check |
+
+Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But ALWAYS spawn 15.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Think harder.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RSWARM3_EOF
+    success "Full swarm tier 3 (/rswarm3) installed"
+
+    # --- /rswarmmax skill ---
+    RSWARMMAX_DIR="$HOME/.claude/skills/rswarmmax"
+    mkdir -p "$RSWARMMAX_DIR"
+    cat > "$RSWARMMAX_DIR/SKILL.md" << 'RSWARMMAX_EOF'
+---
+name: rswarmmax
+description: "Launch a full 15-agent Ruflo swarm at MAX extended thinking budget (ultrathink, ~32k tokens per agent). Natural-language triggers: ultrathink, megathink, max thinking, maximum reasoning, deepest analysis, full swarm max."
+---
+
+# Ruflo Advanced Swarm — Tier Max (ultrathink)
+
+When this skill is invoked, IMMEDIATELY launch a 15-agent swarm at MAX extended thinking. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
+
+## Execution Steps
+
+1. Read the user's task (everything they typed after `/rswarmmax`)
+2. **Signal status line**: Run `echo 15 > /tmp/ruflo-swarm-active` via Bash to light up the swarm indicator
+3. Initialize the swarm in ONE message:
+   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized`
+   - Spawn ALL 15 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
+   - **MANDATORY**: Append `Ultrathink.` as the last line of every Agent `prompt` to activate MAX extended thinking (~32k budget)
+4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
+5. When results come back, synthesize and present the combined output.
+6. **Clear status line**: Run `rm -f /tmp/ruflo-swarm-active` via Bash to turn off the swarm indicator
+
+## The 15 Agents
+
+| # | Agent Type | Role | Task Focus |
+|---|-----------|------|------------|
+| 1 | system-architect | Lead Architect | System design, task decomposition, coordinates all agents |
+| 2 | coder | Backend Dev 1 | Core backend implementation |
+| 3 | coder | Backend Dev 2 | Secondary backend / services |
+| 4 | coder | Frontend Dev | UI / frontend implementation |
+| 5 | backend-dev | DB Engineer | Schema, queries, data layer |
+| 6 | tester | Test Engineer 1 | Unit + integration tests |
+| 7 | tester | Test Engineer 2 | E2E + edge case tests |
+| 8 | security-auditor | Security Auditor | Vulnerability scanning, input validation, secrets check |
+| 9 | performance-engineer | Perf Engineer | Bottleneck analysis, optimization |
+| 10 | reviewer | Code Reviewer | Quality, patterns, best practices |
+| 11 | researcher | Researcher | Background research, prior art, docs lookup |
+| 12 | analyst | Code Analyst | Architecture assessment, dependency analysis |
+| 13 | coder | DevOps Engineer | CI/CD, deployment, infrastructure |
+| 14 | coder | Technical Writer | Documentation, README, usage guides |
+| 15 | tester | QA Coordinator | Final validation, cross-agent consistency check |
+
+Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But ALWAYS spawn 15.
+
+## Rules
+
+- Model: Opus only. Never route to Haiku or Sonnet.
+- Thinking: every Agent prompt MUST end with `Ultrathink.` on its own line
+- Topology: hierarchical-mesh (architect leads, agents coordinate peer-to-peer within their layer)
+- All agents spawned in background in ONE message
+- Each agent gets a clear, specific sub-task with full context — not vague instructions
+- After spawning, STOP and wait
+- When results arrive, review ALL results before presenting final output
+RSWARMMAX_EOF
+    success "Full swarm max (/rswarmmax) installed"
+
     # --- /w4w skill ---
     W4W_DIR="$HOME/.claude/skills/w4w"
     mkdir -p "$W4W_DIR"
@@ -729,6 +1161,78 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: Mini swarm skill (/rmini) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Mini swarm tier 1 (/rmini1)
+    if [ -f "$HOME/.claude/skills/rmini1/SKILL.md" ]; then
+        success "TEST: Mini swarm tier 1 (/rmini1) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Mini swarm tier 1 (/rmini1) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Mini swarm tier 2 (/rmini2)
+    if [ -f "$HOME/.claude/skills/rmini2/SKILL.md" ]; then
+        success "TEST: Mini swarm tier 2 (/rmini2) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Mini swarm tier 2 (/rmini2) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Mini swarm tier 3 (/rmini3)
+    if [ -f "$HOME/.claude/skills/rmini3/SKILL.md" ]; then
+        success "TEST: Mini swarm tier 3 (/rmini3) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Mini swarm tier 3 (/rmini3) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Mini swarm max (/rminimax)
+    if [ -f "$HOME/.claude/skills/rminimax/SKILL.md" ]; then
+        success "TEST: Mini swarm max (/rminimax) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Mini swarm max (/rminimax) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Full swarm tier 1 (/rswarm1)
+    if [ -f "$HOME/.claude/skills/rswarm1/SKILL.md" ]; then
+        success "TEST: Full swarm tier 1 (/rswarm1) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Full swarm tier 1 (/rswarm1) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Full swarm tier 2 (/rswarm2)
+    if [ -f "$HOME/.claude/skills/rswarm2/SKILL.md" ]; then
+        success "TEST: Full swarm tier 2 (/rswarm2) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Full swarm tier 2 (/rswarm2) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Full swarm tier 3 (/rswarm3)
+    if [ -f "$HOME/.claude/skills/rswarm3/SKILL.md" ]; then
+        success "TEST: Full swarm tier 3 (/rswarm3) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Full swarm tier 3 (/rswarm3) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Full swarm max (/rswarmmax)
+    if [ -f "$HOME/.claude/skills/rswarmmax/SKILL.md" ]; then
+        success "TEST: Full swarm max (/rswarmmax) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Full swarm max (/rswarmmax) not found"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
