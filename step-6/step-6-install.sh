@@ -4,7 +4,7 @@ set -uo pipefail
 # =============================================================================
 # Step 6 — Productivity Tools
 # Installs Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar,
-# and Playwright MCP servers. Interactive — pick the tools you actually use.
+# Playwright, and SwiftKit MCP servers. Interactive — pick the tools you use.
 # Obsidian MCP lives in Step 7 alongside the rest of the Obsidian vault setup.
 # Run this in your terminal after completing Steps 1-5.
 # =============================================================================
@@ -31,6 +31,7 @@ INSTALLED_GCAL=false
 INSTALLED_MORGEN=false
 INSTALLED_MOTION=false
 INSTALLED_PLAYWRIGHT=false
+INSTALLED_SWIFTKIT=false
 # Pre-existing installs (credentials managed outside this script).
 # Only Motion tracks this because Motion persists credentials to a local .env
 # the self-test checks for; Morgen/Notion/n8n credentials live inside Claude's
@@ -102,6 +103,10 @@ choose_tools() {
             CHOICES="$CHOICES 7"
             INSTALLED_PLAYWRIGHT=true
         fi
+        if claude mcp list 2>/dev/null | grep -q "swiftkit" 2>/dev/null; then
+            CHOICES="$CHOICES 8"
+            INSTALLED_SWIFTKIT=true
+        fi
 
         if [ -n "$CHOICES" ]; then
             info "Found already-installed tools — verifying configuration"
@@ -129,6 +134,7 @@ choose_tools() {
     echo "    5) Morgen           — unified calendar + tasks (recommended)"
     echo "    6) Motion Calendar  — Motion events, availability, scheduling"
     echo "    7) Playwright       — browser automation for web apps with no API"
+    echo "    8) SwiftKit         — hosted MCP toolkit (100+ tools across services)"
     echo ""
     echo -e "${YELLOW}  Note: Morgen (5) is the recommended calendar+task tool.${NC}"
     echo -e "${YELLOW}  Motion (6) and Google Calendar (4) are secondary —${NC}"
@@ -552,6 +558,51 @@ install_playwright() {
 }
 
 # -----------------------------------------------------------------------------
+# Install SwiftKit MCP (hosted MCP toolkit)
+# -----------------------------------------------------------------------------
+install_swiftkit() {
+    info "Installing SwiftKit MCP server..."
+
+    if claude mcp list 2>/dev/null | grep -q "swiftkit"; then
+        success "SwiftKit MCP already installed"
+        INSTALLED_SWIFTKIT=true
+        return
+    fi
+
+    echo ""
+    echo -e "${BLUE}  SwiftKit is a hosted MCP service that bundles 100+ tools${NC}"
+    echo -e "${BLUE}  across multiple services into a single endpoint. Claude${NC}"
+    echo -e "${BLUE}  connects over HTTP — no local packages to install.${NC}"
+    echo ""
+    echo -e "${BLUE}  Built by SwiftKit (https://swiftkit.sh).${NC}"
+    echo ""
+    echo "    1. Go to https://swiftkit.sh"
+    echo "    2. Sign up and generate an API key"
+    echo "    3. Copy your API key (starts with sk_live_ or sk_test_)"
+    echo ""
+
+    read -sp "  SwiftKit API key: " SWIFTKIT_KEY
+    echo " [saved]"
+    echo ""
+
+    if [ -z "$SWIFTKIT_KEY" ]; then
+        warn "No SwiftKit key provided. Skipping SwiftKit setup."
+        return
+    fi
+
+    claude mcp add --scope user --transport http \
+        -H "Authorization: Bearer $SWIFTKIT_KEY" \
+        swiftkit https://mcp.swiftkit.sh/mcp 2>/dev/null
+
+    if claude mcp list 2>/dev/null | grep -q "swiftkit"; then
+        success "SwiftKit MCP installed"
+        INSTALLED_SWIFTKIT=true
+    else
+        soft_fail "SwiftKit MCP installation could not be verified"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -584,6 +635,7 @@ run_self_test() {
     if $INSTALLED_MORGEN;   then check_registered "Morgen"          "morgen";          else info "TEST: Morgen — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_MOTION;   then check_registered "Motion Calendar" "motion-calendar"; else info "TEST: Motion Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_PLAYWRIGHT; then check_registered "Playwright"    "playwright";      else info "TEST: Playwright — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_SWIFTKIT;  then check_registered "SwiftKit"     "swiftkit";        else info "TEST: SwiftKit — skipped";        TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     # Credential-file checks for tools that persist a local .env
     if $INSTALLED_GCAL; then
@@ -638,6 +690,7 @@ print_summary() {
     if $INSTALLED_MORGEN;   then echo "  Morgen            — unified calendar + tasks (single API key)";       INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_MOTION;   then echo "  Motion Calendar   — Motion events, availability, scheduling";         INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_PLAYWRIGHT; then echo "  Playwright        — browser automation for web apps with no API (Microsoft @playwright/mcp)"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_SWIFTKIT;  then echo "  SwiftKit          — hosted MCP toolkit with 100+ tools across services (swiftkit.sh)";     INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
 
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
@@ -672,6 +725,10 @@ print_summary() {
         if $INSTALLED_PLAYWRIGHT; then
             echo "    - Ask Claude to log into a web app that has no API and automate it"
             echo "    - Ask Claude to navigate a site, fill forms, and read the DOM"
+        fi
+        if $INSTALLED_SWIFTKIT; then
+            echo "    - Ask Claude to use any of SwiftKit's 100+ hosted tools"
+            echo "    - SwiftKit bundles multiple services behind one MCP endpoint"
         fi
     fi
 
@@ -712,6 +769,7 @@ main() {
             5) if ! $INSTALLED_MORGEN;  then install_morgen;          else success "Morgen already configured";          fi ;;
             6) if ! $INSTALLED_MOTION;  then install_motion_calendar; else success "Motion Calendar already configured"; fi ;;
             7) if ! $INSTALLED_PLAYWRIGHT; then install_playwright;   else success "Playwright already configured";     fi ;;
+            8) if ! $INSTALLED_SWIFTKIT;  then install_swiftkit;    else success "SwiftKit already configured";      fi ;;
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done

@@ -28,7 +28,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be 
 | [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 3](#step-3---ruflo--context-hub) | Ruflo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) | Design + Media | UI/UX Pro Max, Taste Skill, 21st.dev Magic, Remotion, yt-dlp, Whisper, FFmpeg | [separate repo](https://github.com/lorecraft-io/creativity-maxxing) |
-| [Step 6](#step-6---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright (pick what you use; Morgen recommended) | ~5 min |
+| [Step 6](#step-6---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit (pick what you use; Morgen recommended) | ~5 min |
 | [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) | Second Brain | Obsidian vault setup, Claude history import, `cbrain`/`cbraintg` commands | [separate repo](https://github.com/lorecraft-io/2ndbrain-maxxing) |
 | [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
@@ -103,7 +103,7 @@ Run the steps in order. Each one builds on the last.
 
 **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)** adds professional design skills and a full video/audio production pipeline. Install it after this repo.
 
-**[Step 6](#step-6---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, workflows, and browser automation. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, or Playwright. All optional, install only what you need.
+**[Step 6](#step-6---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, workflows, browser automation, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, or SwiftKit. All optional, install only what you need.
 
 **[2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)** sets up your Obsidian PKM vault and installs `cbrain`/`cbraintg` commands. Install it after this repo.
 
@@ -649,7 +649,7 @@ Once installed, these tools work through natural language. No commands to memori
 
 Claude picks the right tool automatically based on what you ask. You never need to think about which MCP is handling it.
 
-Step 6 installs seven optional tools in this order:
+Step 6 installs eight optional tools in this order:
 
 1. **Notion** — pages, databases, knowledge management
 2. **Granola** — meeting transcripts and notes
@@ -658,6 +658,7 @@ Step 6 installs seven optional tools in this order:
 5. **Morgen** — unified calendar + tasks (recommended default)
 6. **Motion Calendar** — Motion-specific events, teammate visibility
 7. **Playwright** — browser automation via Microsoft's official `@playwright/mcp`
+8. **SwiftKit** — hosted MCP toolkit with 100+ tools across services
 
 > **Calendar recommendation:** Morgen (5) is the recommended default calendar + task tool. It unifies Google, Outlook, iCloud, and native tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary — install them only if you specifically need direct access to those accounts.
 >
@@ -739,6 +740,16 @@ Built by [Microsoft](https://github.com/microsoft/playwright-mcp) — the offici
 >
 > **Scope note:** Playwright MCP is designed for productivity, not security isolation. Microsoft explicitly says "Playwright MCP is not a security boundary" — treat anything Claude loads through it with the same trust you'd give any browser session you drove manually.
 
+### SwiftKit
+
+Built by [SwiftKit](https://swiftkit.sh). A hosted MCP service that bundles 100+ tools across multiple services into a single HTTP endpoint. Instead of installing individual MCP servers for every service, SwiftKit provides a unified toolkit behind one API key.
+
+- **Single endpoint, many tools.** One MCP connection gives Claude access to a wide range of capabilities across different services.
+- **No local packages.** Everything runs on SwiftKit's hosted infrastructure — nothing to install, update, or maintain locally.
+- **HTTP transport.** Connects via Bearer token auth over HTTPS. Your key is stored in Claude's MCP config only.
+
+> **Requires:** A SwiftKit account and API key from [swiftkit.sh](https://swiftkit.sh). Sign up, generate a key (starts with `sk_live_` or `sk_test_`), and paste it when the setup script asks.
+
 ### Run Step 6
 
 You should still have a Claude session open. If you closed it, open your terminal and type `cskip` to start a new Claude session.
@@ -762,6 +773,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 | Morgen MCP | **Recommended default.** Unified calendar + tasks across Google/Outlook/iCloud/native. Single API key. |
 | Motion Calendar MCP | Motion-specific MCP for teammate visibility and full event search. Secondary. |
 | Playwright MCP | Microsoft's official browser automation — runs a separate Chromium instance (not your browser), uses accessibility-tree snapshots instead of pixels. Lets Claude log into and operate web apps that have no API. No credentials. |
+| SwiftKit MCP | Hosted MCP toolkit by [SwiftKit](https://swiftkit.sh) — 100+ tools across services behind a single HTTP endpoint. Bearer token auth, nothing to install locally. |
 
 ### After Step 6
 
@@ -1043,7 +1055,7 @@ Once you're inside Claude, type:
 /mcp
 ```
 
-This shows every MCP server and its connection status. Everything you installed — Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Google Calendar, Playwright, Obsidian (from 2ndbrain-maxxing), design tools (from creativity-maxxing) — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
+This shows every MCP server and its connection status. Everything you installed — Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Google Calendar, Playwright, SwiftKit, Obsidian (from 2ndbrain-maxxing), design tools (from creativity-maxxing) — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
 
 > "One of my MCP servers isn't connecting — can you troubleshoot it?"
 
@@ -1093,7 +1105,7 @@ Run the steps in this order:
 | 3 | Ruflo + Context Hub | Multi-agent orchestration + API docs |
 | 4 | Design Tools | → **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)** (UI/UX Pro Max, Taste Skill, 21st.dev Magic) |
 | 5 | Visual Media | → **[creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)** (Remotion, YouTube Transcripts, yt-dlp, Whisper, FFmpeg) |
-| 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright (all optional — pick what you use; Morgen recommended) |
+| 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit (all optional — pick what you use; Morgen recommended) |
 | 7 | Second Brain | → **[2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)** (Obsidian vault setup, Claude history import, `cbrain`/`cbraintg`) |
 | 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
@@ -1142,7 +1154,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 
 **What it removes:**
 - Claude Code + shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and scripts (`ctg`, `cbrain`, `cbraintg` in `~/.local/bin/`)
-- All MCP servers (Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Playwright) — Magic, YouTube Transcript, yt-dlp, Whisper, and Obsidian are managed by the companion repos
+- All MCP servers (Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Playwright, SwiftKit) — Magic, YouTube Transcript, yt-dlp, Whisper, and Obsidian are managed by the companion repos
 - All skills (rswarm, rmini, rhive, w4w, get-api-docs, gitfix, safetycheck) — UI/UX Pro Max, Taste Skill pack, and Remotion are managed by creativity-maxxing
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler)
 - Whisper models (~/.whisper/)
