@@ -20,6 +20,7 @@ When this skill is invoked (user types `/w4w` or `w4w`), immediately switch to m
 8. **Report with full specificity.** Include exact line numbers, exact strings, exact file paths. Never say "around line 50" — say "line 47."
 9. **No assumptions.** Do not assume something is correct because it was correct last time. Verify it now.
 10. **Override all efficiency instincts.** This mode exists because thoroughness matters more than speed. Act accordingly.
+11. **Discover before you read.** When the task is "find all instances of X" or "audit for Y" across a codebase: run `grep -rn [pattern]` first to get the complete file list. Do not rely on judgment about which files to open — enumerate exhaustively, then read every match w4w. Skipping the grep step is the same as skipping lines within a file: a violation of this protocol.
 
 ## When Active
 
