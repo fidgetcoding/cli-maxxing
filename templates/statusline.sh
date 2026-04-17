@@ -26,7 +26,7 @@ fi
 # --- fidgetflo CHECK ---
 fidgetflo=""
 if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
-  fidgetflo="⚡️fidgetflo"
+  fidgetflo="⚡️ fidgetflo"
 fi
 
 # --- UIPRO CHECK (always on — global skill) ---

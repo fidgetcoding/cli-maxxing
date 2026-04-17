@@ -966,7 +966,7 @@ fi
 # --- fidgetflo CHECK ---
 fidgetflo=""
 if pgrep -f "claude-flow.*mcp" >/dev/null 2>&1 || pgrep -f "@claude-flow/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
-  fidgetflo="⚡️fidgetflo"
+  fidgetflo="⚡️ fidgetflo"
 fi
 
 # --- UIPRO CHECK (always on — global skill) ---
