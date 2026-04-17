@@ -8,6 +8,25 @@ This skill activates when the user types `/safetycheck`, or says "run a safety c
 
 ## Execution
 
+### Step 0 — Run precheck.sh (if present)
+
+Before any other check, look for a `scripts/precheck.sh` in the git repo root:
+
+```bash
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+```
+
+If `$REPO_ROOT/scripts/precheck.sh` exists:
+1. Run it: `bash "$REPO_ROOT/scripts/precheck.sh"`
+2. Capture exit code and output
+3. If exit code is non-zero, report each failing check as **CRITICAL** (secrets) or **HIGH** (other) in the final results table — label the source as "precheck.sh"
+4. Print the precheck.sh output verbatim under a `### Precheck Results` header before the main audit begins
+5. Continue with Steps 1–4 regardless of precheck result (don't abort — surface everything)
+
+If `scripts/precheck.sh` does not exist, skip Step 0 silently.
+
+---
+
 ### Step 1 — Detect Project Type
 
 Determine what kind of project this is by checking for:
