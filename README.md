@@ -45,6 +45,13 @@ Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be 
 
 [Back to top](#quick-nav)
 
+> [!IMPORTANT]
+> **You need a paid [claude.ai](https://claude.ai) subscription before anything below is useful.**
+>
+> The Claude Code CLI installs for free — but USING Claude requires a paid plan. If you don't have one yet, [sign up first](https://claude.ai) (Claude Pro is the minimum tier at $20/mo; Max is recommended for heavy use). Otherwise the installer downloads ~500 MB of tooling that has nothing to talk to.
+>
+> The installer will prompt you upfront — press Enter if you're subscribed, Ctrl+C to bail and sign up first.
+
 - Your computer needs to be from roughly **2020 or later** (macOS Big Sur+ or a recent Linux).
 - You need an **internet connection** since the scripts download everything live.
 - **Don't run it as root.** Just open your terminal normally and paste the command.

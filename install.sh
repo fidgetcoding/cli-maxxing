@@ -9,6 +9,7 @@ set -uo pipefail
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
 # =============================================================================
 
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -53,6 +54,32 @@ echo -e "${BLUE}  Running all steps in order, skipping what's already done${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
+# Subscription gate — before any downloads. The CLI is free; Claude itself
+# requires a paid claude.ai plan. No plan = the whole install is wasted time,
+# so catch it upfront instead of after 20 min of brew + MCP downloads.
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${YELLOW}  IMPORTANT — Claude subscription required${NC}"
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+echo "  This installer sets up Claude Code (the terminal CLI) for free,"
+echo "  but USING Claude requires a paid claude.ai plan. No plan = the"
+echo "  rest of this install is wasted time."
+echo ""
+echo -e "  No plan yet?  Sign up:  ${GREEN}https://claude.ai/${NC}"
+echo "    • Claude Pro is the minimum tier (\$20/mo)"
+echo "    • Max plan recommended for heavy use"
+echo ""
+echo -e "  Already subscribed?  ${GREEN}Press Enter${NC} to continue."
+echo -e "  Need to sign up first?  ${GREEN}Press Ctrl+C${NC}, come back after."
+echo ""
+if [ -t 0 ]; then
+    # shellcheck disable=SC2162
+    read -p "  Press Enter to continue... " _CLAUDE_SUB_CONFIRM || true
+else
+    echo -e "${YELLOW}  [non-interactive mode — continuing. Make sure you have a plan.]${NC}"
+fi
+echo ""
+
 # Step 1
 echo -e "${YELLOW}>>> Step 1 — Get Claude Running${NC}"
 echo ""
@@ -60,6 +87,30 @@ curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
 # BUG A fix: Step 1 installs brew+nvm; re-source them into this shell so the
 # remaining curl|bash steps (Ghostty/Arc/2/3/9/final) can actually find them.
 reload_path
+
+# Hard gate: if claude didn't land, stop everything. Every downstream step
+# configures Claude integrations — pointless without claude actually working.
+if ! command -v claude &>/dev/null || ! claude --version &>/dev/null; then
+    echo ""
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${RED}  CRITICAL — Claude Code did not install${NC}"
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo "  Step 1 finished but 'claude --version' does not work. Without"
+    echo "  claude on PATH, the remaining steps can't configure anything"
+    echo "  useful — stopping here."
+    echo ""
+    echo "  Most common causes + fixes:"
+    echo "    1. Fresh terminal needed — close this window, open a new one,"
+    echo "       run 'claude --version'. If it works, re-run this installer."
+    echo "    2. npm registry blocked — check internet; try again."
+    echo "    3. Old Node.js — 'node -v' should report v18 or higher."
+    echo ""
+    echo "  Fix one of the above, then re-run:"
+    echo -e "    ${GREEN}bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)${NC}"
+    echo ""
+    exit 1
+fi
 echo ""
 
 # Bonus — Ghostty Terminal (optional, won't reinstall if already present)

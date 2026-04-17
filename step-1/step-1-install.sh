@@ -296,15 +296,42 @@ install_node() {
 #    where the passwd shell is bash but Terminal actually runs zsh.
 # -----------------------------------------------------------------------------
 install_claude_code() {
-    if command -v claude &>/dev/null; then
-        success "Claude Code already installed"
+    if command -v claude &>/dev/null && claude --version &>/dev/null; then
+        success "Claude Code already installed ($(claude --version 2>/dev/null))"
     else
-        info "Installing Claude Code..."
-        npm install -g @anthropic-ai/claude-code 2>/dev/null \
-            || sudo npm install -g @anthropic-ai/claude-code
+        info "Installing Claude Code (the single most important tool — retrying up to 3x)..."
+        local attempt=0
+        local max_attempts=3
+        local installed=0
+        while [ $attempt -lt $max_attempts ]; do
+            attempt=$((attempt + 1))
+            if npm install -g @anthropic-ai/claude-code 2>/dev/null \
+                || sudo npm install -g @anthropic-ai/claude-code; then
+                # Rehydrate nvm in case the shim dir just got populated.
+                export NVM_DIR="$HOME/.nvm"
+                # shellcheck source=/dev/null
+                [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                if command -v claude &>/dev/null && claude --version &>/dev/null; then
+                    installed=1
+                    break
+                fi
+            fi
+            if [ $attempt -lt $max_attempts ]; then
+                local backoff=$((attempt * 5))
+                warn "Claude Code install attempt $attempt/$max_attempts failed — retrying in ${backoff}s..."
+                sleep "$backoff"
+            fi
+        done
 
-        command -v claude &>/dev/null || fail "Claude Code installation failed"
-        success "Claude Code installed"
+        if [ $installed -ne 1 ]; then
+            fail "Claude Code installation failed after $max_attempts attempts. Check internet + npm registry access (https://registry.npmjs.org/), then re-run this installer."
+        fi
+
+        # Final hard verify: the binary must execute, not just exist on PATH.
+        if ! claude --version &>/dev/null; then
+            fail "Claude Code installed but 'claude --version' does not execute. Try opening a new terminal and running 'claude --version'; if that works, re-run the installer."
+        fi
+        success "Claude Code installed ($(claude --version 2>/dev/null))"
     fi
 
     # Add Claude Code shortcuts to every RC file. Idempotent per-file — re-runs
