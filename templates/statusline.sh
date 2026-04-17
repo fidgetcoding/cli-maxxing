@@ -1,6 +1,6 @@
 #!/bin/bash
 # Status Line — real state only
-# 2ndBrain (Obsidian) + Ruflo (MCP) + UIPro + Swarm/Hive activity
+# 2ndBrain (Obsidian) + fidgetflo (MCP) + UIPro + Swarm/Hive activity
 
 input=$(cat)
 
@@ -23,10 +23,10 @@ else
   TIME_FMT="0s"
 fi
 
-# --- RUFLO CHECK ---
-RUFLO=""
-if pgrep -f "claude-flow.*mcp" >/dev/null 2>&1 || pgrep -f "@claude-flow/cli" >/dev/null 2>&1 || pgrep -f "ruflo" >/dev/null 2>&1; then
-  RUFLO="⚡ Ruflo"
+# --- fidgetflo CHECK ---
+fidgetflo=""
+if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
+  fidgetflo="⚡️fidgetflo"
 fi
 
 # --- UIPRO CHECK (always on — global skill) ---
@@ -36,9 +36,9 @@ UIPRO="🎨 UIPro"
 # Lock file alone isn't enough — validate swarm processes are alive.
 # If lock file exists but nothing's running, clean it up (stale session).
 SWARM=""
-SWARM_LOCK="/tmp/ruflo-swarm-active"
+SWARM_LOCK="/tmp/fidgetflo-swarm-active"
 if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
-  if pgrep -f "swarm.*init|claude-flow.*swarm|ruflo.*swarm" >/dev/null 2>&1; then
+  if pgrep -f "swarm.*init|fidgetflo.*swarm" >/dev/null 2>&1; then
     AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
     if [ -n "$AGENT_COUNT" ]; then
       SWARM="🐝 ${AGENT_COUNT}"
@@ -54,9 +54,9 @@ fi
 # --- HIVE CHECK (only shows when actively running) ---
 # Same validation — lock file + live process required.
 HIVE=""
-HIVE_LOCK="/tmp/ruflo-hive-active"
+HIVE_LOCK="/tmp/fidgetflo-hive-active"
 if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
-  if pgrep -f "hive-mind|claude-flow.*hive|ruflo.*hive" >/dev/null 2>&1; then
+  if pgrep -f "hive-mind|fidgetflo.*hive" >/dev/null 2>&1; then
     HIVE="👑 Hive"
   else
     # Stale lock file — no hive processes running, clean up
@@ -67,9 +67,9 @@ fi
 # --- BUILD THE LINE ---
 PARTS=""
 
-# Ruflo
-if [ -n "$RUFLO" ]; then
-  PARTS="${RUFLO}"
+# fidgetflo
+if [ -n "$fidgetflo" ]; then
+  PARTS="${fidgetflo}"
 fi
 
 # UIPro (always on)

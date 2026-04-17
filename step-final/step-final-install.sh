@@ -38,7 +38,7 @@ info "Installing status line script..."
 cat > "$HOME/.claude/statusline.sh" << 'STATUSLINE_EOF'
 #!/bin/bash
 # Status Line — real state only
-# 2ndBrain (Obsidian) + Ruflo (MCP) + UIPro + Swarm/Hive activity
+# 2ndBrain (Obsidian) + fidgetflo (MCP) + UIPro + Swarm/Hive activity
 
 input=$(cat)
 
@@ -62,23 +62,23 @@ else
   TIME_FMT="0s"
 fi
 
-# --- RUFLO CHECK ---
-RUFLO=""
-if pgrep -f "claude-flow.*mcp" >/dev/null 2>&1 || pgrep -f "@claude-flow/cli" >/dev/null 2>&1 || pgrep -f "ruflo" >/dev/null 2>&1; then
-  RUFLO="⚡ Ruflo"
+# --- fidgetflo CHECK ---
+fidgetflo=""
+if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
+  fidgetflo="⚡️fidgetflo"
 fi
 
 # --- UIPRO CHECK (always on — global skill) ---
 UIPRO="🎨 UIPro"
 
 # --- SWARM CHECK (only shows when actively running) ---
-# Lock file is written by /rswarm skill, removed on completion.
+# Lock file is written by /fswarm skill, removed on completion.
 # Agents run as Claude Code subprocesses (not CLI), so pgrep won't find them.
 # Auto-clean lock files older than 30 min as stale.
 SWARM=""
-SWARM_LOCK="/tmp/ruflo-swarm-active"
+SWARM_LOCK="/tmp/fidgetflo-swarm-active"
 if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'ruflo-swarm-active' -mmin +30 2>/dev/null)" ]; then
+  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-swarm-active' -mmin +30 2>/dev/null)" ]; then
     rm -f "$SWARM_LOCK" 2>/dev/null
   else
     AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
@@ -93,9 +93,9 @@ fi
 # --- HIVE CHECK (only shows when actively running) ---
 # Same approach — trust lock file, auto-clean after 30 min.
 HIVE=""
-HIVE_LOCK="/tmp/ruflo-hive-active"
+HIVE_LOCK="/tmp/fidgetflo-hive-active"
 if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'ruflo-hive-active' -mmin +30 2>/dev/null)" ]; then
+  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-hive-active' -mmin +30 2>/dev/null)" ]; then
     rm -f "$HIVE_LOCK" 2>/dev/null
   else
     HIVE="👑 Hive"
@@ -105,9 +105,9 @@ fi
 # --- MINI CHECK (only shows when actively running) ---
 # Same approach — trust lock file, auto-clean after 30 min.
 MINI=""
-MINI_LOCK="/tmp/ruflo-mini-active"
+MINI_LOCK="/tmp/fidgetflo-mini-active"
 if [ -f "$MINI_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'ruflo-mini-active' -mmin +30 2>/dev/null)" ]; then
+  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-mini-active' -mmin +30 2>/dev/null)" ]; then
     rm -f "$MINI_LOCK" 2>/dev/null
   else
     MINI_AGENT_COUNT=$(cat "$MINI_LOCK" 2>/dev/null || echo "")
@@ -121,8 +121,8 @@ fi
 
 # --- BUILD THE LINE ---
 PARTS=""
-if [ -n "$RUFLO" ]; then
-  PARTS="${RUFLO}"
+if [ -n "$fidgetflo" ]; then
+  PARTS="${fidgetflo}"
 fi
 
 if [ -n "$PARTS" ]; then
