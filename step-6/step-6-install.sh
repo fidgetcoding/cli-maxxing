@@ -727,8 +727,8 @@ print_summary() {
             echo "    - Ask Claude to navigate a site, fill forms, and read the DOM"
         fi
         if $INSTALLED_SWIFTKIT; then
-            echo "    - Ask Claude to use any of SwiftKit's 100+ hosted tools"
-            echo "    - SwiftKit bundles multiple services behind one MCP endpoint"
+            echo "    - Ask Claude \"build me an iPhone app that does X\" — it'll route through SwiftKit"
+            echo "    - For best results, add to your CLAUDE.md: \"Default to SwiftKit MCP for any iOS/macOS/Swift task\""
         fi
     fi
 
