@@ -14,7 +14,7 @@ This is one of three repos in the cli-maxxing stack:
 
 Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be installed in either order after that.
 
-## Quick Nav
+## Quick Navigation
 
 | | Section | What it does | Time |
 |---|------|-------------|------|
@@ -43,7 +43,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be 
 
 ## Before You Start
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 > [!IMPORTANT]
 > **You need a paid [claude.ai](https://claude.ai) subscription before anything below is useful.**
@@ -63,7 +63,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `2ndbrain-maxxing` can be 
 
 ## Install Everything
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 If you already know your way around a terminal and just want everything installed at once:
 
@@ -94,7 +94,7 @@ We recommend reading through the steps below first so you understand what each t
 
 ## How It Works
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 Run the steps in order. Each one builds on the last.
 
@@ -144,7 +144,7 @@ Want to get better at using the terminal in general? Check out [Terminal Academy
 
 ## [Keyboard + Command Cheat Sheet](CHEATSHEET.md)
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This is a quick reference for terminal hotkeys, typing basics, launching Claude, and useful commands. **Read this before starting the steps**, especially if you're new to working in a terminal.
 
@@ -169,7 +169,7 @@ Everything else — aliases, slash commands, natural-language tools, troubleshoo
 
 ## Step 1 - Get Claude Running
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step is the foundation. It installs the minimum needed to get Claude Code working on your machine.
 
@@ -262,7 +262,7 @@ That's it for Step 1. Continue to the [Ghostty bonus](#bonus---ghostty-terminal)
 
 ## Bonus - Ghostty Terminal
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This is optional. Everything in this setup works in any terminal app — Terminal.app, iTerm2, whatever you've got. But if you want a terminal that's noticeably faster, looks great out of the box, and lets you Cmd+Click URLs and file paths to open them instantly, Ghostty is worth the two minutes.
 
@@ -338,7 +338,7 @@ Full docs: [ghostty.org/docs](https://ghostty.org/docs)
 
 ## Bonus - Arc Browser
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This is optional, but if you're still using Chrome, Safari, or Firefox as your daily driver — do yourself a favor and switch to Arc. It's not just another Chromium reskin. Arc was built from scratch for people who live in their browser, and once you use it for a week you genuinely won't want to go back.
 
@@ -407,7 +407,7 @@ Or if you're already in a Claude session, paste this:
 
 ## Step 2 - Dev Tools
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step installs the development tools that Claude uses when working on your projects. Things like file converters, search tools, and other utilities that make Claude more capable.
 
@@ -495,7 +495,7 @@ You don't need to do anything to make this work. It's already configured. Just k
 
 ## Step 3 - Ruflo + Context Hub
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step installs Ruflo, a multi-agent swarming layer that turns Claude from a single assistant into a full team of coordinated AI agents. Each agent focuses on a particular task, work is split up, done with more attention to detail: power in numbers. It also installs Context Hub, which makes sure those agents don't hallucinate when writing code that talks to external APIs.
 
@@ -622,7 +622,7 @@ claude mcp add ruflo -- npx -y ruflo@latest
 
 ## Step 4 - Design Tools
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 > **This step has moved.**
 >
@@ -639,7 +639,7 @@ claude mcp add ruflo -- npx -y ruflo@latest
 
 ## Step 5 - Visual Media
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 > **This step has moved.**
 >
@@ -656,7 +656,7 @@ claude mcp add ruflo -- npx -y ruflo@latest
 
 ## Step 6 - Productivity Tools
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step connects Claude to the productivity tools you already use. Everything here is optional — install only the tools that match your workflow. Skip what you don't use.
 
@@ -804,7 +804,7 @@ You now have your productivity stack connected to Claude. Ask about your schedul
 
 ## Step 7 — Second Brain (Obsidian)
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 > **This step has moved.** See [lorecraft-io/2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing).
 
@@ -818,7 +818,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/2ndbrain-maxxin
 
 ## Step 8 - Telegram
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step connects Claude to Telegram so you can message it from your phone. You create a bot on Telegram using @BotFather (free, takes about 2 minutes), then the script configures it locally. After setup, you can send Claude messages, photos, and files from anywhere — your phone, tablet, or any device with Telegram installed. The `ctg` command (already installed in Step 1) launches Claude with Telegram connected, and `cbraintg` does the same but also opens your 2ndBrain vault (requires [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)). This step is optional but makes Claude accessible from your pocket.
 
@@ -853,7 +853,7 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 
 ## Step 9 - Safety Check
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step installs a security auditing skill that lets Claude scan any project for vulnerabilities. Exposed API keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, insecure configurations — the stuff that slips through code review. For MCP projects, it automatically activates 12 additional checks covering tool poisoning, prompt injection vectors, transport security, authentication, and supply chain attacks. You point Claude at a project and tell it to run a safety check. It does the rest.
 
@@ -905,7 +905,7 @@ Open any project in Claude and type `/safetycheck` to run a security audit. For 
 
 ## Step 10 - Developer Tools
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This step is for developers who want Claude to have direct access to their GitHub repositories, issues, pull requests, and code search. It's completely optional — skip it if you don't use GitHub with Claude, and everything else still works.
 
@@ -945,7 +945,7 @@ Ask Claude to "list my open GitHub issues" or "create a PR on cli-maxxing" and t
 
 ## Final Step - Status Line + /gitfix
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also installs the `/gitfix` skill.
 
@@ -1010,7 +1010,7 @@ Setup is complete. Head to **[You're Ready](#youre-ready)** below for your daily
 
 ## Troubleshooting
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 ### I ran the installer but `claude` command is not found
 
@@ -1120,7 +1120,7 @@ Or open a `cskip` session and describe the problem to Claude. It can diagnose an
 
 ## You're Ready
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 ### Quick MCP Check
 
@@ -1173,7 +1173,7 @@ But for day-to-day use? Just type `cbrain` and go.
 
 ## Installation Order
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 Run the steps in this order:
 
@@ -1198,7 +1198,7 @@ Run the steps in this order:
 
 ## Video Tutorials *(coming soon)*
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 Video walkthroughs for every step are coming soon. These will show you exactly what to do, screen by screen, so you can follow along at your own pace.
 
@@ -1206,7 +1206,7 @@ Video walkthroughs for every step are coming soon. These will show you exactly w
 
 ## Staying Up to Date
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This command re-runs every step, skips anything already installed, and picks up anything new. It covers everything in this repo as of right now. If new steps get added in the future, the update command will include them too.
 
@@ -1223,7 +1223,7 @@ Open your terminal and run `cskip` to start a Claude session, then paste the upd
 
 ## Uninstall
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 If you need to remove everything installed by this setup, the uninstall script reverses all steps. It removes Claude Code, MCP servers, skills, shell aliases, dev tools, and brew packages. Your Obsidian vault and notes are never touched.
 
@@ -1254,6 +1254,6 @@ If you need to remove everything installed by this setup, the uninstall script r
 
 ## More Coming Soon
 
-[Back to top](#quick-nav)
+[Back to top](#quick-navigation)
 
 This setup is a living project. New steps, tools, and workflows will be added as they're ready. If you have the update command above, you'll always be able to catch up with one paste.
