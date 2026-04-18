@@ -51,6 +51,24 @@ if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
   fi
 fi
 
+# --- MINI CHECK (only shows when actively running) ---
+# 5-agent compact swarm (/fmini*). Lock file holds agent count.
+MINI=""
+MINI_LOCK="/tmp/fidgetflo-mini-active"
+if [ -f "$MINI_LOCK" ] 2>/dev/null; then
+  if pgrep -f "swarm.*init|fidgetflo.*swarm|fidgetflo.*mini" >/dev/null 2>&1; then
+    AGENT_COUNT=$(cat "$MINI_LOCK" 2>/dev/null || echo "")
+    if [ -n "$AGENT_COUNT" ]; then
+      MINI="🍯 ${AGENT_COUNT}"
+    else
+      MINI="🍯"
+    fi
+  else
+    # Stale lock file — no mini-swarm processes running, clean up
+    rm -f "$MINI_LOCK" 2>/dev/null
+  fi
+fi
+
 # --- HIVE CHECK (only shows when actively running) ---
 # Same validation — lock file + live process required.
 HIVE=""
@@ -79,13 +97,13 @@ else
   PARTS="${UIPRO}"
 fi
 
-# Swarm or Hive activity
-if [ -n "$SWARM" ] && [ -n "$HIVE" ]; then
-  PARTS="${PARTS} [${SWARM} + ${HIVE}]"
-elif [ -n "$SWARM" ]; then
-  PARTS="${PARTS} [${SWARM}]"
-elif [ -n "$HIVE" ]; then
-  PARTS="${PARTS} [${HIVE}]"
+# Swarm / Mini / Hive activity (any combination can be active)
+ACTIVITY=""
+[ -n "$SWARM" ] && ACTIVITY="${ACTIVITY:+${ACTIVITY} + }${SWARM}"
+[ -n "$MINI" ]  && ACTIVITY="${ACTIVITY:+${ACTIVITY} + }${MINI}"
+[ -n "$HIVE" ]  && ACTIVITY="${ACTIVITY:+${ACTIVITY} + }${HIVE}"
+if [ -n "$ACTIVITY" ]; then
+  PARTS="${PARTS} [${ACTIVITY}]"
 fi
 
 echo "${PARTS} • ${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
