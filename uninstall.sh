@@ -466,9 +466,9 @@ uninstall_step_1() {
     fi
 
     if [ "$rc_localbin_removed" -gt 0 ]; then
-        success "~/.local/bin PATH entry removed from $rc_localbin_removed rc file(s)"
+        success "\$HOME/.local/bin PATH entry removed from $rc_localbin_removed rc file(s)"
     else
-        skip "~/.local/bin PATH entry (not found in any rc file)"
+        skip "\$HOME/.local/bin PATH entry (not found in any rc file)"
     fi
 
     if [ "$rc_ghostty_removed" -gt 0 ]; then
