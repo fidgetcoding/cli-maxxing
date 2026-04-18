@@ -1257,3 +1257,13 @@ If you need to remove everything installed by this setup, the uninstall script r
 [Back to top](#quick-navigation)
 
 This setup is a living project. New steps, tools, and workflows will be added as they're ready. If you have the update command above, you'll always be able to catch up with one paste.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
+Built by [Nate Davidovich / Lorecraft](https://github.com/lorecraft-io)
