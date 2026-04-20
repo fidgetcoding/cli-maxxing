@@ -3,9 +3,9 @@
 **Everything you need to start working with AI-powered development tools, installed in the right order with one command per step.**
 
 > [!NOTE]
-> **fidg·et·cod·ing** \ ˈfij-ət-ˌkō-diŋ \   *verb*   ·   **fidgetcoded**; **fidgetcode**
-> <b>1</b> : to code as self-regulation — the ADHD dopamine loop
-> <b>2</b> : to build software through relentless tinkering by someone with no formal training and too many browser tabs open
+> **fidg·et·cod·ing** \ ˈfij-ət-ˌkō-diŋ \   *verb*   ·   **fidgetcoded**; **fidgetcode**<br>
+> **1** : to code as self-regulation — the ADHD dopamine loop<br>
+> **2** : to build software through relentless tinkering by someone with no formal training and too many browser tabs open
 >
 > **Heads up — this was fidgetcoded.** I'm no expert, but I tried — nominally — my best. Getting this stack running end-to-end on a clean machine took a lot of trial and error, and it still might not be perfect.
 >
