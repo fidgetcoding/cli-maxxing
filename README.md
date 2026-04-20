@@ -5,9 +5,13 @@
 > [!NOTE]
 > **Heads up — this was fidgetcoded.** I'm no expert, but I tried — nominally — my best. Getting this stack running end-to-end on a clean machine took a lot of trial and error, and it still might not be perfect.
 >
+> <hr>
+>
 > **fidg·et·cod·ing** \ ˈfij-ət-ˌkō-diŋ \   *verb*   ·   **fidgetcoded**; **fidgetcode**<br>
 > **1** : to code as self-regulation — the ADHD dopamine loop<br>
 > **2** : to build software through relentless tinkering by someone with no formal training and too many browser tabs open
+>
+> <hr>
 >
 > **Read everything carefully as you go (or don't, entirely your call).** If something breaks mid-install, don't panic (or do, also your call):
 >
