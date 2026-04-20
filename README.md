@@ -3,7 +3,7 @@
 **Everything you need to start working with AI-powered development tools, installed in the right order with one command per step.**
 
 > [!NOTE]
-> **fidg·et·code** \ ˈfij-ət-ˌkōd \   *verb*   ·   **fidgetcoded**; **fidgetcoding**
+> **fidg·et·cod·ing** \ ˈfij-ət-ˌkō-diŋ \   *verb*   ·   **fidgetcoded**; **fidgetcode**
 > **1** : to code as self-regulation — the ADHD dopamine loop
 > **2** : to build software through relentless tinkering by someone with no formal training and too many browser tabs open
 >
