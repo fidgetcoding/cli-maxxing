@@ -4,8 +4,8 @@
 
 > [!NOTE]
 > **fidg·et·code** \ ˈfij-ət-ˌkōd \   *verb*   ·   **fidgetcoded**; **fidgetcoding**
-> **1** : to build software through relentless tinkering by someone with no formal training and too many browser tabs open
-> **2** : to ship a feature by rerunning the install script until it stops complaining
+> **1** : to code as self-regulation — the ADHD dopamine loop, coding as a stim
+> **2** : a fork, not a dead end — where most devs start (half the JS ecosystem began as fidgets); sharpens into craft or stagnates as pure loop
 > *see also* VIBECODING
 >
 > **Heads up — this was fidgetcoded.** I'm no expert, but I tried — nominally — my best. Getting this stack running end-to-end on a clean machine took a lot of trial and error, and it still might not be perfect.
