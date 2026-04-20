@@ -43,7 +43,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [Step 1](#step-1---get-claude-running) | Get Claude Running | Sets up the foundation on your machine | ~5 min |
 | [Bonus #1](#bonus-1---ghostty-terminal) | Ghostty Terminal | GPU-accelerated terminal with clickable links and tabs | ~2 min |
 | [Bonus #2](#bonus-2---arc-browser) | Arc Browser | The browser for power users — fast, clean, no tab clutter | ~2 min |
-| [Step 2](#step-2---dev-tools) | Dev Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
+| [Step 2](#step-2---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 3](#step-3---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [Step 6](#step-6---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit (pick what you use; Morgen recommended) | ~5 min |
 | [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
@@ -89,7 +89,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Bonus #2 — Arc Browser](#bonus-2---arc-browser)** is another optional step that installs Arc, a browser built from the ground up for people who actually use their computer all day. If you're still on Chrome or Safari, Arc is a massive upgrade — built-in tab management, Spaces for context switching, a sidebar instead of a tab bar, and it just feels faster. It imports everything from Chrome in about 30 seconds, so switching is painless. Highly recommended.
 
-**[Step 2 — Dev Tools](#step-2---dev-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
+**[Step 2 — Developer & Utility Tools](#step-2---developer--utility-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
 
 **[Step 3 — FidgetFlo + Context Hub](#step-3---fidgetflo--context-hub)** is where you set up FidgetFlo and Context Hub. FidgetFlo is the multi-agent orchestration layer that turns Claude into a full team of AI agents. Context Hub stops Claude from hallucinating when writing code that calls APIs.
 
@@ -115,7 +115,7 @@ If you ever want to start fresh or remove everything this setup installed, there
 
 ### Already have Claude Code installed?
 
-If you already have Claude Code working on your machine, you can skip Step 1 entirely. Just jump straight to [Step 2](#step-2---dev-tools). Everything will work the same. You can paste the install commands directly in your terminal, or if you prefer, download this repo as a ZIP from GitHub, unzip it, and tell Claude to run the scripts from whatever folder they landed in.
+If you already have Claude Code working on your machine, you can skip Step 1 entirely. Just jump straight to [Step 2](#step-2---developer--utility-tools). Everything will work the same. You can paste the install commands directly in your terminal, or if you prefer, download this repo as a ZIP from GitHub, unzip it, and tell Claude to run the scripts from whatever folder they landed in.
 
 ### Bonus
 
@@ -253,7 +253,7 @@ Claude Code requires a paid plan. The software itself is free to install, but to
 
 **Our recommendation:** Start with **Pro** ($20/month). If you find yourself getting rate-limited or waiting for usage to reset, upgrade to Max. You'll know pretty quickly which tier fits your workflow.
 
-That's it for Step 1. Continue to the [Ghostty bonus](#bonus---ghostty-terminal), the [Arc Browser bonus](#bonus---arc-browser), or jump straight to [Step 2](#step-2---dev-tools).
+That's it for Step 1. Continue to [Bonus #1 — Ghostty Terminal](#bonus-1---ghostty-terminal), [Bonus #2 — Arc Browser](#bonus-2---arc-browser), or jump straight to [Step 2 — Developer & Utility Tools](#step-2---developer--utility-tools).
 
 ---
 
@@ -432,7 +432,7 @@ That's it. No config step is needed from the cli-maxxing install script — Arc 
 
 ---
 
-## Step 2 - Dev Tools
+## Step 2 - Developer & Utility Tools
 
 [Back to top](#quick-navigation)
 
@@ -1161,7 +1161,7 @@ Run the steps in this order:
 | 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
 | Bonus | Ghostty Terminal | GPU-accelerated terminal (optional) |
 | Bonus | Arc Browser | Power-user browser with sidebar tabs (optional, macOS) |
-| 2 | Dev Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
+| 2 | Developer & Utility Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 3 | FidgetFlo + Context Hub | Multi-agent orchestration + API docs |
 | 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit (all optional — pick what you use; Morgen recommended) |
 | 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
