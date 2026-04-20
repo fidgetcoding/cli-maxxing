@@ -40,16 +40,15 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [How It Works](#how-it-works) | Overview | How the steps fit together | |
 | [Install Everything](#install-everything) | One-shot | Run all steps at once | ~20 min |
 | [Keyboard + Command Cheat Sheet](#keyboard--command-cheat-sheet) | Commands & Shortcuts | Hotkeys, typing, and commands for your terminal | |
-| [Step 1](#step-1---get-claude-running) | Get Claude Running | Sets up the foundation on your machine | ~5 min |
-| [Bonus #1](#bonus-1---ghostty-terminal) | Ghostty Terminal | GPU-accelerated terminal with clickable links and tabs | ~2 min |
-| [Bonus #2](#bonus-2---arc-browser) | Arc Browser | The browser for power users — fast, clean, no tab clutter | ~2 min |
-| [Step 2](#step-2---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
-| [Step 3](#step-3---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
-| [Step 6](#step-6---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit (pick what you use; Morgen recommended) | ~5 min |
-| [Step 8](#step-8---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
-| [Step 9](#step-9---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
-| [Step 10](#step-10---developer-tools) | Developer Tools *(optional)* | GitHub MCP — repos, issues, PRs, code search via Claude (requires PAT) | ~2 min |
-| [Final Step](#final-step---status-line) | Status Line + /gitfix | Final config — status indicators + /gitfix skill installed | ~2 min |
+| [Step 1](#step-1---claude) | Claude | Sets up the foundation on your machine | ~5 min |
+| [Step 2](#step-2---bonus-software) | Bonus Software | Ghostty (terminal) + Arc (browser) — optional but highly recommended | ~4 min |
+| [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
+| [Step 4](#step-4---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
+| [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit (pick what you use; Morgen recommended) | ~5 min |
+| [Step 6](#step-6---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
+| [Step 7](#step-7---github) | GitHub *(optional)* | GitHub MCP + /gitfix skill — repos, issues, PRs, code search, full-repo doc sync (requires PAT) | ~2 min |
+| [Step 8](#step-8---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
+| [Final Step](#final-step---status-line) | Status Line | Final config — status indicators for active swarms, vault, MCP | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
 | [Video Tutorials (coming soon)](#video-tutorials-coming-soon) | Walkthroughs | Shows you exactly how to do everything, screen by screen | |
 | [Staying Up to Date](#staying-up-to-date) | Update command | Re-run everything, catch new steps | |
@@ -83,25 +82,23 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 
 Run the steps in order. Each one builds on the last.
 
-**[Step 1 — Get Claude Running](#step-1---get-claude-running)** is the only part that feels "techy." This step gets the bare essentials on your machine so Claude (your AI assistant) can run. You paste one command and it handles the rest, but there are a few manual steps after it finishes, like logging into Claude. This is the most hands-on part of the entire process. After Step 1, you can ask Claude questions at any point. If something doesn't make sense, just ask. That's the whole point.
+**[Step 1 — Claude](#step-1---claude)** is the only part that feels "techy." This step gets the bare essentials on your machine so Claude (your AI assistant) can run. You paste one command and it handles the rest, but there are a few manual steps after it finishes, like logging into Claude. This is the most hands-on part of the entire process. After Step 1, you can ask Claude questions at any point. If something doesn't make sense, just ask. That's the whole point.
 
-**[Bonus #1 — Ghostty Terminal](#bonus-1---ghostty-terminal)** is an optional step right after Step 1 that installs and configures Ghostty, a GPU-accelerated terminal. It's faster than CPU-rendered terminals, fully customizable, and has Cmd+Click support for opening URLs, file paths, and PDFs directly from the terminal. You don't need it to continue — everything works in any terminal — but if you want the nicest terminal experience, this is it.
+**[Step 2 — Bonus Software](#step-2---bonus-software)** is optional but highly recommended. It installs two tools that make your day-to-day flow noticeably smoother: **Ghostty**, a GPU-accelerated terminal with Cmd+Click support for URLs and file paths, and **Arc**, a Chromium-based browser with a sidebar instead of a tab bar, Spaces for context switching, and built-in ad blocking. You don't need either to continue — everything works in any terminal and any browser — but if you want the best terminal + browser setup, this is it.
 
-**[Bonus #2 — Arc Browser](#bonus-2---arc-browser)** is another optional step that installs Arc, a browser built from the ground up for people who actually use their computer all day. If you're still on Chrome or Safari, Arc is a massive upgrade — built-in tab management, Spaces for context switching, a sidebar instead of a tab bar, and it just feels faster. It imports everything from Chrome in about 30 seconds, so switching is painless. Highly recommended.
+**[Step 3 — Developer & Utility Tools](#step-3---developer--utility-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
 
-**[Step 2 — Developer & Utility Tools](#step-2---developer--utility-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
+**[Step 4 — FidgetFlo + Context Hub](#step-4---fidgetflo--context-hub)** is where you set up FidgetFlo and Context Hub. FidgetFlo is the multi-agent orchestration layer that turns Claude into a full team of AI agents. Context Hub stops Claude from hallucinating when writing code that calls APIs.
 
-**[Step 3 — FidgetFlo + Context Hub](#step-3---fidgetflo--context-hub)** is where you set up FidgetFlo and Context Hub. FidgetFlo is the multi-agent orchestration layer that turns Claude into a full team of AI agents. Context Hub stops Claude from hallucinating when writing code that calls APIs.
+**[Step 5 — Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, workflows, browser automation, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, or SwiftKit. All optional, install only what you need.
 
-**[Step 6 — Productivity Tools](#step-6---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, workflows, browser automation, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, or SwiftKit. All optional, install only what you need.
+**[Step 6 — Telegram](#step-6---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected — messages show up in your session in real time. This step is completely optional; everything else works without it.
 
-**[Step 8 — Telegram](#step-8---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected — messages show up in your session in real time. This step is completely optional; everything else works without it.
+**[Step 7 — GitHub](#step-7---github)** is the GitHub bundle — for developers. It installs the GitHub MCP so Claude can read and write your repos, issues, pull requests, and search code across your GitHub organizations (requires a GitHub Personal Access Token), plus the `/gitfix` skill that reads every file in a repo and fixes any drift between your code and your docs. Skip this step if you don't use GitHub with Claude.
 
-**[Step 9 — Safety Check](#step-9---safety-check)** installs a security auditing skill that lets Claude scan any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and more. Just point Claude at a project and ask it to run a safety check. It catches the stuff that slips through code review.
+**[Step 8 — Safety Check](#step-8---safety-check)** installs a security auditing skill that lets Claude scan any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and more. Just point Claude at a project and ask it to run a safety check. It catches the stuff that slips through code review.
 
-**[Step 10 — Developer Tools](#step-10---developer-tools)** is for developers only — it installs the GitHub MCP so Claude can read and write your repos, issues, pull requests, and search code across your GitHub organizations. Requires a GitHub Personal Access Token. Skip it if you don't use GitHub with Claude.
-
-**[Final Step — Status Line + /gitfix](#final-step---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also installs the `/gitfix` skill and runs a final verification to make sure every command and tool from the cheat sheet is installed and working.
+**[Final Step — Status Line](#final-step---status-line)** is the wrap-up. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds.
 
 After the Final Step, head to **[You're Ready](#youre-ready)** — it tells you the one command you need going forward and what to do next.
 
@@ -164,7 +161,7 @@ Everything else — aliases, slash commands, natural-language tools, troubleshoo
 
 ---
 
-## Step 1 - Get Claude Running
+## Step 1 - Claude
 
 [Back to top](#quick-navigation)
 
@@ -257,13 +254,17 @@ That's it for Step 1. Continue to [Bonus #1 — Ghostty Terminal](#bonus-1---gho
 
 ---
 
-## Bonus #1 - Ghostty Terminal
+## Step 2 - Bonus Software
 
 [Back to top](#quick-navigation)
 
-This is optional. Everything in this setup works in any terminal app — Terminal.app, iTerm2, whatever you've got. But if you want a terminal that's noticeably faster, looks great out of the box, and lets you Cmd+Click URLs and file paths to open them instantly, Ghostty is worth the two minutes.
+This step is optional but highly recommended. It installs two pieces of software that dramatically improve your day-to-day flow: **Ghostty** (a GPU-accelerated terminal) and **Arc** (a power-user browser). Everything else in this setup works without them, but you'll feel the difference immediately.
 
-### Why Ghostty?
+### Ghostty Terminal
+
+Everything in this setup works in any terminal app — Terminal.app, iTerm2, whatever you've got. But if you want a terminal that's noticeably faster, looks great out of the box, and lets you Cmd+Click URLs and file paths to open them instantly, Ghostty is worth the two minutes.
+
+#### Why Ghostty?
 
 Ghostty is a GPU-accelerated terminal emulator. Most terminals (including Terminal.app) render text on the CPU. Ghostty uses Metal on Mac (and OpenGL on Linux), which means it draws frames faster, scrolls smoother, and handles large output without lagging. If you've ever had your terminal choke on a massive log dump or a long build output, you'll feel the difference.
 
@@ -277,24 +278,24 @@ Beyond speed, it's the customization and clickable links that make it worth swit
 
 This script installs Ghostty via Homebrew, sets up JetBrains Mono as the font, applies a dark color theme, configures the tabbed window style with traffic light buttons, enables Cmd+Click for URLs and file paths, and sets TextEdit as the default opener for text files so Cmd+Click on a `.md`, `.json`, or `.sh` file opens it right away.
 
-### Install Ghostty
+#### Install Ghostty
 
 You can run this from your terminal directly — no Claude session needed:
 
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-ghostty/bonus-ghostty.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/ghostty-install.sh)
 > ```
 
 Or if you're already in a Claude session, paste this:
 
 > **Paste this into your Claude session:**
 > ```
-> run this command to install Ghostty: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-ghostty/bonus-ghostty.sh)
+> run this command to install Ghostty: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/ghostty-install.sh)
 > ```
 
-### If the script fails — install Ghostty manually
+#### If the script fails — install Ghostty manually
 
 If Homebrew times out, stalls, or the script errors out for any reason, install Ghostty directly from the website. It takes two minutes:
 
@@ -308,7 +309,7 @@ If Homebrew times out, stalls, or the script errors out for any reason, install 
 
 That gets you Ghostty itself. To pick up the font, dark theme, `g2`/`g4` tiling aliases, and Cmd+Click config, re-run the install script above — it's idempotent, so it'll detect Ghostty is already installed and just lay down the config bits.
 
-### What This Step Installs
+#### What Ghostty Installs
 
 | Component | What it does |
 |-----------|-------------|
@@ -319,14 +320,14 @@ That gets you Ghostty itself. To pick up the font, dark theme, `g2`/`g4` tiling 
 | g2 (Mac) | Window tiling command. Type `g2` in your terminal to tile 2 Ghostty windows side by side, filling your screen. |
 | g4 (Mac) | Window tiling command. Type `g4` to tile 4 Ghostty windows in a 2x2 grid. Great for running multiple Claude sessions at once. |
 
-### After Installing
+#### After Installing Ghostty
 
 1. Open Ghostty — press **Cmd+Space**, type **Ghostty**, hit Enter.
 2. All your shell aliases (`cskip`, `cbrain`, `cc`, etc.) work immediately. Nothing to reconfigure.
 3. Try **Cmd+Click** on any URL or file path in the terminal output. It just opens.
 4. Use **Cmd+T** to open new tabs.
 
-### Customizing Ghostty
+#### Customizing Ghostty
 
 The config file is plain text:
 
@@ -345,15 +346,11 @@ Edit it with any text editor. Changes take effect the next time you open a Ghost
 
 Full docs: [ghostty.org/docs](https://ghostty.org/docs)
 
----
+### Arc Browser
 
-## Bonus #2 - Arc Browser
+If you're still using Chrome, Safari, or Firefox as your daily driver — do yourself a favor and switch to Arc. It's not just another Chromium reskin. Arc was built from scratch for people who live in their browser, and once you use it for a week you genuinely won't want to go back.
 
-[Back to top](#quick-navigation)
-
-This is optional, but if you're still using Chrome, Safari, or Firefox as your daily driver — do yourself a favor and switch to Arc. It's not just another Chromium reskin. Arc was built from scratch for people who live in their browser, and once you use it for a week you genuinely won't want to go back.
-
-### Why Arc?
+#### Why Arc?
 
 Chrome is fine. It works. But it was designed in 2008 and it still feels like it. You've got 47 tabs open, you can't find anything, your browser is eating 8GB of RAM, and the tab bar is a graveyard of things you meant to read three weeks ago. Arc fixes all of that.
 
@@ -370,7 +367,7 @@ Chrome is fine. It works. But it was designed in 2008 and it still feels like it
 
 Arc is free. There's no premium tier or paywall. It's just a better browser.
 
-### Switching from Chrome
+#### Switching from Chrome
 
 This is the part that stops most people, and it shouldn't. Arc makes migration dead simple:
 
@@ -381,24 +378,24 @@ This is the part that stops most people, and it shouldn't. Arc makes migration d
 
 You don't lose anything. Your Chrome profile stays untouched — you can always go back if you want. But you probably won't want to.
 
-### Install Arc
+#### Install Arc
 
 You can run this from your terminal directly — no Claude session needed:
 
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-arc/bonus-arc.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/arc-install.sh)
 > ```
 
 Or if you're already in a Claude session, paste this:
 
 > **Paste this into your Claude session:**
 > ```
-> run this command to install Arc: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/bonus-arc/bonus-arc.sh)
+> run this command to install Arc: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/arc-install.sh)
 > ```
 
-### If the script fails — install Arc manually
+#### If the script fails — install Arc manually
 
 If Homebrew stalls or the script errors out, grab Arc straight from the website. Takes under two minutes:
 
@@ -414,13 +411,13 @@ If Homebrew stalls or the script errors out, grab Arc straight from the website.
 
 That's it. No config step is needed from the cli-maxxing install script — Arc is self-contained.
 
-### What This Step Installs
+#### What Arc Installs
 
 | Component | What it does |
 |-----------|-------------|
 | Arc Browser | Chromium-based browser with sidebar tabs, Spaces, split view, built-in ad blocking, and automatic tab management. |
 
-### After Installing
+#### After Installing Arc
 
 1. Open Arc — press **Cmd+Space**, type **Arc**, hit Enter.
 2. Import your Chrome data when prompted (bookmarks, passwords, history, extensions).
@@ -432,7 +429,7 @@ That's it. No config step is needed from the cli-maxxing install script — Arc 
 
 ---
 
-## Step 2 - Developer & Utility Tools
+## Step 3 - Developer & Utility Tools
 
 [Back to top](#quick-navigation)
 
@@ -520,7 +517,7 @@ You don't need to do anything to make this work. It's already configured. Just k
 
 ---
 
-## Step 3 - FidgetFlo + Context Hub
+## Step 4 - FidgetFlo + Context Hub
 
 [Back to top](#quick-navigation)
 
@@ -647,7 +644,7 @@ claude mcp add fidgetflo -- npx -y fidgetflo@latest
 
 ---
 
-## Step 6 - Productivity Tools
+## Step 5 - Productivity Tools
 
 [Back to top](#quick-navigation)
 
@@ -795,7 +792,7 @@ You now have your productivity stack connected to Claude. Ask about your schedul
 
 ---
 
-## Step 8 - Telegram
+## Step 6 - Telegram
 
 [Back to top](#quick-navigation)
 
@@ -830,7 +827,7 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 
 ---
 
-## Step 9 - Safety Check
+## Step 8 - Safety Check
 
 [Back to top](#quick-navigation)
 
@@ -882,19 +879,22 @@ Open any project in Claude and type `/safetycheck` to run a security audit. For 
 
 ---
 
-## Step 10 - Developer Tools
+## Step 7 - GitHub
 
 [Back to top](#quick-navigation)
 
-This step is for developers who want Claude to have direct access to their GitHub repositories, issues, pull requests, and code search. It's completely optional — skip it if you don't use GitHub with Claude, and everything else still works.
+This step is the GitHub bundle — for developers who want Claude to have direct access to their repos + a skill that keeps every repo's docs in sync with its code. It's completely optional. Skip it if you don't use GitHub with Claude, and everything else still works.
 
 ### What It Installs
 
-The [GitHub MCP server](https://github.com/modelcontextprotocol/servers/tree/main/src/github) (`@modelcontextprotocol/server-github`) gives Claude a structured tool interface for reading and writing GitHub resources — repos, issues, PRs, files, code search, branches, commits. Once installed, you can ask Claude things like "list open PRs on lorecraft-io/cli-maxxing", "create an issue for this bug", or "search my repos for any file that uses `MORGEN_API_KEY`" and it'll just work.
+Two things:
+
+- **GitHub MCP server** ([`@modelcontextprotocol/server-github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github)) — Claude gets a structured tool interface for reading and writing GitHub resources: repos, issues, PRs, files, code search, branches, commits. Once it's installed, you can ask Claude things like *"list open PRs on lorecraft-io/cli-maxxing"*, *"create an issue for this bug"*, or *"search my repos for any file that uses `MORGEN_API_KEY`"* and it just works.
+- **`/gitfix` skill** — a Claude Code skill that does a full-repo doc sync. Type `/gitfix` inside any Claude session and it reads every install script, skill file, and documentation file in the repo, finds every gap between the code and the docs, and fixes all of it. Use it any time you've made changes and need the README, cheatsheet, and all other docs to reflect reality.
 
 ### Before You Run It
 
-You need a GitHub Personal Access Token (classic PAT). Create one at [github.com/settings/tokens/new](https://github.com/settings/tokens/new):
+You need a GitHub Personal Access Token (classic PAT) for the MCP part. Create one at [github.com/settings/tokens/new](https://github.com/settings/tokens/new):
 
 - **Token name:** `claude-github-mcp`
 - **Expiration:** No expiration (or pick whatever you're comfortable with)
@@ -902,31 +902,34 @@ You need a GitHub Personal Access Token (classic PAT). Create one at [github.com
 
 Click **Generate token** and copy the `ghp_...` value. You'll paste it into the install script.
 
-### Run Step 10
+The `/gitfix` skill needs no token — it runs locally against whatever repo you point Claude at.
+
+### Run Step 7
 
 ```
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)
 ```
 
-The script prompts for your PAT, registers the GitHub MCP with Claude Code, and injects the token into your local MCP config only — nothing is written to disk outside of `~/.claude.json` (same place every other MCP credential lives).
+The script prompts for your PAT, registers the GitHub MCP with Claude Code, injects the token into `~/.claude.json` (same place every other MCP credential lives), and drops the `/gitfix` skill into `~/.claude/skills/gitfix/`.
 
 ### What This Step Installs
 
 | Component | What it does |
 |-----------|-------------|
 | GitHub MCP (`@modelcontextprotocol/server-github`) | Claude Code MCP server that exposes GitHub API operations as tools — read/write repos, issues, PRs, code search, branches, commits. |
+| `/gitfix` skill | Claude Code skill — full-repo doc sync. Reads every file, fixes drift between code and docs. Works on any repo, no token needed. |
 
-### After Step 10
+### After Step 7
 
-Ask Claude to "list my open GitHub issues" or "create a PR on cli-maxxing" and the MCP tools kick in automatically. If you ever need to rotate the token, re-run Step 10 — it'll overwrite the entry in your MCP config.
+Ask Claude to *"list my open GitHub issues"* or *"create a PR on cli-maxxing"* and the MCP tools kick in automatically. Type `/gitfix` (or just ask *"sync the repo"* / *"fix the github"* in plain English) after any significant change to make the docs match the code again. If you ever need to rotate the PAT, re-run Step 7 — it'll overwrite the entry in your MCP config.
 
 ---
 
-## Final Step - Status Line + /gitfix
+## Final Step - Status Line
 
 [Back to top](#quick-navigation)
 
-This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds. It also installs the `/gitfix` skill.
+This is the wrap-up step. It installs a custom status line that shows you what's active at a glance — your vault, MCP connection, design tools, and any running swarms, mini swarms, or hive-minds.
 
 ### What It Sets Up
 
@@ -943,10 +946,6 @@ This is the wrap-up step. It installs a custom status line that shows you what's
 The status line also shows your current model, session duration, and context window usage.
 
 > **🧠 2ndBrain indicator.** This statusline lights up a 🧠 icon when your CWD is inside the Obsidian vault that [`2ndBrain-mogging`](https://github.com/lorecraft-io/2ndBrain-mogging) registered. Mogging's installer writes `~/.claude/.mogging-vault` with the vault's absolute path; this script reads that file. No mogging installed → marker doesn't exist → indicator stays hidden (everything else still works). To re-point at a different vault without re-running mogging: `echo "$NEW_VAULT" > ~/.claude/.mogging-vault`.
-
-**`/gitfix` skill:**
-
-Also installed here. Type `/gitfix` inside any Claude session when you want to do a full repo sync — it reads every install script, skill file, and documentation file in the repo, finds every gap between the code and the docs, and fixes all of it. Use it any time you make changes to a repo and need everything to reflect reality.
 
 ### Run Final Step
 
