@@ -1,5 +1,23 @@
 # Claude Code Cheat Sheet
 
+## My Favorites (daily drivers)
+
+The commands I reach for most. Full reference below.
+
+| Command | What it does |
+|---------|-------------|
+| `cskip` | Launch Claude with permissions skipped — the daily driver |
+| `cbrain` | Launch Claude inside your 2ndBrain vault *(requires vault setup — see [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
+| `g2` | Tile 2 Ghostty windows side by side (macOS) |
+| `/fswarm <task>` | Launch a 15-agent FidgetFlo swarm — describe the task in plain English |
+| `/fmini <task>` | Compact 5-agent FidgetFlo swarm for focused work |
+| `/w4w` | Word-for-word, line-for-line. Max attention, zero skipping, no summarizing |
+| `/safetycheck` | Security audit — scans for exposed keys, injection vectors, supply-chain risks |
+| `/gitfix` | Full repo sync — reads every file, fixes doc drift, makes reality match the README |
+| `/save` | Capture a conversation into your 2ndBrain vault *(requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
+
+---
+
 ## Terminal Basics (Read This First)
 
 The terminal works differently from a normal text editor or document. Here's what you need to know:
@@ -92,23 +110,37 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 
 | Command | Installed in | What it does |
 |---------|-------------|-------------|
-| `/rswarm do the thing` | Step 3 | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
-| `/rmini do the thing` | Step 3 | Launch a compact 5-agent swarm — same power, tighter team |
-| `/rswarm1 <task>` | Step 3 | 15-agent swarm with light extended thinking (~4k budget per agent) — `Think.` appended to every Agent prompt |
-| `/rswarm2 <task>` | Step 3 | 15-agent swarm with hard/deep thinking (~10k budget per agent) — `Think hard.` appended |
-| `/rswarm3 <task>` | Step 3 | 15-agent swarm with harder/deeper thinking (~31k budget per agent) — `Think harder.` appended |
-| `/rswarmmax <task>` | Step 3 | 15-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
-| `/rmini1 <task>` | Step 3 | 5-agent swarm with light extended thinking (~4k budget per agent) — `Think.` appended |
-| `/rmini2 <task>` | Step 3 | 5-agent swarm with hard/deep thinking (~10k budget per agent) — `Think hard.` appended |
-| `/rmini3 <task>` | Step 3 | 5-agent swarm with harder/deeper thinking (~31k budget per agent) — `Think harder.` appended |
-| `/rminimax <task>` | Step 3 | 5-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
-| `/rhive <goal>` | Step 3 | Launch a queen-led autonomous hive-mind with raft consensus |
+| `/fswarm do the thing` | Step 3 | Launch a 15-agent FidgetFlo swarm — just describe what you want in plain English after `/fswarm` |
+| `/fmini do the thing` | Step 3 | Launch a compact 5-agent FidgetFlo swarm — same power, tighter team |
+| `/fswarm1 <task>` | Step 3 | 15-agent swarm with light extended thinking (~4k budget per agent) — `Think.` appended to every Agent prompt |
+| `/fswarm2 <task>` | Step 3 | 15-agent swarm with hard/deep thinking (~10k budget per agent) — `Think hard.` appended |
+| `/fswarm3 <task>` | Step 3 | 15-agent swarm with harder/deeper thinking (~31k budget per agent) — `Think harder.` appended |
+| `/fswarmmax <task>` | Step 3 | 15-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
+| `/fmini1 <task>` | Step 3 | 5-agent swarm with light extended thinking (~4k budget per agent) — `Think.` appended |
+| `/fmini2 <task>` | Step 3 | 5-agent swarm with hard/deep thinking (~10k budget per agent) — `Think hard.` appended |
+| `/fmini3 <task>` | Step 3 | 5-agent swarm with harder/deeper thinking (~31k budget per agent) — `Think harder.` appended |
+| `/fminimax <task>` | Step 3 | 5-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
+| `/fhive <goal>` | Step 3 | Launch a queen-led autonomous FidgetFlo hive-mind with raft consensus |
 | `/w4w` | Step 3 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
 | `/safetycheck` | Step 9 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English |
 | `/gitfix` | Final Step | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality |
 
+### 2ndBrain-mogging skills *(requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) installed)*
 
-> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/rmini` is the compact version of `/rswarm` — 5 agents instead of 15. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme"). Slash commands: `/rswarm`, `/rswarm1`–`/rswarmmax`, `/rmini`, `/rmini1`–`/rminimax`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix` — all require you to type the command (or its natural-language equivalent where noted).
+| Command | What it does |
+|---------|-------------|
+| `/save` | Capture a conversation, passage, or ADR into the vault — alias-driven classification, commits with `[bot:save]` |
+| `/wiki` | Add / audit / heal / find across the vault — ingest sources, repair dead links, run graph audits |
+| `/challenge` | Adversarial vault agent — argues against an idea using your own past notes and memory |
+| `/emerge` | Surface rising topics, killed ideas, and new links across a time window |
+| `/backfill` | Ingest historical Claude CLI transcripts into the vault with chunked summarization + dedupe |
+| `/aliases` | Manage the alias classifier — add, edit, or audit entries in `Claude-Memory/aliases.yaml` |
+| `/autoresearch` | Fetch a URL, summarize to `02-Sources/`, spawn linked concept stubs in `03-Concepts/` |
+| `/canvas` | Generate/maintain Obsidian Canvas files from vault queries |
+| `/tether` | Repair orphaned notes, bidirectionally link projects and hubs |
+| `/connect` | Bridge two notes — surfaces structural analogies, transfer opportunities, collision ideas |
+
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/fmini` is the compact version of `/fswarm` — 5 agents instead of 15. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme"). Slash commands: `/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix` — all require you to type the command (or its natural-language equivalent where noted).
 
 ---
 
@@ -141,7 +173,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Excalidraw | Add-on | Natural language — diagrams, flowcharts, whiteboard sketches | "Draw a system architecture diagram" |
 | Gamma | Add-on | Natural language — presentations, documents, webpages | "Create a pitch deck for my startup" |
 
-> **Key distinction:** Slash commands (`/rswarm`, `/rswarm1`–`/rswarmmax`, `/rmini`, `/rmini1`–`/rminimax`, `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
 > **Add-on tools** are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed.
 
@@ -184,9 +216,9 @@ When these tools are active, you may see indicators in your Claude session:
 | 🧠 2ndBrain | Working inside your Obsidian vault |
 | ⚡ Ruflo | Ruflo MCP server is connected |
 | 🎨 UIPro | Design skill is loaded (always on after creativity-maxxing) |
-| 🐝 Swarm | Swarm is active — shows agent count (after `/rswarm`) |
-| 🍯 Mini | Mini swarm is active — shows agent count (after `/rmini`) |
-| 👑 Hive | Hive-mind is active (after `/rhive`) |
+| 🐝 Swarm | Swarm is active — shows agent count (after `/fswarm`) |
+| 🍯 Mini | Mini swarm is active — shows agent count (after `/fmini`) |
+| 👑 Hive | Hive-mind is active (after `/fhive`) |
 
 ---
 

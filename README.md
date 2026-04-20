@@ -37,8 +37,8 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | | Section | What it does | Time |
 |---|------|-------------|------|
 | [Before You Start](#before-you-start) | Requirements | What you need before running anything | |
-| [Install Everything](#install-everything) | One-shot | Run all steps at once | ~20 min |
 | [How It Works](#how-it-works) | Overview | How the steps fit together | |
+| [Install Everything](#install-everything) | One-shot | Run all steps at once | ~20 min |
 | [Keyboard + Command Cheat Sheet](#keyboard--command-cheat-sheet) | Commands & Shortcuts | Hotkeys, typing, and commands for your terminal | |
 | [Step 1](#step-1---get-claude-running) | Get Claude Running | Sets up the foundation on your machine | ~5 min |
 | [Bonus: Ghostty](#bonus---ghostty-terminal) | Ghostty Terminal | GPU-accelerated terminal with clickable links and tabs | ~2 min |
@@ -76,37 +76,6 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 - If anything is already installed on your machine, the scripts will detect that and skip it automatically.
 
 > **Windows:** Not supported. This is built for macOS and Linux only.
-
----
-
-## Install Everything
-
-[Back to top](#quick-navigation)
-
-If you already know your way around a terminal and just want everything installed at once:
-
-> [!IMPORTANT]
-> **Paste this into your terminal:**
-> ```
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
-> ```
-
-This runs Steps 1, 2, 3, 9, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
-
-**Steps that need interactive input** run separately after the above:
-
-```bash
-# Step 6 — Productivity Tools (Notion, Morgen, n8n, etc.)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
-
-# Step 8 — Telegram (optional — press Enter to skip if you don't have a bot token yet)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
-
-# Step 10 — Developer Tools (optional — GitHub MCP, skip if you don't need it)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)
-```
-
-We recommend reading through the steps below first so you understand what each tool does — but the one-shot option is here if you want it.
 
 ---
 
@@ -160,6 +129,37 @@ Want to get better at using the terminal in general? Check out [Terminal Academy
 
 ---
 
+## Install Everything
+
+[Back to top](#quick-navigation)
+
+If you already know your way around a terminal and just want everything installed at once:
+
+> [!IMPORTANT]
+> **Paste this into your terminal:**
+> ```
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
+> ```
+
+This runs Steps 1, 2, 3, 9, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
+
+**Steps that need interactive input** run separately after the above:
+
+```bash
+# Step 6 — Productivity Tools (Notion, Morgen, n8n, etc.)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+
+# Step 8 — Telegram (optional — press Enter to skip if you don't have a bot token yet)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
+
+# Step 10 — Developer Tools (optional — GitHub MCP, skip if you don't need it)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)
+```
+
+We recommend reading through the steps below first so you understand what each tool does — but the one-shot option is here if you want it.
+
+---
+
 ## [Keyboard + Command Cheat Sheet](CHEATSHEET.md)
 
 [Back to top](#quick-navigation)
@@ -175,8 +175,8 @@ Here are the commands you'll use most:
 | `cskip` | Start with all permissions skipped (fastest, no prompts) |
 | `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing))* |
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
-| `/rswarm *write task here*` | Launch a 15-agent swarm — just describe what you want in plain English after `/rswarm` |
-| `/rmini *write task here*` | Launch a compact 5-agent swarm — same power, tighter team. Describe your task after `/rmini` |
+| `/fswarm *write task here*` | Launch a 15-agent FidgetFlo swarm — just describe what you want in plain English after `/fswarm` |
+| `/fmini *write task here*` | Launch a compact 5-agent FidgetFlo swarm — same power, tighter team. Describe your task after `/fmini` |
 | `/w4w` | Maximum attention to detail mode — word for word, line for line. No skipping, no summarizing, zero regard for credit burn |
 | `Ctrl+C` | Stop whatever is running or exit Claude |
 | `/resume` | Pick up right where you left off — reloads your last session's context |
@@ -523,7 +523,7 @@ Built by [@ruvnet](https://github.com/ruvnet) ([repo](https://github.com/ruvnet/
 
 > **Note:** We made one change from the default Ruflo setup. Out of the box, Ruflo uses a model routing system that can silently send some of your tasks to cheaper, weaker models like Haiku instead of Opus. If you're paying for Opus, you should always get Opus. Our install locks everything to Opus and disables the auto-downgrading. You can always turn routing back on later if you want to save on costs, but we default to giving you the best answers every time.
 
-> This applies to all agents in the swarm — every agent spawned by `/rswarm`, `/rhive`, or `/rmini` runs on Opus. No agent is silently downgraded to a cheaper model.
+> This applies to all agents in the swarm — every agent spawned by `/fswarm`, `/fhive`, or `/fmini` runs on Opus. No agent is silently downgraded to a cheaper model.
 
 Claude Code is already powerful on its own. But Ruflo takes it to another level by adding coordinated multi-agent workflows, persistent memory, and smart cost optimization on top:
 
@@ -549,11 +549,11 @@ Together, Ruflo and Context Hub are what take you from "using AI" to actually be
 
 Step 3 also installs three slash commands that let you launch multi-agent swarms on demand:
 
-- **`/rswarm <task>`** — Launches 15 agents immediately. You describe the task, Claude assigns roles (architect, coders, testers, security auditor, etc.) and they all work in parallel. Use this when you know what you want done and want brute-force execution.
+- **`/fswarm <task>`** — Launches 15 agents immediately. You describe the task, Claude assigns roles (architect, coders, testers, security auditor, etc.) and they all work in parallel. Use this when you know what you want done and want brute-force execution.
 
-- **`/rmini <task>`** — Launches 5 agents immediately. Same architecture as `/rswarm` but with a tighter team: architect, developer, tester, reviewer, and researcher. Use this for focused tasks where you don't need the full battalion.
+- **`/fmini <task>`** — Launches 5 agents immediately. Same architecture as `/fswarm` but with a tighter team: architect, developer, tester, reviewer, and researcher. Use this for focused tasks where you don't need the full battalion.
 
-- **`/rhive <goal>`** — Launches a queen agent that autonomously manages everything. You describe the goal, the queen decides how to break it down, what workers to spawn, and how to coordinate them. Use this when you want to set a direction and step back.
+- **`/fhive <goal>`** — Launches a queen agent that autonomously manages everything. You describe the goal, the queen decides how to break it down, what workers to spawn, and how to coordinate them. Use this when you want to set a direction and step back.
 
 #### Swarm tiers — extended thinking
 
@@ -561,17 +561,17 @@ Subagents inherit the parent session's model (Opus stays Opus) but do **not** in
 
 | Tier | Mini (5 agents) | Swarm (15 agents) | Trigger appended | Thinking budget |
 |------|-----------------|-------------------|------------------|-----------------|
-| 0    | `/rmini`        | `/rswarm`         | *(none)*         | 0               |
-| 1    | `/rmini1`       | `/rswarm1`        | `Think.`         | ~4k             |
-| 2    | `/rmini2`       | `/rswarm2`        | `Think hard.`    | ~10k            |
-| 3    | `/rmini3`       | `/rswarm3`        | `Think harder.`  | ~31k            |
-| max  | `/rminimax`     | `/rswarmmax`      | `Ultrathink.`    | ~32k (max)      |
+| 0    | `/fmini`        | `/fswarm`         | *(none)*         | 0               |
+| 1    | `/fmini1`       | `/fswarm1`        | `Think.`         | ~4k             |
+| 2    | `/fmini2`       | `/fswarm2`        | `Think hard.`    | ~10k            |
+| 3    | `/fmini3`       | `/fswarm3`        | `Think harder.`  | ~31k            |
+| max  | `/fminimax`     | `/fswarmmax`      | `Ultrathink.`    | ~32k (max)      |
 
 Natural-language aliases also work: "hard"/"deep" → tier 2, "harder"/"deeper" → tier 3, "max"/"mega"/"ultra" → max.
 
-Base `/rswarm` and `/rmini` are unchanged — the tier variants are purely additive. Use `/rminimax` for architecture reasoning or hairy debugging where you want a small team thinking hard; use `/rmini2` for routine feature work that still benefits from a bit of deliberation; reach for `/rswarm3` or `/rswarmmax` when you need 15 agents each chewing on a problem at full depth.
+Base `/fswarm` and `/fmini` are unchanged — the tier variants are purely additive. Use `/fminimax` for architecture reasoning or hairy debugging where you want a small team thinking hard; use `/fmini2` for routine feature work that still benefits from a bit of deliberation; reach for `/fswarm3` or `/fswarmmax` when you need 15 agents each chewing on a problem at full depth.
 
-All 10 commands enforce Opus-only (never Haiku or Sonnet) and all share the same `/tmp/ruflo-{swarm,mini}-active` signal files, so the statusline indicators (🐝 for `/rswarm*`, 🍯 for `/rmini*`) fire for every tier.
+All 10 commands enforce Opus-only (never Haiku or Sonnet) and all share the same FidgetFlo `/tmp/` signal files, so the statusline indicators (🐝 for `/fswarm*`, 🍯 for `/fmini*`) fire for every tier.
 
 All three skills signal the statusline so you can see live indicators while agents are working.
 
@@ -606,9 +606,9 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 | Opus Lock | This locks all tasks to Opus so nothing silently downgrades to a weaker model. You're paying for Opus, so you should always get Opus. |
 | Context Hub | This gives Claude access to curated, up-to-date API documentation so it stops hallucinating function names. |
 | Context Hub Skill | This teaches Claude when and how to look up API docs automatically before writing integration code. |
-| Swarm Skill (`/rswarm`) | Type `/rswarm` followed by any task and Claude immediately launches 15 parallel agents to tackle it. A lead architect coordinates backend devs, testers, security auditors, and more — all working simultaneously. |
-| Mini Swarm Skill (`/rmini`) | Type `/rmini` followed by any task and Claude launches 5 focused agents — architect, developer, tester, reviewer, and researcher. Same parallel execution as `/rswarm`, just a tighter team for focused work. |
-| Hive Skill (`/rhive`) | Type `/rhive` followed by a goal and a queen agent takes full control. She decides what workers to spawn, how to coordinate them, and when the work is done. You set the goal and step back. |
+| Swarm Skill (`/fswarm`) | Type `/fswarm` followed by any task and Claude immediately launches 15 parallel agents to tackle it. A lead architect coordinates backend devs, testers, security auditors, and more — all working simultaneously. |
+| Mini Swarm Skill (`/fmini`) | Type `/fmini` followed by any task and Claude launches 5 focused agents — architect, developer, tester, reviewer, and researcher. Same parallel execution as `/fswarm`, just a tighter team for focused work. |
+| Hive Skill (`/fhive`) | Type `/fhive` followed by a goal and a queen agent takes full control. She decides what workers to spawn, how to coordinate them, and when the work is done. You set the goal and step back. |
 | Attention Skill (`/w4w`) | Word-for-word, line-for-line mode. Maximum attention to detail for critical tasks. |
 | TypeScript | Required by some Ruflo features. Installed globally. |
 | agentic-flow | Enables embeddings and advanced routing capabilities. |
@@ -975,9 +975,9 @@ This is the wrap-up step. It installs a custom status line that shows you what's
 |-----------|--------------|
 | ⚡ Ruflo | The Ruflo MCP server is connected |
 | 🎨 UIPro | Design skill is loaded (installed with [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)) |
-| 🐝 Swarm | A swarm is active (shows agent count during `/rswarm`) |
-| 🍯 Mini | A mini swarm is active (shows agent count during `/rmini`) |
-| 👑 Hive | A hive-mind is active (during `/rhive`) |
+| 🐝 Swarm | A swarm is active (shows agent count during `/fswarm`) |
+| 🍯 Mini | A mini swarm is active (shows agent count during `/fmini`) |
+| 👑 Hive | A hive-mind is active (during `/fhive`) |
 
 The status line also shows your current model, session duration, and context window usage.
 
@@ -1177,7 +1177,7 @@ That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with a
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
 - All permissions skipped — Claude acts immediately, no approval prompts
-- Full access to everything: `/rswarm` (+ tiers `1`/`2`/`3`/`max`), `/rmini` (+ tiers `1`/`2`/`3`/`max`), `/rhive`, `/w4w`, `/safetycheck`, `/gitfix`, Ruflo, Context Hub, Morgen, Motion Calendar, Notion, Obsidian, Granola, n8n, design tools, video tools — all of it
+- Full access to everything: `/fswarm` (+ tiers `1`/`2`/`3`/`max`), `/fmini` (+ tiers `1`/`2`/`3`/`max`), `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, FidgetFlo, Context Hub, Morgen, Motion, Notion, Obsidian, Granola, n8n, design tools, video tools — all of it
 - Your status line shows what's active at a glance
 
 **When to use something else:**
@@ -1254,7 +1254,7 @@ If you need to remove everything installed by this setup, the uninstall script r
 **What it removes:**
 - Claude Code + shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and scripts (`ctg`, `cbrain`, `cbraintg` in `~/.local/bin/`)
 - All MCP servers (Ruflo, Notion, Granola, n8n, Morgen, Motion Calendar, Playwright, SwiftKit) — Magic, YouTube Transcript, yt-dlp, Whisper, and Obsidian are managed by the companion repos
-- All skills (rswarm, rmini, rhive, w4w, get-api-docs, gitfix, safetycheck) — UI/UX Pro Max, Taste Skill pack, and Remotion are managed by creativity-maxxing
+- All skills (fswarm, fmini, fhive, w4w, get-api-docs, gitfix, safetycheck) — UI/UX Pro Max, Taste Skill pack, and Remotion are managed by creativity-maxxing
 - Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler)
 - Whisper models (~/.whisper/)
 - Motion Calendar config (~/.motion-mcp/)
