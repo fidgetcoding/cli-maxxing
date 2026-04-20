@@ -143,21 +143,6 @@ If you already know your way around a terminal and just want everything installe
 
 This runs Steps 1, 2, 3, 9, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
 
-**Steps that need interactive input** run separately after the above:
-
-```bash
-# Step 6 — Productivity Tools (Notion, Morgen, n8n, etc.)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
-
-# Step 8 — Telegram (optional — press Enter to skip if you don't have a bot token yet)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
-
-# Step 10 — Developer Tools (optional — GitHub MCP, skip if you don't need it)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)
-```
-
-We recommend reading through the steps below first so you understand what each tool does — but the one-shot option is here if you want it.
-
 ---
 
 ## [Keyboard + Command Cheat Sheet](CHEATSHEET.md)
