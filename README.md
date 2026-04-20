@@ -1,6 +1,6 @@
 # CLI Maxxing
 
-**Everything you need to start working with AI-powered development tools, installed in the right order with one command per step.**
+**Everything you need to start working with AI-powered development tools; one command per step.**
 
 > [!NOTE]
 > **fidg·et·cod·ing** \ ˈfij-ət-ˌkō-diŋ \   *verb*   ·   **fidgetcoded**; **fidgetcode**<br>
