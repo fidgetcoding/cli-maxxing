@@ -75,7 +75,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 - **Don't run it as root.** Just open your terminal normally and paste the command.
 - If anything is already installed on your machine, the scripts will detect that and skip it automatically.
 
-> **Windows:** Not supported. This is built for macOS and Linux only (frankly, I'm not 100% certain Linux installs will work either).
+> **Windows:** Not supported. MacOS and Linux only (frankly, I'm not 100% certain Linux installs will work either).
 
 ---
 
