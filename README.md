@@ -942,7 +942,7 @@ This is the wrap-up step. It installs a custom status line that shows you what's
 
 The status line also shows your current model, session duration, and context window usage.
 
-> **2ndBrain-mogging adds a 🧠 brain indicator** that lights up when you're working inside your Obsidian vault. It's part of [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)'s statusline patch.
+> **🧠 2ndBrain indicator.** This statusline lights up a 🧠 icon when your CWD is inside the Obsidian vault that [`2ndBrain-mogging`](https://github.com/lorecraft-io/2ndBrain-mogging) registered. Mogging's installer writes `~/.claude/.mogging-vault` with the vault's absolute path; this script reads that file. No mogging installed → marker doesn't exist → indicator stays hidden (everything else still works). To re-point at a different vault without re-running mogging: `echo "$NEW_VAULT" > ~/.claude/.mogging-vault`.
 
 **`/gitfix` skill:**
 

@@ -98,6 +98,25 @@ else
   TIME_FMT="0s"
 fi
 
+# --- 2ndBRAIN CHECK ---
+# Primary: ~/.claude/.mogging-vault marker (written by 2ndBrain-mogging's
+# install.sh). Contents = absolute vault path. Light up 🧠 when $CWD
+# matches exactly or sits inside ($CWD starts with path + "/").
+# Fallback: legacy path regex for pre-marker installs / legacy vault names.
+BRAIN=""
+MOGGING_VAULT_MARKER="$HOME/.claude/.mogging-vault"
+if [ -f "$MOGGING_VAULT_MARKER" ] && [ -n "$CWD" ]; then
+  VAULT_PATH=$(head -n1 "$MOGGING_VAULT_MARKER" 2>/dev/null | tr -d '\n')
+  if [ -n "$VAULT_PATH" ]; then
+    case "$CWD" in
+      "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 2ndBrain" ;;
+    esac
+  fi
+fi
+if [ -z "$BRAIN" ] && [ -n "$CWD" ] && echo "$CWD" | grep -qiE "OBSIDIAN/(2ndBrain|MASTER)|/BRAIN2?(/|$)" 2>/dev/null; then
+  BRAIN="🧠 2ndBrain"
+fi
+
 # --- fidgetflo CHECK ---
 fidgetflo=""
 if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
@@ -157,7 +176,11 @@ fi
 
 # --- BUILD THE LINE ---
 PARTS=""
-if [ -n "$fidgetflo" ]; then
+if [ -n "$BRAIN" ] && [ -n "$fidgetflo" ]; then
+  PARTS="${BRAIN} + ${fidgetflo}"
+elif [ -n "$BRAIN" ]; then
+  PARTS="${BRAIN}"
+elif [ -n "$fidgetflo" ]; then
   PARTS="${fidgetflo}"
 fi
 
