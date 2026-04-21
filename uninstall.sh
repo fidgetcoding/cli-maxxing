@@ -186,11 +186,11 @@ uninstall_status_line() {
 }
 
 # -----------------------------------------------------------------------------
-# Step 9 — SafetyCheck
+# Step 8 — Safety Check
 # -----------------------------------------------------------------------------
 uninstall_safetycheck() {
     echo ""
-    echo -e "${BLUE}--- Step 9: SafetyCheck ---${NC}"
+    echo -e "${BLUE}--- Step 8: Safety Check ---${NC}"
 
     if [ -d "$HOME/.claude/skills/safetycheck" ]; then
         rm -rf "$HOME/.claude/skills/safetycheck"
@@ -201,11 +201,33 @@ uninstall_safetycheck() {
 }
 
 # -----------------------------------------------------------------------------
-# Step 8 — Telegram
+# Step 7 — GitHub MCP + /gitfix
+# -----------------------------------------------------------------------------
+uninstall_github() {
+    echo ""
+    echo -e "${BLUE}--- Step 7: GitHub MCP + /gitfix ---${NC}"
+
+    if claude mcp list 2>/dev/null | grep -qi "github" 2>/dev/null; then
+        claude mcp remove github 2>/dev/null || true
+        success "GitHub MCP"
+    else
+        skip "GitHub MCP (not found)"
+    fi
+
+    if [ -d "$HOME/.claude/skills/gitfix" ]; then
+        rm -rf "$HOME/.claude/skills/gitfix"
+        success "Skill: /gitfix"
+    else
+        skip "Skill: /gitfix (not found)"
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# Step 6 — Telegram
 # -----------------------------------------------------------------------------
 uninstall_telegram() {
     echo ""
-    echo -e "${BLUE}--- Step 8: Telegram ---${NC}"
+    echo -e "${BLUE}--- Step 6: Telegram ---${NC}"
 
     if [ -d "$HOME/.claude/channels/telegram" ]; then
         rm -rf "$HOME/.claude/channels/telegram"
@@ -216,14 +238,15 @@ uninstall_telegram() {
 }
 
 # -----------------------------------------------------------------------------
-# Step 6 — Productivity Tools
-# (Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright)
+# Step 5 — Productivity Tools
+# (Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright,
+#  SwiftKit, Superhuman, Google Drive)
 # -----------------------------------------------------------------------------
 uninstall_productivity_mcps() {
     echo ""
-    echo -e "${BLUE}--- Step 6: Productivity Tools ---${NC}"
+    echo -e "${BLUE}--- Step 5: Productivity Tools ---${NC}"
 
-    for mcp in notion granola n8n google-calendar morgen motion playwright; do
+    for mcp in notion granola n8n google-calendar morgen motion playwright swiftkit superhuman gdrive; do
         if claude mcp list 2>/dev/null | grep -qi "$mcp" 2>/dev/null; then
             claude mcp remove "$mcp" 2>/dev/null || true
             success "$mcp MCP"
@@ -250,11 +273,11 @@ uninstall_productivity_mcps() {
 }
 
 # -----------------------------------------------------------------------------
-# Step 3 — FidgetFlo + Context Hub + skills
+# Step 4 — FidgetFlo + skills
 # -----------------------------------------------------------------------------
 uninstall_fidgetflo_stack() {
     echo ""
-    echo -e "${BLUE}--- Step 3: FidgetFlo + Context Hub ---${NC}"
+    echo -e "${BLUE}--- Step 4: FidgetFlo ---${NC}"
 
     # FidgetFlo MCP
     if claude mcp list 2>/dev/null | grep -qi "fidgetflo" 2>/dev/null; then
@@ -288,7 +311,7 @@ uninstall_fidgetflo_stack() {
     for skill in \
         fswarm fswarm1 fswarm2 fswarm3 fswarmmax \
         fmini fmini1 fmini2 fmini3 fminimax \
-        fhive get-api-docs w4w gitfix; do
+        fhive get-api-docs w4w; do
         if [ -d "$HOME/.claude/skills/$skill" ]; then
             rm -rf "$HOME/.claude/skills/$skill"
             success "Skill: /$skill"
@@ -307,11 +330,11 @@ uninstall_fidgetflo_stack() {
 }
 
 # -----------------------------------------------------------------------------
-# Step 2 — Dev Tools (brew packages)
+# Step 3 — Developer & Utility Tools (brew packages)
 # -----------------------------------------------------------------------------
 uninstall_dev_tools() {
     echo ""
-    echo -e "${BLUE}--- Step 2: Dev Tools ---${NC}"
+    echo -e "${BLUE}--- Step 3: Developer & Utility Tools ---${NC}"
 
     for tool in pandoc poppler jq ripgrep gh tree fzf wget weasyprint; do
         if command -v "$tool" &>/dev/null || brew list "$tool" &>/dev/null 2>&1; then
@@ -590,6 +613,7 @@ main() {
 
     uninstall_status_line
     uninstall_safetycheck
+    uninstall_github
     uninstall_telegram
     uninstall_productivity_mcps
     uninstall_fidgetflo_stack

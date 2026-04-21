@@ -87,7 +87,7 @@ main() {
     echo ""
 
     # Step 4 — refreshes fidgetflo/agentic-flow + skill files (/w4w, /fswarm*, /fmini*, /fhive, get-api-docs)
-    echo -e "${YELLOW}>>> Running Step 4 — FidgetFlo + Context Hub${NC}"
+    echo -e "${YELLOW}>>> Running Step 4 — FidgetFlo${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
     echo ""
@@ -134,11 +134,12 @@ main() {
     echo "  Design + media:     github.com/lorecraft-io/creativity-maxxing"
     echo "  Second Brain:       github.com/lorecraft-io/2ndBrain-mogging"
     echo ""
-    echo "  Note: Steps 6 and 8 require interactive input (API credentials"
-    echo "  and Telegram bot token). They may skip themselves if run"
+    echo "  Note: Steps 6, 7, and 8 require interactive input (Telegram bot token,"
+    echo "  GitHub PAT, and API credentials). They may skip themselves if run"
     echo "  non-interactively. Run them directly in your terminal if needed:"
     echo ""
     echo "    Step 6: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
+    echo "    Step 7: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
     echo "    Step 8: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)"
     echo ""
     echo "  Open a new terminal window for aliases to take effect."

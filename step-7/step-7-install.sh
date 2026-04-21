@@ -2,9 +2,9 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 10 — Developer Tools
-# Installs GitHub MCP server. More developer tools may be added here.
-# Run after completing Steps 1-9. Run this in your terminal.
+# Step 7 — GitHub MCP + /gitfix
+# Installs GitHub MCP server and the /gitfix skill.
+# Run after completing Steps 1-6. Run this in your terminal.
 # =============================================================================
 
 RED='\033[0;31m'
@@ -23,6 +23,7 @@ soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRO
 
 # Track what was installed this run
 INSTALLED_GITHUB=false
+INSTALLED_GITFIX=false
 
 # -----------------------------------------------------------------------------
 # Detect OS
@@ -70,10 +71,10 @@ choose_tools() {
             return
         else
             echo ""
-            echo -e "${YELLOW}  Step 10 requires interactive input for API credentials.${NC}"
+            echo -e "${YELLOW}  Step 7 requires interactive input for API credentials.${NC}"
             echo -e "${YELLOW}  Run it directly in your terminal:${NC}"
             echo ""
-            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)"
+            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
             echo ""
             print_summary
             exit 0
@@ -127,7 +128,7 @@ install_github() {
     echo -e "${YELLOW}  Check only: repo (top checkbox), read:org (under admin:org), gist.${NC}"
     echo ""
 
-    read -sp "  GitHub Personal Access Token (ghp_...): " GITHUB_TOKEN
+    read -rsp "  GitHub Personal Access Token (ghp_...): " GITHUB_TOKEN
     echo " [saved]"
     echo ""
 
@@ -179,6 +180,43 @@ PYEOF
 }
 
 # -----------------------------------------------------------------------------
+# Install /gitfix skill
+# -----------------------------------------------------------------------------
+install_gitfix() {
+    GITFIX_DIR="$HOME/.claude/skills/gitfix"
+    GITFIX_FILE="$GITFIX_DIR/SKILL.md"
+    GITFIX_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/gitfix-skill/SKILL.md"
+
+    mkdir -p "$GITFIX_DIR"
+
+    if [ -f "$GITFIX_FILE" ]; then
+        info "Updating existing /gitfix skill..."
+        INSTALLED_GITFIX=true
+    else
+        info "Installing /gitfix skill..."
+    fi
+
+    GITFIX_TMP="$GITFIX_FILE.tmp"
+    if curl -fsSL "$GITFIX_URL" -o "$GITFIX_TMP" 2>/dev/null && [ -s "$GITFIX_TMP" ]; then
+        mv "$GITFIX_TMP" "$GITFIX_FILE"
+        success "/gitfix skill installed at $GITFIX_FILE"
+        INSTALLED_GITFIX=true
+    else
+        rm -f "$GITFIX_TMP"
+        warn "Download failed — attempting local fallback..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        LOCAL_GITFIX="$(dirname "$SCRIPT_DIR")/gitfix-skill/SKILL.md"
+        if [ -f "$LOCAL_GITFIX" ]; then
+            cp "$LOCAL_GITFIX" "$GITFIX_FILE"
+            success "/gitfix skill installed from local copy"
+            INSTALLED_GITFIX=true
+        else
+            soft_fail "Could not install /gitfix skill — download and local fallback both failed"
+        fi
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -206,6 +244,14 @@ run_self_test() {
 
     if $INSTALLED_GITHUB; then check_registered "GitHub" "github"; else info "TEST: GitHub — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
 
+    if $INSTALLED_GITFIX; then
+        success "TEST: /gitfix skill installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: /gitfix skill not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     echo ""
     if [ "$TEST_FAIL" -eq 0 ]; then
         echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC} ($TEST_SKIP skipped)"
@@ -223,13 +269,17 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 10 Complete — Developer Tools${NC}"
+    echo -e "${GREEN}  Step 7 Complete — GitHub + /gitfix${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
     INSTALLED_COUNT=0
 
     if $INSTALLED_GITHUB; then echo "  GitHub  — repos, issues, PRs, code search"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_GITFIX; then
+        echo "  /gitfix — full-repo consistency audit: docs, scripts, and README all in sync"
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+    fi
 
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
@@ -244,6 +294,7 @@ print_summary() {
             echo "    - Ask Claude to search code across your GitHub organizations"
             echo "    - Ask Claude to create issues, review diffs, or push commits"
         fi
+        echo "    - Run /gitfix inside any Claude session to sync all docs with reality"
     fi
 
     echo ""
@@ -254,7 +305,7 @@ print_summary() {
     fi
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo "  Continue to the Final Step to install your status line."
+    echo "  Continue to Step 8 (Safety Check) or the Final Step (Status Line)."
     echo ""
 }
 
@@ -264,8 +315,8 @@ print_summary() {
 main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 10 — Developer Tools${NC}"
-    echo -e "${BLUE}  GitHub and other dev-facing MCP tools • macOS + Linux${NC}"
+    echo -e "${BLUE}  Step 7 — GitHub MCP + /gitfix${NC}"
+    echo -e "${BLUE}  GitHub MCP + /gitfix skill • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -280,6 +331,9 @@ main() {
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done
+
+    # /gitfix always installs (no interactive input required)
+    install_gitfix
 
     run_self_test
     print_summary

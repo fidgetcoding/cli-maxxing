@@ -423,46 +423,6 @@ if [ "$OPTIONAL_FAIL" -gt 0 ]; then
 fi
 
 # =============================================================================
-# Install /gitfix skill
-# =============================================================================
-echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Installing /gitfix skill${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-
-GITFIX_DIR="$HOME/.claude/skills/gitfix"
-GITFIX_FILE="$GITFIX_DIR/SKILL.md"
-GITFIX_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/gitfix-skill/SKILL.md"
-
-mkdir -p "$GITFIX_DIR"
-
-if [ -f "$GITFIX_FILE" ]; then
-    info "Updating existing /gitfix skill..."
-else
-    info "Installing /gitfix skill..."
-fi
-
-GITFIX_TMP="$GITFIX_FILE.tmp"
-if curl -fsSL "$GITFIX_URL" -o "$GITFIX_TMP" 2>/dev/null && [ -s "$GITFIX_TMP" ]; then
-    mv "$GITFIX_TMP" "$GITFIX_FILE"
-    success "/gitfix skill installed at $GITFIX_FILE"
-else
-    rm -f "$GITFIX_TMP"
-    warn "Download failed — attempting local fallback..."
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    LOCAL_GITFIX="$(dirname "$SCRIPT_DIR")/gitfix-skill/SKILL.md"
-    if [ -f "$LOCAL_GITFIX" ]; then
-        cp "$LOCAL_GITFIX" "$GITFIX_FILE"
-        success "/gitfix skill installed from local copy"
-    else
-        warn "Could not install /gitfix skill — download and local fallback both failed"
-    fi
-fi
-
-echo ""
-
-# =============================================================================
 # Self-Test — status line specifically
 # =============================================================================
 echo ""
@@ -502,12 +462,12 @@ else
     TEST_FAIL=$((TEST_FAIL + 1))
 fi
 
-# Test 4: /gitfix skill installed
+# Test 4: /gitfix skill present (installed by Step 7)
 if [ -s "$HOME/.claude/skills/gitfix/SKILL.md" ]; then
-    success "TEST: /gitfix skill installed at ~/.claude/skills/gitfix/SKILL.md"
+    success "TEST: /gitfix skill present (installed by Step 7)"
     TEST_PASS=$((TEST_PASS + 1))
 else
-    echo -e "${RED}[FAIL]${NC} TEST: /gitfix skill not found"
+    warn "TEST: /gitfix skill not found — run Step 7 to install it"
     TEST_FAIL=$((TEST_FAIL + 1))
 fi
 
@@ -519,8 +479,8 @@ echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━
 echo -e "${GREEN}  Final Step Complete — Status Line + Health Check${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "  Installed skills:"
-echo "    /gitfix      — full-repo consistency audit: docs, scripts, and code all in sync"
+echo "  Skills (installed by earlier steps):"
+echo "    /gitfix      — full-repo consistency audit: docs, scripts, and code all in sync (Step 7)"
 echo ""
 echo "  Status line indicators:"
 echo "    🧠 2ndBrain  — in Obsidian vault"
