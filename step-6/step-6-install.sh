@@ -242,6 +242,7 @@ if [ -f "$TOKEN_FILE" ]; then
         echo -e "${RED}[FAIL]${NC} TEST: Token format invalid"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
+    unset SAVED_TOKEN
 else
     echo -e "${RED}[FAIL]${NC} TEST: Cannot validate token (file missing)"
     TEST_FAIL=$((TEST_FAIL + 1))
