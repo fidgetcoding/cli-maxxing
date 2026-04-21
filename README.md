@@ -439,7 +439,7 @@ Connects Claude to the productivity tools you already use. Everything's optional
 
 Claude picks the right tool automatically based on what you ask. Pick whichever apply:
 
-1. **Notion** · 2. **Granola** · 3. **n8n** · 4. **Google Calendar** · 5. **Morgen** ⭐ · 6. **Motion Calendar** · 7. **Playwright** · 8. **SwiftKit** · 9. **Superhuman**
+1. **Notion** · 2. **Granola** · 3. **n8n** · 4. **Google Calendar** · 5. **Morgen** ⭐ · 6. **Motion Calendar** · 7. **Playwright** · 8. **SwiftKit** · 9. **Superhuman** · 10. **Google Drive**
 
 > **Morgen (5) is the recommended default** — it unifies Google, Outlook, iCloud, and native calendars + tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary — install only if you need those accounts directly.
 >
@@ -469,7 +469,7 @@ The script asks which tools you want, then walks you through each one's credenti
 | 7 | **Playwright** ([Microsoft](https://github.com/microsoft/playwright-mcp)) | Lets Claude log into and operate web apps with no API. Runs its own Chromium (not your real browser), reads via accessibility-tree snapshots — fast + reliable. | Node 18+ (from Step 1) + ~hundreds of MB disk for Chromium. No credentials. |
 | 8 | **SwiftKit** ([swiftkit.sh](https://swiftkit.sh)) | Hosted MCP toolkit for **iOS / macOS / Swift development** — 100+ tools for writing, building, and shipping Apple-platform code behind one HTTP endpoint. Default for anything iPhone/iOS/Swift-related. Nothing to install locally. | Account + API key (`sk_live_` or `sk_test_`). |
 | 9 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
-| — | **Google Drive** (MCP — local or claude.ai hosted) | Browse, search, and read Google Drive files — Docs, Sheets, PDFs, shared folders. | **Easiest path:** enable the claude.ai-hosted MCP (claude.ai → avatar → **Settings** → **Connectors** → **Google Drive** → **Connect**). **Local-MCP path:** set up Google Cloud OAuth creds (same flow as Google Calendar) and run `claude mcp add gdrive -- npx -y @modelcontextprotocol/server-gdrive`. Not auto-installed by this script yet. |
+| 10 | **Google Drive** | Browse, search, and read Google Drive files — Docs, Sheets, PDFs, shared folders — via Google's official hosted MCP at `drivemcp.googleapis.com`. | Google account. One-time browser OAuth on first use. |
 
 > **Playwright scope note:** Microsoft explicitly says "Playwright MCP is not a security boundary." Treat anything Claude loads through it the same as any browser session you'd drive manually.
 >
@@ -525,26 +525,19 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 
 [Back to top](#quick-navigation)
 
-This step is the GitHub bundle — for developers who want Claude to have direct access to their repos + a skill that keeps every repo's docs in sync with its code. It's completely optional. Skip it if you don't use GitHub with Claude, and everything else still works.
+The GitHub bundle — optional, for devs. Installs two things:
 
-### What It Installs
-
-Two things:
-
-- **GitHub MCP server** ([`@modelcontextprotocol/server-github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github)) — Claude gets a structured tool interface for reading and writing GitHub resources: repos, issues, PRs, files, code search, branches, commits. Once it's installed, you can ask Claude things like *"list open PRs on lorecraft-io/cli-maxxing"*, *"create an issue for this bug"*, or *"search my repos for any file that uses `MORGEN_API_KEY`"* and it just works.
-- **`/gitfix` skill** — a Claude Code skill that does a full-repo doc sync. Type `/gitfix` inside any Claude session and it reads every install script, skill file, and documentation file in the repo, finds every gap between the code and the docs, and fixes all of it. Use it any time you've made changes and need the README, cheatsheet, and all other docs to reflect reality.
+- **GitHub MCP** ([`@modelcontextprotocol/server-github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github)) — Claude gets direct access to your repos: issues, PRs, files, code search, branches, commits. *"List open PRs on cli-maxxing"*, *"search my repos for any file that uses MORGEN_API_KEY"* — it just works.
+- **`/gitfix` skill** — full-repo doc sync. Reads every install script, skill file, and doc, finds drift between code and docs, fixes it. Run it after any significant change so the README stops lying.
 
 ### Before You Run It
 
-You need a GitHub Personal Access Token (classic PAT) for the MCP part. Create one at [github.com/settings/tokens/new](https://github.com/settings/tokens/new):
+You need a **GitHub Personal Access Token (classic PAT)** for the MCP. Create one at [github.com/settings/tokens/new](https://github.com/settings/tokens/new):
 
-- **Token name:** `claude-github-mcp`
-- **Expiration:** No expiration (or pick whatever you're comfortable with)
-- **Scopes:** check only `repo`, `read:org` (under `admin:org`), and `gist`
+- **Name:** `claude-github-mcp`
+- **Scopes:** `repo`, `read:org` (under `admin:org`), `gist`
 
-Click **Generate token** and copy the `ghp_...` value. You'll paste it into the install script.
-
-The `/gitfix` skill needs no token — it runs locally against whatever repo you point Claude at.
+Copy the `ghp_...` value. `/gitfix` needs no token — it runs locally.
 
 ### Run Step 7
 
@@ -552,18 +545,18 @@ The `/gitfix` skill needs no token — it runs locally against whatever repo you
 bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)
 ```
 
-The script prompts for your PAT, registers the GitHub MCP with Claude Code, injects the token into `~/.claude.json` (same place every other MCP credential lives), and drops the `/gitfix` skill into `~/.claude/skills/gitfix/`.
+Script prompts for your PAT, registers the GitHub MCP (token stored in `~/.claude.json` alongside every other MCP credential), and drops `/gitfix` into `~/.claude/skills/gitfix/`.
 
 ### What This Step Installs
 
 | Component | What it does |
 |-----------|-------------|
-| GitHub MCP (`@modelcontextprotocol/server-github`) | Claude Code MCP server that exposes GitHub API operations as tools — read/write repos, issues, PRs, code search, branches, commits. |
-| `/gitfix` skill | Claude Code skill — full-repo doc sync. Reads every file, fixes drift between code and docs. Works on any repo, no token needed. |
+| GitHub MCP | Exposes GitHub API ops as Claude tools — read/write repos, issues, PRs, code search, branches, commits. |
+| `/gitfix` skill | Full-repo doc sync. Fixes drift between code and docs. Works on any repo, no token needed. |
 
 ### After Step 7
 
-Ask Claude to *"list my open GitHub issues"* or *"create a PR on cli-maxxing"* and the MCP tools kick in automatically. Type `/gitfix` (or just ask *"sync the repo"* / *"fix the github"* in plain English) after any significant change to make the docs match the code again. If you ever need to rotate the PAT, re-run Step 7 — it'll overwrite the entry in your MCP config.
+Ask *"list my open GitHub issues"* or *"create a PR on cli-maxxing"* and the MCP kicks in automatically. Type `/gitfix` (or say *"sync the repo"* / *"fix the github"* in plain English) after any major change to realign the docs. To rotate the PAT, re-run Step 7 — it overwrites the token in place.
 
 ---
 

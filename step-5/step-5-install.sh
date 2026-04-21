@@ -33,6 +33,7 @@ INSTALLED_MOTION=false
 INSTALLED_PLAYWRIGHT=false
 INSTALLED_SWIFTKIT=false
 INSTALLED_SUPERHUMAN=false
+INSTALLED_GDRIVE=false
 # Pre-existing installs (credentials managed outside this script).
 # Only Motion tracks this because Motion persists credentials to a local .env
 # the self-test checks for; Morgen/Notion/n8n credentials live inside Claude's
@@ -142,6 +143,10 @@ choose_tools() {
             CHOICES="$CHOICES 9"
             INSTALLED_SUPERHUMAN=true
         fi
+        if claude mcp list 2>/dev/null | grep -q "gdrive" 2>/dev/null; then
+            CHOICES="$CHOICES 10"
+            INSTALLED_GDRIVE=true
+        fi
 
         if [ -n "$CHOICES" ]; then
             info "Found already-installed tools — verifying configuration"
@@ -171,6 +176,7 @@ choose_tools() {
     echo "    7) Playwright       — browser automation for web apps with no API"
     echo "    8) SwiftKit         — hosted MCP toolkit (100+ tools across services)"
     echo "    9) Superhuman       — email triage + drafting via the official Superhuman MCP"
+    echo "   10) Google Drive     — browse, search, read Docs/Sheets/PDFs via Google's official MCP"
     echo ""
     echo -e "${YELLOW}  Note: Morgen (5) is the recommended calendar+task tool.${NC}"
     echo -e "${YELLOW}  Motion (6) and Google Calendar (4) are secondary —${NC}"
@@ -675,6 +681,40 @@ install_superhuman() {
 }
 
 # -----------------------------------------------------------------------------
+# Install Google Drive MCP (official Google-hosted remote MCP — OAuth on first use)
+# URL: https://drivemcp.googleapis.com/mcp/v1
+# -----------------------------------------------------------------------------
+install_gdrive() {
+    info "Installing Google Drive MCP server..."
+
+    if claude mcp list 2>/dev/null | grep -q "gdrive"; then
+        success "Google Drive MCP already installed"
+        INSTALLED_GDRIVE=true
+        return
+    fi
+
+    echo ""
+    echo -e "${BLUE}  Google Drive has an official hosted MCP at${NC}"
+    echo -e "${BLUE}  drivemcp.googleapis.com — Claude gets read/search access${NC}"
+    echo -e "${BLUE}  to your Drive files (Docs, Sheets, PDFs, shared folders).${NC}"
+    echo ""
+    echo -e "${BLUE}  Auth: OAuth flow on first tool use. Your default browser${NC}"
+    echo -e "${BLUE}  will open — approve Claude against your Google account.${NC}"
+    echo ""
+
+    claude mcp add --scope user --transport http \
+        gdrive https://drivemcp.googleapis.com/mcp/v1 2>/dev/null \
+        || claude mcp add --transport http gdrive https://drivemcp.googleapis.com/mcp/v1 2>/dev/null
+
+    if claude mcp list 2>/dev/null | grep -q "gdrive"; then
+        success "Google Drive MCP installed (authorize on first use)"
+        INSTALLED_GDRIVE=true
+    else
+        soft_fail "Google Drive MCP installation could not be verified — try manually: claude mcp add --transport http gdrive https://drivemcp.googleapis.com/mcp/v1"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -709,6 +749,7 @@ run_self_test() {
     if $INSTALLED_PLAYWRIGHT; then check_registered "Playwright"    "playwright";      else info "TEST: Playwright — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_SWIFTKIT;  then check_registered "SwiftKit"     "swiftkit";        else info "TEST: SwiftKit — skipped";        TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_SUPERHUMAN; then check_registered "Superhuman"  "superhuman";      else info "TEST: Superhuman — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_GDRIVE;    then check_registered "Google Drive" "gdrive";          else info "TEST: Google Drive — skipped";    TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     # Credential-file checks for tools that persist a local .env
     if $INSTALLED_GCAL; then
@@ -765,6 +806,7 @@ print_summary() {
     if $INSTALLED_PLAYWRIGHT; then echo "  Playwright        — browser automation for web apps with no API (Microsoft @playwright/mcp)"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_SWIFTKIT;  then echo "  SwiftKit          — hosted MCP toolkit with 100+ tools across services (swiftkit.sh)";     INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_SUPERHUMAN; then echo "  Superhuman        — email triage + drafting from Claude (superhuman.com)"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_GDRIVE;    then echo "  Google Drive      — read Drive files (Docs, Sheets, PDFs) via Google's official MCP"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
 
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
@@ -807,6 +849,10 @@ print_summary() {
         if $INSTALLED_SUPERHUMAN; then
             echo "    - Ask Claude \"triage my inbox\" or \"draft a reply to the last email from X\""
             echo "    - Browser opens on first use for one-time OAuth against your Superhuman account"
+        fi
+        if $INSTALLED_GDRIVE; then
+            echo "    - Ask Claude \"find the doc about X in my Drive\" or \"summarize this shared sheet\""
+            echo "    - Browser opens on first use for one-time OAuth against your Google account"
         fi
     fi
 
@@ -851,6 +897,7 @@ main() {
             7) if ! $INSTALLED_PLAYWRIGHT; then install_playwright;   else success "Playwright already configured";     fi ;;
             8) if ! $INSTALLED_SWIFTKIT;   then install_swiftkit;   else success "SwiftKit already configured";   fi ;;
             9) if ! $INSTALLED_SUPERHUMAN; then install_superhuman; else success "Superhuman already configured"; fi ;;
+           10) if ! $INSTALLED_GDRIVE;     then install_gdrive;     else success "Google Drive already configured"; fi ;;
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done
