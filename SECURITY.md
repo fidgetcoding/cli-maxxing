@@ -44,7 +44,7 @@ The safetycheck skill installer (step-8) verifies downloaded skill files with SH
 
 ## Input Sanitization
 
-`templates/statusline.sh` reads agent counts from lock files at `/tmp/fidgetflo-swarm-active` and `/tmp/fidgetflo-mini-active`. Before interpolating any value into the status line string, numeric values are stripped of all non-digit characters (`${AGENT_COUNT//[^0-9]/}`) to prevent injection of escape sequences or control characters into the terminal prompt.
+Three scripts read agent counts from the FidgetFlo lock files at `/tmp/fidgetflo-swarm-active` and `/tmp/fidgetflo-mini-active`: the production status-line renderer (`templates/statusline.sh`), the Step 4 installer (`step-4/step-4-install.sh`), and the Final Step installer (`step-final/step-final-install.sh`). All three strip non-digit characters before interpolating any value (`${AGENT_COUNT//[^0-9]/}`) to prevent injection of escape sequences or control characters into the terminal prompt.
 
 ## Playwright MCP — Scope Note
 
