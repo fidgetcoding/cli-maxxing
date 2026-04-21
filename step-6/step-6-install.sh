@@ -20,8 +20,8 @@ fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 
 # -----------------------------------------------------------------------------
 # Ensure runtime PATH (brew, nvm, ~/.local/bin) is visible.
-# Defense-in-depth: users typically run Step 8 in a fresh terminal after
-# Steps 1-7 completed, but installers/nvm don't always source their shell
+# Defense-in-depth: users typically run Step 6 in a fresh terminal after
+# Steps 1-5 completed, but installers/nvm don't always source their shell
 # rc files in non-login shells. This makes `node`, `npm`, `claude`, `ctg`,
 # and `cbraintg` resolvable regardless of how the user invoked the script.
 # -----------------------------------------------------------------------------

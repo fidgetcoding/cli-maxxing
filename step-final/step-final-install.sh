@@ -63,7 +63,7 @@ echo ""
 
 # Check jq is available (needed for status line)
 if ! command -v jq &>/dev/null; then
-    warn "jq not found — install it with: brew install jq (or run Step 2)"
+    warn "jq not found — install it with: brew install jq (or run Step 3)"
 fi
 
 # Create .claude directory if it doesn't exist
@@ -371,7 +371,7 @@ if grep -q 'CLAUDE_CODE_NO_FLICKER' "$SHELL_RC" 2>/dev/null; then
     success "HEALTH: no-flicker mode — enabled"
     HC_PASS=$((HC_PASS + 1))
 else
-    warn "HEALTH: no-flicker mode not set — run Step 2 again to enable"
+    warn "HEALTH: no-flicker mode not set — run Step 3 again to enable"
     HC_FAIL=$((HC_FAIL + 1))
 fi
 
@@ -380,7 +380,7 @@ if [ -f "$HOME/.claude/settings.json" ] && grep -q '"Stop"' "$HOME/.claude/setti
     success "HEALTH: memory auto-save hook — configured"
     HC_PASS=$((HC_PASS + 1))
 else
-    warn "HEALTH: memory hook not found — run Step 2 again to configure"
+    warn "HEALTH: memory hook not found — run Step 3 again to configure"
     HC_FAIL=$((HC_FAIL + 1))
 fi
 
@@ -404,7 +404,7 @@ if command -v jq &>/dev/null; then
     success "HEALTH: jq — installed"
     HC_PASS=$((HC_PASS + 1))
 else
-    warn "HEALTH: jq not found — run Step 2 first"
+    warn "HEALTH: jq not found — run Step 3 first"
     HC_FAIL=$((HC_FAIL + 1))
 fi
 
