@@ -443,7 +443,7 @@ print_summary() {
     echo "    Open Ghostty from Spotlight (Cmd+Space, type Ghostty)"
     echo "    Cmd+T to open a new tab"
     echo "    Cmd+Click any URL or file path to open it"
-    echo "    Shell aliases (cskip, cbrain, etc.) set up by other steps work here automatically"
+    echo "    Shell aliases (cc, ccr, ccc, cskip) set up by Step 1 work here automatically"
     echo ""
     if [ "$OS" = "mac" ]; then
         echo "  Config location:"

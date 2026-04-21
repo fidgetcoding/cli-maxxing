@@ -584,6 +584,8 @@ print_summary() {
     echo "    Node.js        $(node -v 2>/dev/null || echo '—')"
     echo "    npm            v$(npm -v 2>/dev/null || echo '—')"
     echo "    Claude Code    $(claude --version 2>/dev/null || echo '—')"
+    echo "    Shell aliases  cc, ccr, ccc, cskip"
+    echo "    ctg command    ~/.local/bin/ctg"
     echo ""
     if [ "$ERRORS" -gt 0 ]; then
         echo -e "  ${YELLOW}Warnings: $ERRORS non-critical tool(s) failed to install.${NC}"
@@ -604,7 +606,7 @@ main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BLUE}  Step 1 — Get Claude Running${NC}"
-    echo -e "${BLUE}  4 tools • macOS + Linux${NC}"
+    echo -e "${BLUE}  5 tools • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo -e "  ${YELLOW}Note: This script installs everything automatically, but${NC}"
