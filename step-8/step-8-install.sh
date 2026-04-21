@@ -244,7 +244,7 @@ run_self_test() {
 
     # Test 3: Skill file is non-empty
     if [ -s "$SKILL_FILE" ]; then
-        SKILL_SIZE=$(wc -c < "$SKILL_FILE" | xargs)
+        SKILL_SIZE=$(wc -c < "$SKILL_FILE"); SKILL_SIZE="${SKILL_SIZE//[[:space:]]/}"
         success "TEST: SKILL.md is non-empty ($SKILL_SIZE bytes)"
         TEST_PASS=$((TEST_PASS + 1))
     else
