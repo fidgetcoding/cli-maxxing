@@ -295,8 +295,9 @@ uninstall_fidgetflo_stack() {
         skip "Claude-flow MCP server (not found)"
     fi
 
-    # Global npm packages
-    for pkg in fidgetflo@latest agentic-flow@latest @aisuite/chub typescript; do
+    # Global npm packages installed by step-4. Deliberately does NOT touch
+    # typescript — it's a user tool and many other things may depend on it.
+    for pkg in fidgetflo@latest agentic-flow@latest; do
         PKG_NAME="${pkg//@latest/}"
         if npm list -g "$PKG_NAME" 2>/dev/null | grep -q "$PKG_NAME"; then
             npm uninstall -g "$PKG_NAME" 2>/dev/null || true
@@ -311,7 +312,7 @@ uninstall_fidgetflo_stack() {
     for skill in \
         fswarm fswarm1 fswarm2 fswarm3 fswarmmax \
         fmini fmini1 fmini2 fmini3 fminimax \
-        fhive get-api-docs w4w; do
+        fhive w4w; do
         if [ -d "$HOME/.claude/skills/$skill" ]; then
             rm -rf "$HOME/.claude/skills/$skill"
             success "Skill: /$skill"
