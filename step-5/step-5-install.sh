@@ -248,6 +248,7 @@ install_notion() {
     else
         soft_fail "Notion MCP installation could not be verified"
     fi
+    unset NOTION_TOKEN
 }
 
 # -----------------------------------------------------------------------------
@@ -356,6 +357,7 @@ install_n8n() {
     else
         soft_fail "n8n MCP installation could not be verified"
     fi
+    unset N8N_TOKEN N8N_URL
 }
 
 # -----------------------------------------------------------------------------
@@ -446,6 +448,7 @@ install_google_calendar() {
     else
         soft_fail "Google Calendar MCP installation could not be verified"
     fi
+    unset GCAL_CLIENT_ID GCAL_CLIENT_SECRET
 }
 
 # -----------------------------------------------------------------------------
@@ -502,6 +505,7 @@ install_morgen() {
     else
         soft_fail "Morgen MCP installation could not be verified"
     fi
+    unset MORGEN_API_KEY MORGEN_TIMEZONE
 }
 
 # -----------------------------------------------------------------------------
@@ -564,6 +568,7 @@ install_motion_calendar() {
     else
         soft_fail "Motion Calendar MCP installation could not be verified"
     fi
+    unset MOTION_API_KEY FIREBASE_API_KEY FIREBASE_REFRESH_TOKEN MOTION_USER_ID
 }
 
 # -----------------------------------------------------------------------------
@@ -649,6 +654,7 @@ install_swiftkit() {
     else
         soft_fail "SwiftKit MCP installation could not be verified"
     fi
+    unset SWIFTKIT_KEY
 }
 
 # -----------------------------------------------------------------------------
