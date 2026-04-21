@@ -165,90 +165,57 @@ Everything else — aliases, slash commands, natural-language tools, troubleshoo
 
 [Back to top](#quick-navigation)
 
-This step is the foundation. It installs the minimum needed to get Claude Code working on your machine.
-
-**Heads up:** This is the most manual part of the setup. The script itself runs automatically, but afterwards you'll need to set up your Claude account yourself. Don't worry, it's all spelled out below. Once you're past this, Claude is there to help you with everything else.
+This step installs the minimum needed to get Claude Code running on your machine. It's the most hands-on part of the setup — everything after this can be handled by Claude itself.
 
 ### macOS / Linux
 
-**How to open Terminal:** On Mac, press **Cmd+Space** to open Spotlight, type **Terminal**, and hit Enter. On Linux, look for "Terminal" in your applications menu, or press **Ctrl+Alt+T**.
+Open Terminal: **Cmd+Space → "Terminal"** on Mac, or **Ctrl+Alt+T** on Linux.
 
 > [!IMPORTANT]
-> **Copy and paste this into Terminal, then hit Enter:**
+> **Paste this in and hit Enter:**
 > ```bash
 > bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-1/step-1-install.sh)
 > ```
 
-> **It will ask for your Mac password.** The script needs it to install system tools. When you see `Password:`, type your Mac login password and hit Enter. The install will pause until you do this. You won't see what you're typing — no characters, no dots, just a lock icon or a blank line. That's normal. Just type it and press Enter.
+> The script will ask for your Mac password to install system tools. When you see `Password:`, type it and hit Enter — you won't see the characters, that's normal.
 
 ### What This Step Installs
 
-These are the tools that get installed automatically when you run the command above:
-
 | Tool | What it does |
 |------|-------------|
-| Xcode CLT (Mac) / build-essential (Linux) | Build tools that other installers need. Runs automatically in the background. |
-| Homebrew (Mac) / apt or dnf (Linux) | This is a package manager. It installs other software for you. |
-| Git | This tracks and manages code changes. |
-| nvm | Node Version Manager — installs and manages Node.js versions. |
-| Node.js (v18+) | This runs JavaScript. Claude Code needs it to work. |
-| Claude Code | This is your AI coding assistant. The main tool you'll be using. |
-| Shell aliases | Shortcuts: `cskip`, `cc`, `ccr`, `ccc` — faster ways to launch Claude with different settings. |
-| cbrain | Launches Claude pointed at your Obsidian vault. Your daily driver after setting up [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging). Do not use until your vault is set up. |
-| ctg | Launches Claude with Telegram connected from any directory. Includes a token check — exits cleanly if no token is configured. |
-| cbraintg | Same as cbrain but with Telegram integration. Includes the same token check as ctg. |
+| Xcode CLT (Mac) / build-essential (Linux) | Build tools that other installers need. |
+| Homebrew (Mac) / apt or dnf (Linux) | Package manager — installs other software. |
+| Git | Tracks and manages code changes. |
+| nvm + Node.js (v18+) | Node Version Manager + the JavaScript runtime Claude Code needs. |
+| Claude Code | Your AI coding assistant. The main tool. |
+| Shell aliases | `cskip`, `cc`, `ccr`, `ccc` — faster ways to launch Claude. |
+| cbrain | Launches Claude pointed at your Obsidian vault. Daily driver after setting up [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging). |
+| ctg | Launches Claude with Telegram connected from any directory. |
+| cbraintg | `cbrain` + Telegram. |
 
-### Shift+Tab — Toggle Permissions
+### After the script finishes
 
-When Claude is running in any terminal, you can press **Shift+Tab** to switch between normal mode (where Claude asks before doing anything) and auto-approve mode (where Claude just does it). No need to exit and relaunch. This works in any terminal app — Terminal.app, iTerm2, Ghostty, or whatever you prefer.
+1. **Close this terminal and open a new one.** Homebrew, nvm, and the new aliases only load in a fresh shell. `claude` won't be on your PATH until you restart.
+2. **Run `claude --version`** — you should see something like `2.1.112 (Claude Code)`. If you get "command not found," try `source ~/.zshrc` (or `~/.bashrc`). Still stuck? See [Troubleshooting](#troubleshooting).
+3. **Press Ctrl+C to exit Claude, then run `cskip`** — this starts Claude in auto-approve mode (no permission prompts), the recommended way to run the rest of the setup.
 
-After the script finishes, you need to activate the tools that were just installed. Do these three things in order:
-
-**1. Close this terminal and open a new one.**
-
-This is the most important step. Homebrew, nvm, and the new shell aliases only load when a fresh shell starts. If you skip this, `claude` and `cskip` won't be found even though they're installed. Fully close the Terminal window (Cmd+Q on Mac works too) and open a new one.
-
-**2. Verify Claude is working** — in the new terminal, run:
-
-```bash
-claude --version
-```
-
-You should see a version number like `2.1.112 (Claude Code)`. If you see that, you're good.
-
-> If `claude --version` says "command not found," try `source ~/.zshrc` (or `source ~/.bashrc` if you're on Linux or still using bash). macOS uses zsh by default since Catalina, so `.zshrc` is almost always the right one. If that still doesn't work, see the [Troubleshooting](#troubleshooting) section below — specifically "I ran the installer but `claude` command is not found."
-
-**3. Exit and switch to auto-approve mode:**
-
-Press **Ctrl+C** to exit Claude, then run `cskip` to continue with auto-approve mode (Claude runs without asking permission for each action). This is the recommended way to work through the remaining setup steps.
+> **Shift+Tab** toggles between permission-asking mode and auto-approve mode inside any running Claude session — no need to restart.
 
 ### Set Up Your Claude Account
 
-You'll need a Claude account with an active subscription before you can use Claude Code. **Do this now if you haven't already.** You won't be able to log in during Step 2 without it.
+Sign up at [claude.ai](https://claude.ai) before Step 3. Claude Code is free to install but requires a paid plan to actually use.
 
-Sign up at [claude.ai](https://claude.ai).
-
-#### Why Claude?
-
-We use Claude because it's genuinely the best AI platform for the kind of work we do. Not marketing, just what we've seen firsthand. Claude consistently outperforms other models at understanding complex instructions, writing clean code, and reasoning through multi-step problems without losing the thread. They also ship new features incredibly fast. The pace of improvement is unreal.
-
-But beyond the tech, we chose Anthropic for how they operate. Their CEO Dario Amodei left OpenAI specifically to take a more responsible approach to AI development. He's shown real backbone, including being willing to walk away from government contracts rather than compromise on their principles. Anthropic leads on safety research, they're transparent about what their models can and can't do, and they actually listen to their users when building new features. No shady practices, no cutting corners, no chasing hype at the expense of doing things right.
-
-That philosophy shows up in how Claude actually works. It's careful, honest, and doesn't try to BS you when it doesn't know something.
-
-Claude is the smartest tool in the room, built by people who actually care about getting this right.
+**Why Claude?** Anthropic consistently ships the strongest model for complex reasoning + code, and they lead on safety research instead of chasing hype. Claude is careful, honest, and doesn't BS you when it doesn't know something — it's the smartest tool in the room, built by people who care about getting this right.
 
 #### Subscription Plans
 
-Claude Code requires a paid plan. The software itself is free to install, but to actually use it you'll need one of these:
-
 | Plan | Cost | What you get |
 |------|------|-------------|
-| **Claude Pro** | $20/month | Good for getting started. Handles everyday tasks like writing code, editing files, and answering questions. You'll hit usage limits if you run long sessions or do heavy back-to-back work. |
-| **Claude Max 5x** | $100/month | This gives you 5x the usage of Pro. Best for people who use Claude throughout the day or run multi-step workflows. You can work for hours without hitting a wall. |
-| **Claude Max 20x** | $200/month | This gives you 20x the usage of Pro. For power users running complex, long-running tasks like full codebase refactors, multi-agent swarms, or all-day sessions. Virtually unlimited for most people. |
+| **Claude Pro** | $20/month | Everyday tasks — writing code, editing files, Q&A. You'll hit limits on long sessions. |
+| **Claude Max 5x** | $100/month | 5× Pro usage. Best for daily users and multi-step workflows. |
+| **Claude Max 20x** | $200/month | 20× Pro usage. Full codebase refactors, multi-agent swarms, all-day sessions. |
 
-**Our recommendation:** Start with **Pro** ($20/month). If you find yourself getting rate-limited or waiting for usage to reset, upgrade to Max. You'll know pretty quickly which tier fits your workflow.
+**My recommendation:** Start with **Pro** ($20/month). If you hit rate limits, upgrade to Max — you'll know pretty quickly which tier fits your workflow.
 
 That's it for Step 1. Continue to [Step 2 — Bonus Software](#step-2---bonus-software) for Ghostty + Arc, or jump straight to [Step 3 — Developer & Utility Tools](#step-3---developer--utility-tools).
 
@@ -258,176 +225,58 @@ That's it for Step 1. Continue to [Step 2 — Bonus Software](#step-2---bonus-so
 
 [Back to top](#quick-navigation)
 
-This step is optional but highly recommended. It installs two pieces of software that dramatically improve your day-to-day flow: **Ghostty** (a GPU-accelerated terminal) and **Arc** (a power-user browser). Everything else in this setup works without them, but you'll feel the difference immediately.
+Optional but highly recommended. Installs **Ghostty** (GPU-accelerated terminal with clickable links + `g2`/`g4` window tiling) and **Arc** (sidebar-tab browser with Spaces, split view, built-in ad blocking). Everything else in this setup works without them — skip if you're happy with your current terminal + browser.
+
+### Run both at once
+
+> [!IMPORTANT]
+> ```bash
+> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/step-2-install.sh)
+> ```
+
+Prefer to do one at a time? Run either script individually:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/ghostty-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/arc-install.sh)
+```
+
+---
 
 ### Ghostty Terminal
 
-Everything in this setup works in any terminal app — Terminal.app, iTerm2, whatever you've got. But if you want a terminal that's noticeably faster, looks great out of the box, and lets you Cmd+Click URLs and file paths to open them instantly, Ghostty is worth the two minutes.
+GPU-accelerated (Metal on Mac, OpenGL on Linux). **Cmd+Click** any URL or file path to open it. Comes tuned: JetBrains Mono font, dark theme, tabbed windows, plus `g2`/`g4` aliases to tile 2 or 4 Ghostty windows across your screen in one keystroke — great for running multiple Claude sessions side-by-side.
 
-#### Why Ghostty?
+**Docs:** [ghostty.org/docs](https://ghostty.org/docs) · **Config:** `~/Library/Application Support/com.mitchellh.ghostty/config` (Mac) or `~/.config/ghostty/config` (Linux)
 
-Ghostty is a GPU-accelerated terminal emulator. Most terminals (including Terminal.app) render text on the CPU. Ghostty uses Metal on Mac (and OpenGL on Linux), which means it draws frames faster, scrolls smoother, and handles large output without lagging. If you've ever had your terminal choke on a massive log dump or a long build output, you'll feel the difference.
+<details>
+<summary><strong>Script failed? Install Ghostty manually</strong></summary>
 
-Beyond speed, it's the customization and clickable links that make it worth switching:
+1. Go to [ghostty.org/download](https://ghostty.org/download) → **Download for macOS** (or your Linux package).
+2. Open the `.dmg`, drag **Ghostty.app** into **Applications**, eject the image.
+3. Open Ghostty (Cmd+Space → `Ghostty`) → click **Open** on the macOS warning.
+4. Re-run the Ghostty install script above to pick up the font + theme + `g2`/`g4` config. It's idempotent.
 
-- **GPU-accelerated rendering.** Metal on Mac, OpenGL on Linux. Noticeably faster than CPU-rendered terminals, especially with large output.
-- **Tabbed interface with native title bar.** Looks and feels like a proper Mac app. Cmd+T for new tabs, red/yellow/green traffic light buttons, everything where you'd expect it.
-- **Cmd+Click to open anything.** URLs open in your browser. File paths open in the associated app. PDFs, websites, local files — just hold Cmd and click. This is the single most useful terminal feature you didn't know you were missing.
-- **Fully customizable.** Fonts, colors, padding, key bindings — everything is a plain text config file. No preferences UI to dig through, just edit the config and reload.
-- **Lightweight.** Ghostty launches fast and stays out of your way. No account, no telemetry, no update nags.
-
-This script installs Ghostty via Homebrew, sets up JetBrains Mono as the font, applies a dark color theme, configures the tabbed window style with traffic light buttons, enables Cmd+Click for URLs and file paths, and sets TextEdit as the default opener for text files so Cmd+Click on a `.md`, `.json`, or `.sh` file opens it right away.
-
-#### Install Ghostty
-
-You can run this from your terminal directly — no Claude session needed:
-
-> [!IMPORTANT]
-> **Paste this into your terminal:**
-> ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/ghostty-install.sh)
-> ```
-
-Or if you're already in a Claude session, paste this:
-
-> **Paste this into your Claude session:**
-> ```
-> run this command to install Ghostty: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/ghostty-install.sh)
-> ```
-
-#### If the script fails — install Ghostty manually
-
-If Homebrew times out, stalls, or the script errors out for any reason, install Ghostty directly from the website. It takes two minutes:
-
-1. Open your browser and go to **[ghostty.org/download](https://ghostty.org/download)**.
-2. Click the **Download for macOS** button (or the Linux package for your distro). A `.dmg` file lands in your `Downloads` folder.
-3. Open the `.dmg` — double-click it in Finder or your Downloads stack.
-4. A Finder window opens with **Ghostty.app** on the left and an **Applications** folder shortcut on the right. Drag **Ghostty.app** onto the **Applications** folder. Wait for the copy to finish.
-5. Eject the disk image — right-click the mounted volume on your desktop (or in Finder's sidebar) and choose **Eject**.
-6. Open Ghostty — press **Cmd+Space**, type **Ghostty**, hit **Enter**.
-7. macOS will warn you it was downloaded from the internet — click **Open** to confirm.
-
-That gets you Ghostty itself. To pick up the font, dark theme, `g2`/`g4` tiling aliases, and Cmd+Click config, re-run the install script above — it's idempotent, so it'll detect Ghostty is already installed and just lay down the config bits.
-
-#### What Ghostty Installs
-
-| Component | What it does |
-|-----------|-------------|
-| Ghostty | GPU-accelerated terminal emulator. Fast, lightweight, customizable. |
-| JetBrains Mono | Clean monospace font designed for code. Installed via Homebrew. |
-| Ghostty Config | Pre-configured with dark theme, tabbed interface, traffic light buttons, link clicking, and font settings. |
-| duti (Mac) | File association manager. Sets TextEdit as the default opener for text files so Cmd+Click works the way you'd expect. |
-| g2 (Mac) | Window tiling command. Type `g2` in your terminal to tile 2 Ghostty windows side by side, filling your screen. |
-| g4 (Mac) | Window tiling command. Type `g4` to tile 4 Ghostty windows in a 2x2 grid. Great for running multiple Claude sessions at once. |
-
-#### After Installing Ghostty
-
-1. Open Ghostty — press **Cmd+Space**, type **Ghostty**, hit Enter.
-2. All your shell aliases (`cskip`, `cbrain`, `cc`, etc.) work immediately. Nothing to reconfigure.
-3. Try **Cmd+Click** on any URL or file path in the terminal output. It just opens.
-4. Use **Cmd+T** to open new tabs.
-
-#### Customizing Ghostty
-
-The config file is plain text:
-
-- **Mac:** `~/Library/Application Support/com.mitchellh.ghostty/config`
-- **Linux:** `~/.config/ghostty/config`
-
-Edit it with any text editor. Changes take effect the next time you open a Ghostty window. Common tweaks:
-
-| Setting | What it does | Default |
-|---------|-------------|---------|
-| `font-size` | Text size | `14` |
-| `font-family` | Font face | `JetBrains Mono` |
-| `background` | Background color (hex) | `000000` (black) |
-| `window-padding-x` / `y` | Inner padding in pixels | `8` |
-| `macos-titlebar-style` | Window style: `native`, `tabs`, or `transparent` | `tabs` |
-
-Full docs: [ghostty.org/docs](https://ghostty.org/docs)
+</details>
 
 ---
 
 ### Arc Browser
 
-If you're still using Chrome, Safari, or Firefox as your daily driver — do yourself a favor and switch to Arc. It's not just another Chromium reskin. Arc was built from scratch for people who live in their browser, and once you use it for a week you genuinely won't want to go back.
+Chromium-based with a sidebar instead of a tab bar, Spaces for context switching, split view, built-in ad blocking, and a Cmd+T command bar that replaces the URL bar. Imports from Chrome in 30 seconds — bookmarks, passwords, history, and all your extensions come along.
 
-#### Why Arc?
+**Download:** [arc.net](https://arc.net) · macOS + Windows only (Linux skips this step automatically)
 
-Chrome is fine. It works. But it was designed in 2008 and it still feels like it. You've got 47 tabs open, you can't find anything, your browser is eating 8GB of RAM, and the tab bar is a graveyard of things you meant to read three weeks ago. Arc fixes all of that.
+<details>
+<summary><strong>Script failed? Install Arc manually</strong></summary>
 
-- **No tab bar.** Tabs live in a collapsible sidebar. Your screen is the website, not a row of tiny rectangles you can't read. It's immediately cleaner and you actually use more of your screen.
-- **Spaces.** Group tabs by context — one Space for work, one for personal, one for a project. Swipe between them. It's like virtual desktops but for your browser. No more mixing your Jira tickets with your YouTube rabbit holes.
-- **Pinned tabs that actually work.** Pin the sites you use every day (Gmail, Notion, calendar) to the top of your sidebar. They stay open, they stay fresh, and they don't get lost in a sea of other tabs.
-- **Split view.** Open two pages side by side without a window manager. Drag a tab to the right and it snaps into place. Great for referencing docs while writing code, or comparing two pages.
-- **Built-in ad blocking and tracker blocking.** No extensions needed. Pages load faster and you're not being surveilled by every ad network on the internet.
-- **Command bar (Cmd+T).** This replaces the traditional URL bar with something closer to Spotlight. Search your open tabs, bookmarks, history, and the web from one place. It's fast and it learns your habits.
-- **Little Arc.** Press a hotkey and get a tiny floating browser window for a quick search or link preview without leaving what you're doing. Dismiss it and you're right back.
-- **Fast profile switching.** If you have multiple profiles (work, personal, client accounts), you can switch between them instantly from the sidebar. No logging out, no "Choose a profile" screen, no waiting. You just click between identities the same way you switch Spaces. It's the fastest multi-account workflow in any browser.
-- **Automatic tab archiving.** Tabs you haven't looked at in 12 hours get archived automatically. They're not gone — you can find them — but they're not cluttering your sidebar. Your browser stays clean without you doing anything.
-- **It's Chromium under the hood.** All your Chrome extensions work. 1Password, React DevTools, Vimium, whatever you use — it all carries over.
+1. Go to [arc.net](https://arc.net) → **Download Arc** (auto-detects your OS).
+2. Open the downloaded file → drag **Arc.app** into **Applications** (Mac), or run the `.exe` (Windows).
+3. Open Arc → click **Open** on the macOS warning.
+4. Sign up for a free Arc account (required for sync) and accept the Chrome import prompt.
+5. Set Arc as default browser when asked — or later via **System Settings → Desktop & Dock → Default web browser**.
 
-Arc is free. There's no premium tier or paywall. It's just a better browser.
-
-#### Switching from Chrome
-
-This is the part that stops most people, and it shouldn't. Arc makes migration dead simple:
-
-1. **Open Arc for the first time** and it asks if you want to import from Chrome.
-2. **Say yes.** It pulls over your bookmarks, saved passwords, history, autofill data, and extensions. All of it. Takes about 30 seconds.
-3. **Set Arc as your default browser** when it asks (or do it later in System Settings > Desktop & Dock > Default web browser).
-4. That's it. You're done. Everything you had in Chrome is now in Arc.
-
-You don't lose anything. Your Chrome profile stays untouched — you can always go back if you want. But you probably won't want to.
-
-#### Install Arc
-
-You can run this from your terminal directly — no Claude session needed:
-
-> [!IMPORTANT]
-> **Paste this into your terminal:**
-> ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/arc-install.sh)
-> ```
-
-Or if you're already in a Claude session, paste this:
-
-> **Paste this into your Claude session:**
-> ```
-> run this command to install Arc: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/arc-install.sh)
-> ```
-
-#### If the script fails — install Arc manually
-
-If Homebrew stalls or the script errors out, grab Arc straight from the website. Takes under two minutes:
-
-1. Open your current browser and go to **[arc.net](https://arc.net)**.
-2. Click **Download Arc** on the homepage (the site auto-detects your OS and serves the right installer — `.dmg` on Mac, `.exe` on Windows).
-3. Open the downloaded file from your `Downloads` folder.
-4. On macOS: a Finder window opens with **Arc.app** and an **Applications** folder shortcut. Drag **Arc.app** into **Applications**. On Windows: run the `.exe` and follow the installer prompts.
-5. Eject the disk image (macOS) — right-click the mounted volume and choose **Eject**.
-6. Open Arc — press **Cmd+Space**, type **Arc**, hit **Enter**. (Windows: Start menu → Arc.)
-7. macOS will ask to confirm opening a downloaded app — click **Open**.
-8. Sign up for a free Arc account when prompted (required for sync between devices) and say **yes** when Arc offers to import your bookmarks, passwords, history, and extensions from Chrome. Takes about 30 seconds.
-9. When Arc asks to be your default browser, say yes — or do it later in **System Settings → Desktop & Dock → Default web browser**.
-
-That's it. No config step is needed from the cli-maxxing install script — Arc is self-contained.
-
-#### What Arc Installs
-
-| Component | What it does |
-|-----------|-------------|
-| Arc Browser | Chromium-based browser with sidebar tabs, Spaces, split view, built-in ad blocking, and automatic tab management. |
-
-#### After Installing Arc
-
-1. Open Arc — press **Cmd+Space**, type **Arc**, hit Enter.
-2. Import your Chrome data when prompted (bookmarks, passwords, history, extensions).
-3. Set it as your default browser when asked.
-4. Press **Cmd+T** to open the command bar — this replaces the URL bar and it's way faster.
-5. Try **Cmd+S** to pin a tab to your sidebar.
-
-> **Note:** Arc is available on macOS and Windows. This install script uses Homebrew, so it only runs on macOS. If you're on Linux, this step will be skipped automatically.
+</details>
 
 ---
 
