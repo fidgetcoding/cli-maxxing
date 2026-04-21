@@ -1,6 +1,6 @@
 # CLI-MAXXING Install Flow Walkthrough -- Regression Test
 
-> **Note:** This walkthrough covers Steps 1, 3, 6, 8, and Final. Steps 2 (Bonus Software), 4 (FidgetFlo), 5 (Productivity Tools), and 7 (GitHub) are present in the repo but not included in this regression test. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for their respective test walkthroughs.
+> **Note:** This walkthrough covers Steps 1, 3, 6, and Final. Steps 2 (Bonus Software), 4 (FidgetFlo), 5 (Productivity Tools), 7 (GitHub), and 8 (Safety Check) are present in the repo but not fully covered in this regression test. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for their respective test walkthroughs.
 
 **Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
@@ -59,16 +59,16 @@
 
 ---
 
-## Step 2 -- Dev Tools
+## Step 2 -- Bonus Software (Ghostty + Arc)
 
 **File:** `step-2/step-2-install.sh`
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
-| `verify_prerequisites` | Checks node + claude | PASS |
-| Python, Pandoc, etc. | All Homebrew-based | PASS |
-| `configure_memory_hook` | Writes Stop hook to `~/.claude/settings.json` | PASS |
-| `configure_no_flicker` | Writes `CLAUDE_CODE_NO_FLICKER=1` to `~/.zshrc` | PASS |
+| Install Ghostty | `brew install --cask ghostty` | PASS |
+| Install Arc | `brew install --cask arc` (macOS only) | PASS |
+| Ghostty config | Writes font + theme to `~/Library/Application Support/com.mitchellh.ghostty/config` | PASS |
+| g2/g4 functions | Added to `~/.zshrc` | PASS |
 
 **Bugs found:** None.
 
@@ -82,7 +82,7 @@
 |---------|-------------------|--------|
 | `source_runtime_path` | Hydrates PATH: brew, nvm, `~/.local/bin` | PASS |
 | `detect_os` | Detects `mac`, shell `zsh`, RC `~/.zshrc` | PASS |
-| Python, Pandoc, etc. | All Homebrew-based | PASS |
+| Python, Pandoc, jq, ripgrep, etc. | All Homebrew-based | PASS |
 | `configure_memory_hook` | Writes Stop hook to `~/.claude/settings.json` | PASS |
 | `configure_no_flicker` | Writes `CLAUDE_CODE_NO_FLICKER=1` to `~/.zshrc` | PASS |
 
