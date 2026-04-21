@@ -642,6 +642,7 @@ print_summary() {
     echo "    tree           $(command -v tree &>/dev/null && echo 'installed' || echo '—')"
     echo "    fzf            $(fzf --version 2>/dev/null | cut -d' ' -f1 || echo '—')"
     echo "    wget           $(command -v wget &>/dev/null && echo 'installed' || echo '—')"
+    echo "    weasyprint     $(command -v weasyprint &>/dev/null && echo 'installed' || echo '—')"
     echo ""
     # Report no-flicker status across all rc files we may have written to
     NO_FLICKER_STATUS="—"
@@ -678,7 +679,7 @@ main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BLUE}  Step 3 — Developer & Utility Tools${NC}"
-    echo -e "${BLUE}  10 tools • macOS + Linux${NC}"
+    echo -e "${BLUE}  11 tools • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
