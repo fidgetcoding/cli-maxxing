@@ -1,6 +1,6 @@
 # CLI-MAXXING Install Flow Walkthrough -- Regression Test
 
-> **Note:** Steps 4, 5, and 7 have been extracted to companion repos. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing) for those test walkthroughs.
+> **Note:** Steps 4, 5, and 7 have been extracted to companion repos. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for those test walkthroughs.
 
 **Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
@@ -106,7 +106,7 @@ The `OBSIDIAN/` prefix requirement has been removed. The pattern now matches any
 
 **File:** `step-6/step-6-install.sh`
 
-Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing), NOT here.
+Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging), NOT here.
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
@@ -119,7 +119,7 @@ Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndbrain-maxxi
 | (5) Morgen *(recommended)* | Prompts for API key + optional IANA timezone, registers via `-e MORGEN_API_KEY=... -e MORGEN_TIMEZONE=...`. No local `.env` — credentials live in Claude Code's MCP config | PASS |
 | (6) Motion Calendar | Prompts for Motion API key, Firebase API key, Firebase refresh token, Motion user ID. Writes `~/.motion-mcp/.env` (chmod 700/600). Registers via `claude mcp add motion` | PASS |
 | (7) Playwright | No credentials required. Registers Microsoft's official `@playwright/mcp` via `claude mcp add playwright -- npx -y @playwright/mcp@latest`. Chromium binaries auto-download on first use. | PASS |
-| Obsidian | NOT in this repo — see 2ndbrain-maxxing | N/A |
+| Obsidian | NOT in this repo — see 2ndBrain-mogging | N/A |
 | Self-test | `check_registered` covers all 7 tools, verifies Motion + GCal `.env` files exist for their respective installs | PASS |
 | Summary | Prints tool-count + "what you can do now" hints per installed tool | PASS |
 

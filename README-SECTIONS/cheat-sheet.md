@@ -39,7 +39,7 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | `cc` | Short alias for `claude` |
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
-| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires vault setup — see [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing))* |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(requires vault setup — see [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected |
 | `ctg` | Skip-permissions + Telegram channel connected (any directory) |
 | `g2` | Tile 2 Ghostty windows side by side, filling your screen *(requires Ghostty — Bonus step, macOS only)* |
@@ -47,7 +47,7 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 
 > **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
 >
-> **Note:** Until you set up Second Brain ([2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
+> **Note:** Until you set up Second Brain ([2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
 
 ## What is auto-approve mode?
 
@@ -132,7 +132,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Morgen *(recommended)* | Step 6 | Natural language — unified calendar + tasks across Google/Outlook/iCloud/native | "What's on my calendar this week?" · "Add a task called 'Review contracts' due Friday" |
 | Motion Calendar | Step 6 | Natural language — Motion-specific features (teammate visibility, full event search) | "Who on my team has a conflict at 3pm?" |
 | Playwright | Step 6 | Natural language — browser automation for web apps with no API. Runs a separate Chromium instance, reads accessibility-tree snapshots (not pixels) | "Log into Higgsfield and generate an image for me" · "Open this URL, fill the form, and tell me what comes back" |
-| Obsidian | 2ndbrain-maxxing | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing)) | "Search my vault for notes about machine learning" |
+| Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |
 | No-Flicker Mode | Step 2 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 2 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 | Telegram | Step 8 | Automatic when launched with `ctg` or `cbraintg` — reads and replies to Telegram messages | (messages arrive automatically from connected chats) |
@@ -203,7 +203,7 @@ These are available in your terminal after Step 3 installs the Ruflo CLI.
 | Swarm not responding | Run `npx ruflo@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
 | `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
-| Obsidian vault not found | Vault setup lives in [2ndbrain-maxxing](https://github.com/lorecraft-io/2ndbrain-maxxing). Once set up, tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
+| Obsidian vault not found | Vault setup lives in [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging). Once set up, tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
 | Shift+Return acts like Enter | Try Option+Enter as an alternative for multi-line input |
 
 ---
