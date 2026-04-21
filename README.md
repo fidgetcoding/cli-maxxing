@@ -350,7 +350,7 @@ A "stop hook" fires every time you end a Claude session (Ctrl+C or `/exit`). Cla
 
 [Back to top](#quick-navigation)
 
-[**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo) is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It turns Claude Code from a single assistant into a coordinated team of AI agents: multi-agent swarms on demand, persistent memory, self-healing workflows, and all agents Opus-locked by default (no silent downgrade to Haiku/Sonnet).
+[**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo) 💚 is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It turns Claude Code from a single assistant into a coordinated team of AI agents: multi-agent swarms on demand, persistent memory, self-healing workflows, and all agents Opus-locked by default (no silent downgrade to Haiku/Sonnet). *(💚 = built by fidgetcoding.)*
 
 ### Run Step 4
 
@@ -464,14 +464,16 @@ The script asks which tools you want, then walks you through each one's credenti
 | 2 | **Granola** | Search your Granola meeting transcripts + notes through conversation. | [Granola](https://granola.ai) installed + signed in on Mac. No key. |
 | 3 | **n8n** | HTTP bridge to **your own** n8n instance — trigger and inspect workflows you built. Not a hosted service. | An n8n workflow with an **MCP Server Trigger** node; copy its Production URL. Optional Bearer token. |
 | 4 | **Google Calendar** | Direct Google Calendar access via OAuth. *Secondary — only install if you need a specific Google account bypassing Morgen.* | Google account + ~5min to create OAuth creds (script walks you through). |
-| 5 | **Morgen** ⭐ ([@lorecraft-io](https://github.com/lorecraft-io/morgen-mcp)) | Unified calendar + tasks across Google/Outlook/iCloud/native. Natural-language dates/recurrence, auto-schedule, day reflow. One key for everything. | API key from [platform.morgen.so/developers-api](https://platform.morgen.so/developers-api). |
-| 6 | **Motion Calendar** ([@lorecraft-io](https://github.com/lorecraft-io/motion-mcp)) | Teammate visibility + full event search that Morgen's API doesn't expose. *Motion-specific features only.* | Motion API key + Firebase key + refresh token + user ID (script walks you through). |
+| 5 | **[Morgen](https://github.com/lorecraft-io/morgen-mcp)** ⭐ 💚 | Unified calendar + tasks across Google/Outlook/iCloud/native. Natural-language dates/recurrence, auto-schedule, day reflow. One key for everything. | API key from [platform.morgen.so/developers-api](https://platform.morgen.so/developers-api). |
+| 6 | **[Motion Calendar](https://github.com/lorecraft-io/motion-mcp)** 💚 | Teammate visibility + full event search that Morgen's API doesn't expose. *Motion-specific features only.* | Motion API key + Firebase key + refresh token + user ID (script walks you through). |
 | 7 | **Playwright** ([Microsoft](https://github.com/microsoft/playwright-mcp)) | Lets Claude log into and operate web apps with no API. Runs its own Chromium (not your real browser), reads via accessibility-tree snapshots — fast + reliable. | Node 18+ (from Step 1) + ~hundreds of MB disk for Chromium. No credentials. |
 | 8 | **SwiftKit** ([swiftkit.sh](https://swiftkit.sh)) | Hosted MCP toolkit for **iOS / macOS / Swift development** — 100+ tools for writing, building, and shipping Apple-platform code behind one HTTP endpoint. Default for anything iPhone/iOS/Swift-related. Nothing to install locally. | Account + API key (`sk_live_` or `sk_test_`). |
 | 9 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
 | — | **Google Drive** (MCP — local or claude.ai hosted) | Browse, search, and read Google Drive files — Docs, Sheets, PDFs, shared folders. | **Easiest path:** enable the claude.ai-hosted MCP (claude.ai → avatar → **Settings** → **Connectors** → **Google Drive** → **Connect**). **Local-MCP path:** set up Google Cloud OAuth creds (same flow as Google Calendar) and run `claude mcp add gdrive -- npx -y @modelcontextprotocol/server-gdrive`. Not auto-installed by this script yet. |
 
 > **Playwright scope note:** Microsoft explicitly says "Playwright MCP is not a security boundary." Treat anything Claude loads through it the same as any browser session you'd drive manually.
+>
+> 💚 = built by fidgetcoding (Morgen, Motion Calendar above; FidgetFlo in Step 4).
 
 ### After Step 5
 
