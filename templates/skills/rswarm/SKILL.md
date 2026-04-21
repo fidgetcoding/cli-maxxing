@@ -1,23 +1,23 @@
 ---
-name: rswarm
-description: "Launch a full 15-agent Ruflo swarm to execute a task immediately. Triggers real multi-agent execution — not a reference."
+name: fswarm
+description: "Launch a full 15-agent FidgetFlo swarm to execute a task immediately. Triggers real multi-agent execution — not a reference."
 user_invocable: true
 ---
 
-# Ruflo Advanced Swarm — Immediate Execution
+# FidgetFlo Advanced Swarm — Immediate Execution
 
 When this skill is invoked, IMMEDIATELY launch a 15-agent swarm. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
 
 ## Execution Steps
 
-1. Read the user's task (everything they typed after `/rswarm`)
-2. **Signal status line**: Run `echo 15 > /tmp/ruflo-swarm-active` via Bash to light up the 🐝 indicator
+1. Read the user's task (everything they typed after `/fswarm`)
+2. **Signal status line**: Run `echo 15 > /tmp/fidgetflo-swarm-active` via Bash to light up the 🐝 indicator
 3. Initialize the swarm in ONE message:
-   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized` (skip if the Ruflo MCP tool isn't available — the Agent-tool spawn below is what actually does the work)
+   - Call `mcp__fidgetflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 15, strategy `specialized` (skip if the FidgetFlo MCP tool isn't available — the Agent-tool spawn below is what actually does the work)
    - Spawn ALL 15 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
 4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
 5. When results come back, synthesize and present the combined output.
-6. **Clear status line**: Run `rm -f /tmp/ruflo-swarm-active` via Bash to turn off the 🐝 indicator
+6. **Clear status line**: Run `rm -f /tmp/fidgetflo-swarm-active` via Bash to turn off the 🐝 indicator
 
 ## The 15 Agents
 
@@ -39,7 +39,7 @@ When this skill is invoked, IMMEDIATELY launch a 15-agent swarm. Do NOT explain 
 | 14 | coder | Technical Writer | Documentation, README, usage guides |
 | 15 | tester | QA Coordinator | Final validation, cross-agent consistency check |
 
-Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But ALWAYS spawn 15.
+Adapt agent assignments to the task — not every task needs all 15 roles. If the task is frontend-only, shift agent roles accordingly. But always spawn 15.
 
 ## Rules
 

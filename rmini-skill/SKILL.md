@@ -1,22 +1,22 @@
 ---
-name: rmini
-description: "Launch a compact 5-agent Ruflo swarm for focused task execution. Smaller than /rswarm but still parallel and powerful."
+name: fmini
+description: "Launch a compact 5-agent FidgetFlo swarm for focused task execution. Smaller than /fswarm but still parallel and powerful."
 ---
 
-# Ruflo Mini Swarm — Compact Execution
+# FidgetFlo Mini Swarm — Compact Execution
 
 When this skill is invoked, IMMEDIATELY launch a 5-agent swarm. Do NOT explain how swarms work. Do NOT show code examples. Do NOT ask clarifying questions unless the task is truly ambiguous. ACT.
 
 ## Execution Steps
 
-1. Read the user's task (everything they typed after `/rmini`)
-2. **Signal status line**: Run `echo 5 > /tmp/ruflo-mini-active` via Bash to light up the 🍯 indicator
+1. Read the user's task (everything they typed after `/fmini`)
+2. **Signal status line**: Run `echo 5 > /tmp/fidgetflo-mini-active` via Bash to light up the 🍯 indicator
 3. Initialize the swarm in ONE message:
-   - Call `mcp__ruflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 5, strategy `specialized` (skip if the Ruflo MCP tool isn't available — the Agent-tool spawn below is what actually does the work)
+   - Call `mcp__fidgetflo__swarm_init` with topology `hierarchical-mesh`, maxAgents 5, strategy `specialized` (skip if the FidgetFlo MCP tool isn't available — the Agent-tool spawn below is what actually does the work)
    - Spawn ALL 5 agents via the Agent tool with `run_in_background: true` — every agent in ONE message
 4. After spawning, STOP. Do not poll. Do not check status. Wait for agents to return.
 5. When results come back, synthesize and present the combined output.
-6. **Clear status line**: Run `rm -f /tmp/ruflo-mini-active` via Bash to turn off the 🍯 indicator
+6. **Clear status line**: Run `rm -f /tmp/fidgetflo-mini-active` via Bash to turn off the 🍯 indicator
 
 ## The 5 Agents
 

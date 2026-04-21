@@ -1,6 +1,6 @@
 # CLI-MAXXING Install Flow Walkthrough -- Regression Test
 
-> **Note:** Steps 4, 5, and 7 have been extracted to companion repos. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for those test walkthroughs.
+> **Note:** This walkthrough covers Steps 1, 3, 6, 8, and Final. Steps 2 (Bonus Software), 4 (FidgetFlo), 5 (Productivity Tools), and 7 (GitHub) are present in the repo but not included in this regression test. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for their respective test walkthroughs.
 
 **Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
