@@ -45,8 +45,8 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 4](#step-4---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
 | [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit (pick what you use; Morgen recommended) | ~5 min |
-| [Step 6](#step-6---telegram) | Telegram *(optional)* | Message Claude from your phone via Telegram bot | ~2 min |
-| [Step 7](#step-7---github) | GitHub *(optional)* | GitHub MCP + /gitfix skill — repos, issues, PRs, code search, full-repo doc sync (requires PAT) | ~2 min |
+| [Step 6](#step-6---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
+| [Step 7](#step-7---github) | GitHub | GitHub MCP + /gitfix skill — repos, issues, PRs, code search, full-repo doc sync (requires PAT) | ~2 min |
 | [Step 8](#step-8---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
 | [Final Step](#final-step---status-line) | Status Line | Final config — status indicators for active swarms, vault, MCP | ~2 min |
 | [You're Ready](#youre-ready) | **Start here after setup** | Your daily command and what to do next | |
@@ -112,7 +112,7 @@ If you ever want to start fresh or remove everything this setup installed, there
 
 ### Already have Claude Code installed?
 
-If you already have Claude Code working on your machine, you can skip Step 1 entirely. Just jump straight to [Step 2](#step-2---developer--utility-tools). Everything will work the same. You can paste the install commands directly in your terminal, or if you prefer, download this repo as a ZIP from GitHub, unzip it, and tell Claude to run the scripts from whatever folder they landed in.
+If you already have Claude Code working on your machine, you can skip Step 1 entirely. Just jump straight to [Step 3](#step-3---developer--utility-tools). Everything will work the same. You can paste the install commands directly in your terminal, or if you prefer, download this repo as a ZIP from GitHub, unzip it, and tell Claude to run the scripts from whatever folder they landed in.
 
 ### Bonus
 
@@ -250,7 +250,7 @@ Claude Code requires a paid plan. The software itself is free to install, but to
 
 **Our recommendation:** Start with **Pro** ($20/month). If you find yourself getting rate-limited or waiting for usage to reset, upgrade to Max. You'll know pretty quickly which tier fits your workflow.
 
-That's it for Step 1. Continue to [Bonus #1 — Ghostty Terminal](#bonus-1---ghostty-terminal), [Bonus #2 — Arc Browser](#bonus-2---arc-browser), or jump straight to [Step 2 — Developer & Utility Tools](#step-2---developer--utility-tools).
+That's it for Step 1. Continue to [Step 2 — Bonus Software](#step-2---bonus-software) for Ghostty + Arc, or jump straight to [Step 3 — Developer & Utility Tools](#step-3---developer--utility-tools).
 
 ---
 
@@ -345,6 +345,8 @@ Edit it with any text editor. Changes take effect the next time you open a Ghost
 | `macos-titlebar-style` | Window style: `native`, `tabs`, or `transparent` | `tabs` |
 
 Full docs: [ghostty.org/docs](https://ghostty.org/docs)
+
+---
 
 ### Arc Browser
 
@@ -468,7 +470,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install my dev tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/step-2-install.sh)
+> run this command to install my dev tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
 > ```
 
 
@@ -590,7 +592,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up FidgetFlo and Context Hub: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
+> run this command to set up FidgetFlo and Context Hub: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-4/step-4-install.sh)
 > ```
 
 
@@ -622,7 +624,7 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 
 ### After Step 3
 
-Your core tools are installed. Continue to Step 6 for productivity tools. Or open a new `cskip` session and try something ambitious. FidgetFlo kicks in automatically when the task calls for it.
+Your core tools are installed. Continue to Step 5 for productivity tools. Or open a new `cskip` session and try something ambitious. FidgetFlo kicks in automatically when the task calls for it.
 
 ### MCP Server Setup
 
@@ -660,7 +662,7 @@ Once installed, these tools work through natural language. No commands to memori
 
 Claude picks the right tool automatically based on what you ask. You never need to think about which MCP is handling it.
 
-Step 6 installs eight optional tools in this order:
+Step 5 installs eight optional tools in this order:
 
 1. **Notion** — pages, databases, knowledge management
 2. **Granola** — meeting transcripts and notes
@@ -770,7 +772,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install productivity tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+> run this command to install productivity tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)
 > ```
 
 ### What This Step Installs
@@ -788,7 +790,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 
 ### After Step 6
 
-You now have your productivity stack connected to Claude. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. If you skipped any tools, you can always come back and re-run Step 6 to add them. For the Obsidian MCP and vault access, install [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging).
+You now have your productivity stack connected to Claude. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. If you skipped any tools, you can always come back and re-run Step 5 to add them. For the Obsidian MCP and vault access, install [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging).
 
 ---
 
@@ -811,12 +813,12 @@ This step connects Claude to Telegram so you can message it from your phone. You
 ### Run Step 8
 
 > [!NOTE]
-> Step 8 is interactive — it will ask you to create a bot on Telegram and paste the token. The whole process takes about 2 minutes.
+> Step 6 is interactive — it will ask you to create a bot on Telegram and paste the token. The whole process takes about 2 minutes.
 
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up Telegram: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
+> run this command to set up Telegram: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
 > ```
 
 ### After Step 8
@@ -864,7 +866,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install the safety check skill: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-9/step-9-install.sh)
+> run this command to install the safety check skill: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
 > ```
 
 ### What This Step Installs
@@ -1031,7 +1033,7 @@ Python 3.9 (the macOS default) ships with PEP 668 restrictions that block `pip i
 
 **Fix:** re-run Step 2:
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/step-2-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
 ```
 If it's still failing, install manually:
 ```bash
@@ -1052,7 +1054,7 @@ It does **not** remove Homebrew, nvm, Node.js, or Claude Code itself — those a
 
 ### Telegram: pressing Enter skips setup
 
-This is intentional. If you press Enter without pasting a token, the script skips Telegram setup and continues. You can always re-run Step 8 later when you have your bot token ready.
+This is intentional. If you press Enter without pasting a token, the script skips Telegram setup and continues. You can always re-run Step 6 later when you have your bot token ready.
 
 ### Telegram: stuck in a warning loop after setup
 
@@ -1065,15 +1067,15 @@ If you launch Claude with `ctg` or `cbraintg` and see a stream of repeating mess
 2. Continue with the remaining setup steps using `cskip` (no Telegram) instead of `ctg`
 3. Come back to Telegram troubleshooting later — type `cskip`, then ask Claude: *"My Telegram bot token isn't being detected — can you check my config at ~/.claude/channels/telegram/ and fix it?"*
 
-The most common cause is the token file being missing or in the wrong format. Re-running Step 8 (`bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)`) and re-entering your token usually resolves it.
+The most common cause is the token file being missing or in the wrong format. Re-running Step 6 (`bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)`) and re-entering your token usually resolves it.
 
-### Step 6 (Productivity Tools) skips when run through the update command
+### Step 5 (Productivity Tools) skips when run through the update command
 
-Step 6 requires interactive input for API credentials. When run via `curl | bash` (including through the update command), it detects non-interactive mode and exits with instructions.
+Step 5 requires interactive input for API credentials. When run via `curl | bash` (including through the update command), it detects non-interactive mode and exits with instructions.
 
-**Fix:** Run Step 6 directly in your terminal:
+**Fix:** Run Step 5 directly in your terminal:
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)
 ```
 
 ### Obsidian MCP returns internal errors
@@ -1157,17 +1159,17 @@ Run the steps in this order:
 
 | Step | Name | What it does |
 |------|------|-------------|
-| 1 | CLI Basics | Git, Node.js, Claude Code, shell aliases |
-| Bonus | Ghostty Terminal | GPU-accelerated terminal (optional) |
-| Bonus | Arc Browser | Power-user browser with sidebar tabs (optional, macOS) |
-| 2 | Developer & Utility Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
-| 3 | FidgetFlo + Context Hub | Multi-agent orchestration + API docs |
-| 6 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit (all optional — pick what you use; Morgen recommended) |
-| 8 | Telegram *(optional)* | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
-| 9 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
-| **Final** | **Status Line + /gitfix** | **Final config — status indicators, system health check, /gitfix skill** |
+| 1 | Claude | Git, Node.js, Claude Code, shell aliases |
+| 2 | Bonus Software | Ghostty (GPU-accelerated terminal) + Arc (power-user browser). Optional but recommended. |
+| 3 | Developer & Utility Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
+| 4 | FidgetFlo + Context Hub | Multi-agent orchestration + API docs |
+| 5 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit (all optional — pick what you use; Morgen recommended) |
+| 6 | Telegram | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
+| 7 | GitHub | GitHub MCP (repos, issues, PRs, code search — requires PAT) + `/gitfix` skill for full-repo doc sync |
+| 8 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
+| **Final** | **Status Line** | **Status indicators + system health check** |
 
-> **Note:** Step 6 (Productivity Tools) is all optional — install only the tools you use. Step 8 (Telegram) is completely optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 9 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line + /gitfix) is the wrap-up — it wires your status indicators, installs the /gitfix skill, and runs a system health check.
+> **Note:** Step 5 (Productivity Tools) is all optional — install only the tools you use. Step 6 (Telegram) is optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 7 (GitHub) is optional — skip it if you don't use GitHub with Claude. Step 8 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators and runs a system health check.
 
 ---
 
