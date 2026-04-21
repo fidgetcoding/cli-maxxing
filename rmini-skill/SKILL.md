@@ -1,6 +1,7 @@
 ---
 name: fmini
 description: "Launch a compact 5-agent FidgetFlo swarm for focused task execution. Smaller than /fswarm but still parallel and powerful."
+user_invocable: true
 ---
 
 # FidgetFlo Mini Swarm — Compact Execution

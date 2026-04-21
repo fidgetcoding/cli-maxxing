@@ -1299,7 +1299,7 @@ print_summary() {
     fi
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo "  Check the README for more steps as they're added."
+    echo "  Continue to Step 5 (Productivity Tools) to wire up Notion, calendars, and the rest."
     echo ""
 }
 

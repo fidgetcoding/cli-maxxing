@@ -1,3 +1,9 @@
+---
+name: gitfix
+description: "Full-repo consistency audit — reads every install script, skill file, and doc, then fixes every place the docs don't match reality. Ends with an optional push gate."
+user_invocable: true
+---
+
 # Git Fix — Full Repo Sync
 
 When this skill is invoked, perform a comprehensive audit of the current GitHub repository — reading every relevant local file, cross-referencing all documentation, and fixing every inconsistency so the repo is fully in sync.

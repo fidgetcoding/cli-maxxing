@@ -43,7 +43,7 @@ MOTION_PREEXISTING=false
 # -----------------------------------------------------------------------------
 # Ensure runtime PATH (brew, nvm, ~/.local/bin) is visible.
 # Defense-in-depth: users typically run this step in a fresh terminal after
-# Steps 1-5 completed, but installers/nvm don't always source their shell
+# Steps 1-4 completed, but installers/nvm don't always source their shell
 # rc files in non-login shells. This makes `node`, `npm`, and `claude`
 # resolvable regardless of how the user invoked the script.
 # -----------------------------------------------------------------------------
@@ -407,13 +407,13 @@ install_google_calendar() {
 
     if [ -z "$GCAL_CLIENT_ID" ] || [ -z "$GCAL_CLIENT_SECRET" ]; then
         warn "Credentials left blank. Skipping Google Calendar setup."
-        warn "Re-run Step 6 when you have your credentials ready."
+        warn "Re-run Step 5 when you have your credentials ready."
         return
     fi
 
     # Write credentials file as a local backup reference.
     # IMPORTANT: Editing this file later does NOT take effect automatically.
-    # To update credentials, re-run Step 6. The -e flags below are what
+    # To update credentials, re-run Step 5. The -e flags below are what
     # actually injects the credentials into the MCP server at runtime.
     mkdir -p "$HOME/.google-calendar-mcp"
     chmod 700 "$HOME/.google-calendar-mcp"
@@ -424,7 +424,7 @@ install_google_calendar() {
     chmod 600 "$HOME/.google-calendar-mcp/.env"
     echo ""
     echo -e "  ${YELLOW}Note: editing ~/.google-calendar-mcp/.env later will not update credentials.${NC}"
-    echo -e "  ${YELLOW}To change credentials, re-run Step 6.${NC}"
+    echo -e "  ${YELLOW}To change credentials, re-run Step 5.${NC}"
 
     # Register the MCP server with credentials via -e flags.
     claude mcp add --scope user \
@@ -871,7 +871,7 @@ print_summary() {
     fi
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo "  Check the README for more steps as they're added."
+    echo "  Continue to Step 6 (Telegram) to wire up the Telegram bridge."
     echo ""
 }
 
