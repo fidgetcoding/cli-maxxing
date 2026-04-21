@@ -1,6 +1,10 @@
 # README Updates -- Post-Install Review
 
-> **Status: COMPLETED — historical planning doc.** All recommendations below have been merged into README.md. Kept for reference. The observations about Step 6 and Granola are superseded by the 2026-04-14 Step 6 overhaul: Step 6 now installs Notion, Granola, n8n, Google Calendar, Morgen, and Motion Calendar (Obsidian MCP moved to Step 7 where the vault is set up).
+> **Status: COMPLETED — historical planning doc.** All recommendations below have been merged into README.md. Kept for reference.
+>
+> **Step numbers in this file are historical (pre-mogging layout).** The body still reads "Step 6 = Productivity Tools, Step 7 = vault / Obsidian, Step 8 = Telegram". The current canon is: **Step 1** CLI Tools · **Step 2** Bonus Software (Ghostty + Arc) · **Step 3** Developer & Utility Tools · **Step 4** FidgetFlo · **Step 5** Productivity Tools (10 MCPs) · **Step 6** Telegram · **Step 7** GitHub + `/gitfix` · **Step 8** Safety Check · **Final** Status Line. Obsidian MCP has moved out of this repo entirely into [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging).
+>
+> The observations about Step 6 and Granola below are also superseded by the 2026-04-14 Step 6 overhaul and subsequent renumbering: Granola is now installed by **Step 5** (option 2 in the Productivity menu), alongside Notion, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, and Google Drive.
 
 This document specifies the changes recommended for README.md based on the live install test on a fresh Mac setup (vault at `~/Desktop/2ndBrain`).
 
