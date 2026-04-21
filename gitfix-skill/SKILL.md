@@ -22,6 +22,13 @@ Before reading any file, build a complete map of the repo:
 2. For each `step-*/`, `bonus-*/`, `gitfix-skill/`, and other feature folders, list their contents
 3. Note every install script (`*.sh`), skill file (`SKILL.md`), and documentation file (`*.md`)
 4. Identify the primary documentation files: `README.md`, `CHEATSHEET.md`, `SECURITY.md`, and any files in `README-SECTIONS/` or `docs/`
+5. **Grep-based discovery.** Before reading files individually, enumerate the surface area exhaustively:
+   - `grep -rn '<old-repo-name>' .` — every reference to any predecessor or sibling repo name (e.g. renames, forks, merged projects)
+   - `grep -rn '<current-version>\|<prev-version>' .` — version strings mentioned anywhere (package.json truth vs docs claims)
+   - `grep -rnE '\.(sh|md|json|yml|yaml|toml)$' --include='*' -l '<current-repo-name>' .` — self-references (for finding where self-name appears so renames are clean)
+   - `grep -rn 'TODO\|FIXME\|XXX\|HACK' .` — unresolved markers
+   - `grep -rn '<deprecated-command-or-alias>' .` — commands that changed names
+   Capture every hit with line numbers — you read what grep tells you to read, not what judgment suggests. Prior audits' count of "N references" is an anchor, not a ceiling: refs hide in `README-SECTIONS/`, `tests/`, `docs/`, sub-scripts that top-level greps miss.
 
 Do not skip any folder. The map must be complete before Phase 2 begins.
 
@@ -97,6 +104,11 @@ Compare what the code actually does (Phase 2) against what the docs say (Phase 3
 **CHEATSHEET auto-triggered tools table** — Does it reflect the actual MCP servers installed across all steps?
 
 **Cross-references between docs** — Does the README point to the right section anchors? Do links resolve?
+
+**Stale-reference sweep (grep-driven).** Use the greps from Phase 1 step 5 as the authoritative fix list. For each pattern:
+- Confirm every hit. Do not trust prior passes' counts. If memory says "N refs in README.md and install.sh", re-grep the whole tree — the misses live in `README-SECTIONS/`, `tests/fixtures/`, `docs/`, sub-scripts, config snippets.
+- Flip each hit to the current canonical form, preserving case-sensitivity rules (e.g. lowercase `old-name` → new repo's canonical case).
+- Post-flip verify: `grep -rE '<old-pattern>' .` must return 0 hits on tracked files. Untracked `owner: human` vault notes are out of scope but should be flagged in the Watch list.
 
 ### Phase 5 — Fix Everything
 
@@ -199,3 +211,4 @@ Never push without asking first. Never skip listing the commits. The user must s
 - **No invented content.** If you don't know the current state of something, read the file. Don't guess.
 - **Flag what you can't verify.** If something requires running a command or checking an external URL, flag it in the Watch list rather than silently skipping it.
 - **Touch every section.** The value of `/gitfix` is that nothing gets missed. If a section is fine, say so in the report. If it's wrong, fix it.
+- **Grep before you trust.** When looking for every instance of X across the repo, run `grep -rn <pattern> .` first — not just against top-level `README.md` + `install.sh`. The refs that slip through every prior audit are the ones hiding in `README-SECTIONS/`, `tests/fixtures/`, `docs/`, config snippets, and vendored scripts. Do not rely on memory or prior-pass counts. Skipping the grep step is how bugs survive sweeps.
