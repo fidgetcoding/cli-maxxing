@@ -40,7 +40,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [How It Works](#how-it-works) | Overview | How the steps fit together | |
 | [Install Everything](#install-everything) | One-shot | Run all steps at once | ~20 min |
 | [Keyboard + Command Cheat Sheet](#keyboard--command-cheat-sheet) | Commands & Shortcuts | Hotkeys, typing, and commands for your terminal | |
-| [Step 1](#step-1---cli-tools) | CLI Tools | Git, Node.js, Claude Code, shell aliases — the foundation | ~5 min |
+| [Step 1](#step-1---cli-tools) | CLI Tools | Git, Node.js, Claude Code, shell aliases — the foundation | ~10 min |
 | [Step 2](#step-2---bonus-software) | Bonus Software | Ghostty (terminal) + Arc (browser) — optional but highly recommended | ~4 min |
 | [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 4](#step-4---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
@@ -178,6 +178,8 @@ Open Terminal: **Cmd+Space → "Terminal"** on Mac, or **Ctrl+Alt+T** on Linux.
 > ```
 
 > The script will ask for your Mac password to install system tools. When you see `Password:`, type it and hit Enter — you won't see the characters, that's normal.
+
+> **Xcode Command Line Tools dialog (Mac).** Early in the install, macOS pops up a system dialog to download Apple's Command Line Tools. Click **Install** (and **Agree** on the license prompt) the moment it appears. The dialog will claim "About an hour remaining" — **ignore it.** The actual download is ~3–5 minutes and the timer never refreshes. Just leave the dialog open, let it finish, and the install script picks right back up.
 
 ### What This Step Installs
 
