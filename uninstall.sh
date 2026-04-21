@@ -377,7 +377,7 @@ uninstall_ghostty() {
         skip "Ghostty config (not found)"
     fi
 
-    # duti (installed by bonus-ghostty.sh)
+    # duti (installed by step-2/ghostty-install.sh)
     if brew list duti &>/dev/null 2>&1; then
         brew uninstall duti 2>/dev/null || true
         success "brew: duti"
@@ -387,7 +387,7 @@ uninstall_ghostty() {
 }
 
 # -----------------------------------------------------------------------------
-# Bonus — Arc Browser (remove the app if installed via bonus script)
+# Step 2 — Arc Browser (remove the app if installed via step-2/arc-install.sh)
 # -----------------------------------------------------------------------------
 uninstall_arc() {
     echo ""
