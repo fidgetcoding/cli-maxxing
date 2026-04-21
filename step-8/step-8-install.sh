@@ -4,7 +4,7 @@ set -uo pipefail
 # =============================================================================
 # Step 8 — Safety Check — Security Auditing
 # Installs the /safetycheck Claude Code skill for running security audits
-# Run after Step 1 — requires Claude Code installed
+# Run after completing Steps 1-7
 # =============================================================================
 
 RED='\033[0;31m'
@@ -346,6 +346,8 @@ print_summary() {
     fi
     echo -e "  ${YELLOW}Tip: Run /safetycheck in any project. MCP projects get${NC}"
     echo -e "  ${YELLOW}12 additional security checks automatically.${NC}"
+    echo ""
+    echo "  Continue to Final Step (Status Line) when you're ready."
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }

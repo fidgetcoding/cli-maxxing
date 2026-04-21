@@ -4,7 +4,7 @@ set -uo pipefail
 # =============================================================================
 # Final Step — Status Line
 # Installs the custom status line that shows what's active at a glance
-# Run after all other steps are complete
+# Run after completing Steps 1-8
 # =============================================================================
 
 RED='\033[0;31m'
@@ -489,7 +489,7 @@ echo "    /gitfix      — full-repo consistency audit: docs, scripts, and code 
 echo ""
 echo "  Status line indicators:"
 echo "    🧠 2ndBrain  — in Obsidian vault"
-echo "    ⚡ FidgetFlo     — MCP server connected"
+echo "    ⚡️ fidgetflo  — MCP server connected"
 echo "    🎨 UIPro     — design skill loaded"
 echo "    🐝 Swarm     — swarm active (during /fswarm)"
 echo "    👑 Hive      — hive-mind active (during /fhive)"
@@ -499,6 +499,10 @@ echo -e "  ${YELLOW}Important: Until you set up Second Brain (2ndBrain-mogging),
 echo -e "  ${YELLOW}instead of cbrain. cbrain requires an Obsidian vault to exist.${NC}"
 echo ""
 echo "  Restart Claude Code to see your status line."
+echo ""
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}  You're all set. CLI Maxxing is complete.${NC}"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
 # Mark step complete (best-effort — don't fail the run if mkdir/touch can't write)
