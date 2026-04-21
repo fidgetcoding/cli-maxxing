@@ -12,7 +12,7 @@ Cause: macOS Accessibility API refuses `AXSize` / `AXPosition` writes on fullscr
 
 ## The fix (applied in two places)
 
-Canonical: `~/.zshrc` (lines 28–220). Propagated into the installer: `CLI-MAXXING/bonus-ghostty/bonus-ghostty.sh` (inside the `TILING_EOF` heredoc, inside inner `APPLESCRIPT` heredocs for `g2` and `g4`).
+Canonical: `~/.zshrc` (lines 28–220). Propagated into the installer: `CLI-MAXXING/step-2/ghostty-install.sh` (inside the `TILING_EOF` heredoc, inside inner `APPLESCRIPT` heredocs for `g2` and `g4`).
 
 Two changes per function:
 
@@ -31,7 +31,7 @@ Two changes per function:
 
 2. **`try` / `end try` wrappers** around every `set size`, `set position`, and `perform action "AXRaise"` call. If a window is still mid-transition or otherwise rejects the write, the error is swallowed and the next window still gets positioned instead of aborting the whole script.
 
-Note: `step-final-install.sh` does NOT define `g2`/`g4` — it only grep-checks for the `g2()` marker in `$SHELL_RC` during the health-check phase. The functions live exclusively in `bonus-ghostty.sh` (which appends them to the shell rc) and in the canonical `~/.zshrc`. `x2` (external-display tiler) only exists in `~/.zshrc`; it is intentionally not shipped by the bonus installer.
+Note: `step-final-install.sh` does NOT define `g2`/`g4` — it only grep-checks for the `g2()` marker in `$SHELL_RC` during the health-check phase. The functions live exclusively in `step-2/ghostty-install.sh` (which appends them to the shell rc) and in the canonical `~/.zshrc`. `x2` (external-display tiler) only exists in `~/.zshrc`; it is intentionally not shipped by the bonus installer.
 
 ## Manual repro (verify the bug is dead)
 
@@ -54,8 +54,8 @@ Run `g2` again while neither window is fullscreen. It should behave identically 
 
 ## Verification performed on the installer
 
-- `bash -n bonus-ghostty.sh` → syntax OK
-- `bash -n step-final-install.sh` → syntax OK
+- `bash -n step-2/ghostty-install.sh` → syntax OK
+- `bash -n step-final/step-final-install.sh` → syntax OK
 - Heredoc sentinels balanced: `TILING_EOF` (1 open / 1 close), inner `APPLESCRIPT` (2 open / 2 close for g2 + g4), `STATUSLINE_EOF` / `SETTINGS_EOF` balanced in step-final.
 - AXFullScreen references: 4 (expected — 2 per function × 2 functions).
 - `try` / `end try`: 9 / 9 (balanced).
