@@ -41,7 +41,7 @@ Close and reopen Claude Code for the status line to take effect.
 | Indicator | Meaning |
 |-----------|---------|
 | 🧠 2ndBrain | Working directory is inside an Obsidian vault (2ndBrain or MASTER) |
-| ⚡️ fidgetflo | FidgetFlo MCP server is running |
+| ⚡️ fidgetflo | FidgetFlo MCP server is running |
 | 🎨 UIPro | Always shown (global skill, always available) |
 | 🐝 Swarm | Active swarm session (with agent count if available) |
 | 👑 Hive | Active hive-mind session |
@@ -55,7 +55,7 @@ The script uses lock files to detect active sessions:
 - `/tmp/fidgetflo-mini-active` — Created when a mini swarm starts. Contents hold the agent count as a plain integer (e.g., `5`).
 - `/tmp/fidgetflo-hive-active` — Created when a hive-mind starts.
 
-Stale lock files (where no matching process is running) are automatically cleaned up by the script.
+Stale lock files (older than 30 minutes) are automatically cleaned up by the script.
 
 ### Creating lock files from your automation
 
