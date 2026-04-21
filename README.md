@@ -119,7 +119,8 @@ If you already have Claude Code working on your machine, you can skip Step 1 ent
 
 ### Bonus
 
-Want to get better at using the terminal in general? Check out [Terminal Academy](https://github.com/lorecraft-io/terminal-academy), a gamified way to learn terminal commands and workflows. It makes the learning curve way less painful.
+> [!TIP]
+> Want to get better at using the terminal in general? Check out [Terminal Academy](https://github.com/lorecraft-io/terminal-academy), a gamified way to learn terminal commands and workflows. It makes the learning curve way less painful.
 
 ---
 
