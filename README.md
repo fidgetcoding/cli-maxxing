@@ -469,18 +469,9 @@ The script asks which tools you want, then walks you through each one's credenti
 | 7 | **Playwright** ([Microsoft](https://github.com/microsoft/playwright-mcp)) | Lets Claude log into and operate web apps with no API. Runs its own Chromium (not your real browser), reads via accessibility-tree snapshots — fast + reliable. | Node 18+ (from Step 1) + ~hundreds of MB disk for Chromium. No credentials. |
 | 8 | **SwiftKit** ([swiftkit.sh](https://swiftkit.sh)) | Hosted MCP toolkit for **iOS / macOS / Swift development** — 100+ tools for writing, building, and shipping Apple-platform code behind one HTTP endpoint. Default for anything iPhone/iOS/Swift-related. Nothing to install locally. | Account + API key (`sk_live_` or `sk_test_`). |
 | 9 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
+| — | **[Google Drive](https://claude.ai)** *(claude.ai connector)* | Browse, search, and read Google Drive files — Docs, Sheets, PDFs, shared folders. | Enable at [claude.ai](https://claude.ai) → avatar → **Settings** → **Connectors** → **Google Drive** → **Connect**. Not installed by this script. |
 
 > **Playwright scope note:** Microsoft explicitly says "Playwright MCP is not a security boundary." Treat anything Claude loads through it the same as any browser session you'd drive manually.
-
-### Also worth flipping on — claude.ai connectors
-
-These live on claude.ai's hosted side (Settings → Connectors), not in this install script. One OAuth click and they show up alongside the MCPs above:
-
-| Tool | What it does |
-|------|--------------|
-| [**Google Drive**](https://claude.ai) | Browse, search, and read Google Drive files — Docs, Sheets, PDFs, shared folders. Great for pulling in reference material mid-session without an OAuth dance per file. |
-
-To enable: [claude.ai](https://claude.ai) → avatar → **Settings** → **Connectors** → find Google Drive → **Connect**. Done.
 
 ### After Step 5
 
