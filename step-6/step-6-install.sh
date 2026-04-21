@@ -256,12 +256,13 @@ else
 fi
 
 # Test 4: cbraintg command exists and is executable
+# Optional add-on — installed by 2ndBrain-mogging, not CLI-MAXXING.
+# Do not count as TEST_FAIL; just report status so the user knows what's available.
 if [ -x "$HOME/.local/bin/cbraintg" ]; then
     success "TEST: cbraintg command installed at ~/.local/bin/cbraintg"
     TEST_PASS=$((TEST_PASS + 1))
 else
-    echo -e "${RED}[FAIL]${NC} TEST: cbraintg not found or not executable"
-    TEST_FAIL=$((TEST_FAIL + 1))
+    info "TEST: cbraintg not installed (optional — install 2ndBrain-mogging to enable)"
 fi
 
 echo ""
