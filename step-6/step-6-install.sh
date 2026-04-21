@@ -85,8 +85,7 @@ fi
 if [ -x "$HOME/.local/bin/cbraintg" ]; then
     success "cbraintg command found at ~/.local/bin/cbraintg"
 else
-    warn "cbraintg not found at ~/.local/bin/cbraintg — re-run Step 1 to set it up"
-    PREREQ_PASS=false
+    warn "cbraintg not found — it is installed by the 2ndBrain-mogging companion repo, not Step 1"
 fi
 
 echo ""

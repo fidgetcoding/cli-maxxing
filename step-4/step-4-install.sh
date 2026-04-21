@@ -81,7 +81,7 @@ verify_prerequisites() {
         fail "Claude Code not found. Run Step 1 first."
     fi
     if ! command -v jq &>/dev/null; then
-        fail "jq not found. Run Step 2 first."
+        fail "jq not found. Run Step 3 first."
     fi
     success "Steps 1-3 prerequisites verified"
 }
