@@ -33,6 +33,7 @@ source_runtime_path() {
         fi
     done
     export NVM_DIR="$HOME/.nvm"
+    # shellcheck source=/dev/null
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
     case ":$PATH:" in
         *":$HOME/.local/bin:"*) ;;
@@ -249,7 +250,7 @@ configure_link_opener() {
         success "TextEdit set as default for text/config files"
     else
         info "Installing duti for file association management..."
-        brew install duti 2>/dev/null && {
+        if brew install duti 2>/dev/null; then
             duti -s com.apple.TextEdit .txt all 2>/dev/null
             duti -s com.apple.TextEdit .md all 2>/dev/null
             duti -s com.apple.TextEdit .log all 2>/dev/null
@@ -260,10 +261,10 @@ configure_link_opener() {
             duti -s com.apple.TextEdit .conf all 2>/dev/null
             duti -s com.apple.TextEdit .cfg all 2>/dev/null
             success "TextEdit set as default for text/config files"
-        } || {
+        else
             warn "Could not install duti. Cmd+Click will still work — files will open in whatever app macOS currently defaults to."
             warn "To change defaults manually: right-click a file > Get Info > Open With > TextEdit > Change All."
-        }
+        fi
     fi
 }
 

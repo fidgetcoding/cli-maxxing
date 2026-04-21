@@ -33,6 +33,7 @@ source_runtime_path() {
         fi
     done
     export NVM_DIR="$HOME/.nvm"
+    # shellcheck source=/dev/null
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
     case ":$PATH:" in
         *":$HOME/.local/bin:"*) ;;

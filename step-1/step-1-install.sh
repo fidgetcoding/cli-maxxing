@@ -202,9 +202,11 @@ install_homebrew() {
         # install_git / install_node steps see `brew`.
         if [ -f /opt/homebrew/bin/brew ]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
+            # shellcheck disable=SC2016
             BREW_SHELLENV_LINE='eval "$(/opt/homebrew/bin/brew shellenv)"'
         elif [ -f /usr/local/bin/brew ]; then
             eval "$(/usr/local/bin/brew shellenv)"
+            # shellcheck disable=SC2016
             BREW_SHELLENV_LINE='eval "$(/usr/local/bin/brew shellenv)"'
         else
             BREW_SHELLENV_LINE=""
@@ -215,9 +217,11 @@ install_homebrew() {
             for profile in "${SHELL_PROFILES[@]}"; do
                 [ -e "$profile" ] || touch "$profile"
                 if ! grep -q 'brew shellenv' "$profile" 2>/dev/null; then
-                    echo "" >> "$profile"
-                    echo '# Homebrew' >> "$profile"
-                    echo "$BREW_SHELLENV_LINE" >> "$profile"
+                    {
+                        echo ""
+                        echo '# Homebrew'
+                        echo "$BREW_SHELLENV_LINE"
+                    } >> "$profile"
                     info "Added Homebrew shellenv to $profile"
                 fi
             done
@@ -355,7 +359,8 @@ install_claude_code() {
             "alias cc='claude'" \
             "alias ccr='claude --resume'" \
             "alias ccc='claude --continue'"; do
-            ALIAS_NAME=$(echo "$alias_line" | sed "s/alias \([^=]*\)=.*/\1/")
+            ALIAS_NAME="${alias_line%%=*}"
+            ALIAS_NAME="${ALIAS_NAME#alias }"
             if ! grep -q "alias ${ALIAS_NAME}=" "$rc" 2>/dev/null; then
                 echo "$alias_line" >> "$rc"
                 aliases_added_here=$((aliases_added_here + 1))
@@ -370,9 +375,12 @@ install_claude_code() {
 
         # Add ~/.local/bin to PATH if not already present in this rc
         if ! grep -q '\.local/bin' "$rc" 2>/dev/null; then
-            echo "" >> "$rc"
-            echo '# Local bin (ctg)' >> "$rc"
-            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$rc"
+            # shellcheck disable=SC2016
+            {
+                echo ""
+                echo '# Local bin (ctg)'
+                echo 'export PATH="$HOME/.local/bin:$PATH"'
+            } >> "$rc"
             success "Added ~/.local/bin to PATH in $rc"
         else
             success "$HOME/.local/bin already configured in $rc"

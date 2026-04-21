@@ -2,11 +2,11 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 6 — Productivity Tools
+# Step 5 — Productivity Tools
 # Installs Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar,
-# Playwright, and SwiftKit MCP servers. Interactive — pick the tools you use.
-# Obsidian MCP lives in Step 7 alongside the rest of the Obsidian vault setup.
-# Run this in your terminal after completing Steps 1-5.
+# Playwright, SwiftKit, Superhuman, and Google Drive MCP servers.
+# Interactive — pick the tools you use.
+# Run this in your terminal after completing Steps 1-4.
 # =============================================================================
 
 RED='\033[0;31m'
@@ -153,10 +153,10 @@ choose_tools() {
             return
         else
             echo ""
-            echo -e "${YELLOW}  Step 6 requires interactive input for API credentials.${NC}"
+            echo -e "${YELLOW}  Step 5 requires interactive input for API credentials.${NC}"
             echo -e "${YELLOW}  Run it directly in your terminal:${NC}"
             echo ""
-            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
+            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)"
             echo ""
             print_summary
             exit 0
@@ -226,7 +226,7 @@ install_notion() {
     echo -e "${YELLOW}  integration. Claude can only see pages you explicitly share.${NC}"
     echo ""
 
-    read -sp "  Notion integration token: " NOTION_TOKEN
+    read -rsp "  Notion integration token: " NOTION_TOKEN
     echo ""
     echo ""
 
@@ -331,7 +331,7 @@ install_n8n() {
     echo -e "${BLUE}  Optional: if you set Bearer Token auth on the MCP trigger,${NC}"
     echo -e "${BLUE}  paste the token here. Otherwise press Enter to skip.${NC}"
     echo ""
-    read -sp "  Bearer token (optional): " N8N_TOKEN
+    read -rsp "  Bearer token (optional): " N8N_TOKEN
     echo ""
     echo ""
 
@@ -392,9 +392,9 @@ install_google_calendar() {
     echo -e "${YELLOW}  APIs & Services > OAuth consent screen > Test users > Add users${NC}"
     echo ""
 
-    read -sp "  Google OAuth Client ID: " GCAL_CLIENT_ID
+    read -rsp "  Google OAuth Client ID: " GCAL_CLIENT_ID
     echo " [saved]"
-    read -sp "  Google OAuth Client Secret: " GCAL_CLIENT_SECRET
+    read -rsp "  Google OAuth Client Secret: " GCAL_CLIENT_SECRET
     echo " [saved]"
     echo ""
 
@@ -466,7 +466,7 @@ install_morgen() {
     echo -e "${BLUE}  Source:  https://github.com/lorecraft-io/morgen-mcp${NC}"
     echo ""
 
-    read -sp "  Morgen API key: " MORGEN_API_KEY
+    read -rsp "  Morgen API key: " MORGEN_API_KEY
     echo " [saved]"
 
     if [ -z "$MORGEN_API_KEY" ]; then
@@ -523,13 +523,13 @@ install_motion_calendar() {
     echo -e "${BLUE}  Motion account settings.${NC}"
     echo ""
 
-    read -sp "  Motion API key: " MOTION_API_KEY
+    read -rsp "  Motion API key: " MOTION_API_KEY
     echo " [saved]"
-    read -sp "  Firebase API key: " FIREBASE_API_KEY
+    read -rsp "  Firebase API key: " FIREBASE_API_KEY
     echo " [saved]"
-    read -sp "  Firebase refresh token: " FIREBASE_REFRESH_TOKEN
+    read -rsp "  Firebase refresh token: " FIREBASE_REFRESH_TOKEN
     echo " [saved]"
-    read -sp "  Motion user ID: " MOTION_USER_ID
+    read -rsp "  Motion user ID: " MOTION_USER_ID
     echo " [saved]"
 
     if [ -z "$MOTION_API_KEY" ] || [ -z "$FIREBASE_API_KEY" ] || [ -z "$FIREBASE_REFRESH_TOKEN" ] || [ -z "$MOTION_USER_ID" ]; then
@@ -623,7 +623,7 @@ install_swiftkit() {
     echo "    3. Copy your API key (starts with sk_live_ or sk_test_)"
     echo ""
 
-    read -sp "  SwiftKit API key: " SWIFTKIT_KEY
+    read -rsp "  SwiftKit API key: " SWIFTKIT_KEY
     echo " [saved]"
     echo ""
 
@@ -670,13 +670,13 @@ install_superhuman() {
 
     # No API key to collect — Superhuman uses browser OAuth on first use.
     claude mcp add --scope user --transport http \
-        superhuman https://mcp.mail.superhuman.com/mcp 2>/dev/null
+        superhuman https://mcp.superhuman.com/mcp 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -q "superhuman"; then
         success "Superhuman MCP installed (authorize on first use)"
         INSTALLED_SUPERHUMAN=true
     else
-        soft_fail "Superhuman MCP installation could not be verified — try manually: claude mcp add --transport http superhuman https://mcp.mail.superhuman.com/mcp"
+        soft_fail "Superhuman MCP installation could not be verified — try manually: claude mcp add --transport http superhuman https://mcp.superhuman.com/mcp"
     fi
 }
 
@@ -791,7 +791,7 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 6 Complete — Productivity Tools${NC}"
+    echo -e "${GREEN}  Step 5 Complete — Productivity Tools${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -876,7 +876,7 @@ main() {
 
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 6 — Productivity Tools${NC}"
+    echo -e "${BLUE}  Step 5 — Productivity Tools${NC}"
     echo -e "${BLUE}  Notes, calendars, meetings, workflows — pick what you use • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
@@ -907,7 +907,7 @@ main() {
 
     # Breadcrumb for /doctor and re-run detection.
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
-    touch "$HOME/.cli-maxxing/step-6.done" 2>/dev/null || true
+    touch "$HOME/.cli-maxxing/step-5.done" 2>/dev/null || true
 }
 
 main "$@"

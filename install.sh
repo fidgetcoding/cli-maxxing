@@ -4,8 +4,8 @@ set -uo pipefail
 # =============================================================================
 # CLI Maxxing — Install
 # Runs all non-interactive steps in order. Steps that are already installed
-# are skipped automatically. Steps that require interactive input (Step 6,
-# Step 8, and Step 10) are noted at the end — run them separately in your terminal.
+# are skipped automatically. Steps that require interactive input (Step 5,
+# Step 6, and Step 7) are noted at the end — run them separately in your terminal.
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
 # =============================================================================
 
@@ -125,8 +125,8 @@ echo ""
 curl -fsSL "$BASE_URL/step-3/step-3-install.sh" | bash
 echo ""
 
-# Step 4 — FidgetFlo + Context Hub
-echo -e "${YELLOW}>>> Step 4 — FidgetFlo + Context Hub${NC}"
+# Step 4 — FidgetFlo
+echo -e "${YELLOW}>>> Step 4 — FidgetFlo${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
 echo ""

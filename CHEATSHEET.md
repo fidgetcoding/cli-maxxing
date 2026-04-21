@@ -151,7 +151,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Tool | Installed in | How it activates | Example prompt |
 |------|-------------|-----------------|----------------|
 | UI/UX Pro Max | creativity-maxxing | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
-| Taste Skill (7 variants) | creativity-maxxing | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-skill", "redesign this with soft-skill" | "Build a premium landing page" · "Redesign this dashboard with taste-skill" |
+| Taste Skill (8 variants) | creativity-maxxing | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-skill", "redesign this with soft-skill" | "Build a premium landing page" · "Redesign this dashboard with taste-skill" |
 | 21st.dev Magic | creativity-maxxing | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
 | Remotion | creativity-maxxing | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
 | YouTube Transcripts | creativity-maxxing | Natural language — paste a YouTube link and ask for the transcript | "Get the transcript of this video: https://youtube.com/..." |
@@ -184,22 +184,22 @@ These activate on their own when Claude detects a relevant task via natural lang
 
 ## Taste Skill — Variants & Knobs (creativity-maxxing)
 
-Installed by creativity-maxxing via `npx skills add Leonxlnx/taste-skill`. The pack ships **8 variants** as separate skill folders under `~/.claude/skills/`. They're passive skills — Claude activates the right one based on what you ask for. You can also name a variant explicitly in your prompt ("use soft-skill", "redesign this with minimalist-skill") to force a specific style.
+Installed by creativity-maxxing via `npx skills add Leonxlnx/taste-skill`. The pack ships **8 variants** as separate skill folders under `~/.claude/skills/`. They're passive skills — Claude activates the right one based on what you ask for. You can also name a variant explicitly in your prompt ("use minimalist-ui", "redesign this with high-end-visual-design") to force a specific style.
 
 | Variant | When Claude uses it | Example prompt |
 |---------|---------------------|----------------|
-| `taste-skill` | Default premium frontend rules — layout, typography, color, spacing, motion | "Build a premium SaaS landing page" |
-| `redesign-skill` | Upgrading an existing project — audits current design, then fixes problems | "Redesign this dashboard — it looks generic" |
-| `soft-skill` | Expensive, soft UI look — premium fonts, whitespace, depth, spring animations | "Make this feel expensive, soft, Apple-ish" |
-| `output-skill` | Anti-laziness — stops placeholder comments, skipped blocks, half-finished outputs | "Give me the full component, no TODOs" |
-| `minimalist-skill` | Clean editorial style — monochrome, crisp borders, Notion/Linear inspired | "Build a minimalist admin panel" |
-| `brutalist-skill` *(beta)* | Raw mechanical interfaces — Swiss typographic print fused with CRT terminal aesthetics | "Make it brutalist, terminal-style" |
-| `stitch-skill` | Google Stitch-compatible semantic design rules; exports a `DESIGN.md` | "Set up stitch-compatible design rules for this project" |
-| `gpt-taste` | GPT-leaning variant of the taste filter — useful when output needs to feel more GPT-aligned | "Build this with gpt-taste style" |
+| `/design-taste-frontend` | Default premium frontend rules — layout, typography, color, spacing, motion (3 tunable knobs) | "Build a premium SaaS landing page" |
+| `/high-end-visual-design` | Expensive, soft UI look — premium fonts, whitespace, depth, spring animations | "Make this feel expensive, soft, Apple-ish" |
+| `/full-output-enforcement` | Anti-laziness — stops placeholder comments, skipped blocks, half-finished outputs | "Give me the full component, no TODOs" |
+| `/redesign-existing-projects` | Upgrading an existing project — audits current design, then fixes problems | "Redesign this dashboard — it looks generic" |
+| `/stitch-design-taste` | Google Stitch-compatible semantic design rules; exports a `DESIGN.md` | "Set up stitch-compatible design rules for this project" |
+| `/minimalist-ui` | Clean editorial style — monochrome, crisp borders, Notion/Linear inspired | "Build a minimalist admin panel" |
+| `/industrial-brutalist-ui` *(beta)* | Raw mechanical interfaces — Swiss typographic print fused with CRT terminal aesthetics | "Make it brutalist, terminal-style" |
+| `/gpt-taste` | GPT-leaning variant of the taste filter — useful when output needs to feel more GPT-aligned | "Build this with gpt-taste style" |
 
-### Taste Skill Knobs (`taste-skill` variant only)
+### Taste Skill Knobs (`design-taste-frontend` variant only)
 
-The main `taste-skill` file has three numeric knobs at the top you can tune from **1-10**. Edit `~/.claude/skills/taste-skill/SKILL.md` and change the numbers, or tell Claude "set DESIGN_VARIANCE to 9 for this build".
+The main `design-taste-frontend` file has three numeric knobs at the top you can tune from **1-10**. Edit `~/.claude/skills/design-taste-frontend/SKILL.md` and change the numbers, or tell Claude "set DESIGN_VARIANCE to 9 for this build".
 
 | Knob | 1-3 | 4-7 | 8-10 |
 |------|-----|-----|------|

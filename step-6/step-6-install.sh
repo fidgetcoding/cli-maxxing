@@ -2,9 +2,9 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 8 — Telegram
+# Step 6 — Telegram
 # Connect Claude to Telegram — send and receive messages from your phone
-# Run after Step 7 (Second Brain) or earlier — requires Step 1 for aliases
+# Run after completing Steps 1-5 — requires Step 1 for aliases
 # =============================================================================
 
 RED='\033[0;31m'
@@ -52,7 +52,7 @@ source_runtime_path
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Step 8 — Telegram${NC}"
+echo -e "${BLUE}  Step 6 — Telegram${NC}"
 echo -e "${BLUE}  Connect Claude to Telegram — message Claude from your phone${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
@@ -115,7 +115,7 @@ if [ -f "$TOKEN_FILE" ] && grep -q 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/nu
     fi
     echo -e "${YELLOW}Telegram bot token already configured: ${MASKED}${NC}"
     echo ""
-    read -p "Reconfigure with a new token? (y/N): " RECONFIGURE
+    read -rp "Reconfigure with a new token? (y/N): " RECONFIGURE
     if [[ ! "$RECONFIGURE" =~ ^[Yy]$ ]]; then
         info "Keeping existing configuration."
         echo ""
@@ -153,7 +153,7 @@ if [ "$SKIP_TOKEN" = false ]; then
 
     if [ -z "$BOT_TOKEN" ]; then
         echo ""
-        info "Telegram setup skipped. You can add your token later by re-running Step 8."
+        info "Telegram setup skipped. You can add your token later by re-running Step 6."
         SKIP_TOKEN=true
     else
         # Validate token format: digits, colon, alphanumeric + dash/underscore
@@ -278,7 +278,7 @@ fi
 # =============================================================================
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Step 8 Complete — Telegram Configured${NC}"
+echo -e "${GREEN}  Step 6 Complete — Telegram Configured${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 echo "  Next steps:"
@@ -300,4 +300,4 @@ echo ""
 
 # Breadcrumb for /doctor and re-run detection.
 mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
-touch "$HOME/.cli-maxxing/step-8.done" 2>/dev/null || true
+touch "$HOME/.cli-maxxing/step-6.done" 2>/dev/null || true

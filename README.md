@@ -129,7 +129,7 @@ If you already know your way around a terminal and just want everything installe
 > bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
 > ```
 
-This runs Steps 1, 2, 3, 9, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
+This runs Steps 1, 2, 3, 4, 8, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
 
 ---
 
@@ -510,7 +510,7 @@ Two launcher commands come with it (both installed back in Step 1):
 > run this command to set up Telegram: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
 > ```
 
-### After Step 8
+### After Step 6
 
 Open a new terminal and run `ctg` to launch Claude with Telegram connected. Inside your Claude session, tell it to pair your Telegram bot. Once paired, messages you send from Telegram will appear in your Claude session in real time. You can also use `cbraintg` to launch with both Telegram and your 2ndBrain vault loaded.
 

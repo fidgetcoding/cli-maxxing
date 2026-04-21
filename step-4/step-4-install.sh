@@ -2,9 +2,9 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 3 — fidgetflo Setup
+# Step 4 — fidgetflo Setup
 # Installs and configures fidgetflo multi-agent swarming orchestration
-# Run this in your terminal after completing Steps 1 and 2
+# Run this in your terminal after completing Steps 1-3
 # =============================================================================
 
 RED='\033[0;31m'
@@ -83,7 +83,7 @@ verify_prerequisites() {
     if ! command -v jq &>/dev/null; then
         fail "jq not found. Run Step 2 first."
     fi
-    success "Steps 1 and 2 prerequisites verified"
+    success "Steps 1-3 prerequisites verified"
 }
 
 # -----------------------------------------------------------------------------
@@ -1163,24 +1163,6 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     fi
 
-    # Context Hub
-    if command -v chub &>/dev/null || npx @aisuite/chub --version &>/dev/null 2>&1; then
-        success "TEST: Context Hub available"
-        TEST_PASS=$((TEST_PASS + 1))
-    else
-        soft_fail "TEST: Context Hub not available"
-        TEST_FAIL=$((TEST_FAIL + 1))
-    fi
-
-    # Context Hub skill
-    if [ -f "$HOME/.claude/skills/get-api-docs/SKILL.md" ]; then
-        success "TEST: Context Hub skill configured"
-        TEST_PASS=$((TEST_PASS + 1))
-    else
-        soft_fail "TEST: Context Hub skill not found"
-        TEST_FAIL=$((TEST_FAIL + 1))
-    fi
-
     # Swarm skill (/fswarm)
     if [ -f "$HOME/.claude/skills/fswarm/SKILL.md" ]; then
         success "TEST: Swarm skill (/fswarm) installed"
@@ -1364,7 +1346,7 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 3 Complete — fidgetflo is Ready${NC}"
+    echo -e "${GREEN}  Step 4 Complete — fidgetflo is Ready${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  fidgetflo is now installed and connected to Claude Code."
@@ -1398,7 +1380,7 @@ main() {
 
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 3 — fidgetflo${NC}"
+    echo -e "${BLUE}  Step 4 — fidgetflo${NC}"
     echo -e "${BLUE}  Multi-agent orchestration • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
@@ -1421,7 +1403,7 @@ main() {
 
     # Mark step complete for orchestrator / resume-logic to detect.
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
-    touch "$HOME/.cli-maxxing/step-3.done"
+    touch "$HOME/.cli-maxxing/step-4.done"
 }
 
 main "$@"

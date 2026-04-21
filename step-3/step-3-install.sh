@@ -2,10 +2,10 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 2 — Dev Tools
+# Step 3 — Developer & Utility Tools
 # Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, gh, tree, fzf, wget, weasyprint
 # Run this in your terminal after completing Step 1
-# Usage: curl -fsSL <hosted-url>/step-2/step-2-install.sh | bash
+# Usage: curl -fsSL <hosted-url>/step-3/step-3-install.sh | bash
 # =============================================================================
 
 RED='\033[0;31m'
@@ -329,7 +329,12 @@ install_gh() {
         if command -v apt-get &>/dev/null; then
             curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            sudo apt-get update -qq && sudo apt-get install -y -qq gh || { soft_fail "GitHub CLI installation failed"; return; }
+            if sudo apt-get update -qq && sudo apt-get install -y -qq gh; then
+                :
+            else
+                soft_fail "GitHub CLI installation failed"
+                return
+            fi
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y gh || { soft_fail "GitHub CLI installation failed"; return; }
         else
@@ -385,7 +390,12 @@ install_fzf() {
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y fzf || { soft_fail "fzf installation failed"; return; }
         else
-            git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf" && "$HOME/.fzf/install" --all --no-bash --no-fish || { soft_fail "fzf installation failed"; return; }
+            if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf" && "$HOME/.fzf/install" --all --no-bash --no-fish; then
+                :
+            else
+                soft_fail "fzf installation failed"
+                return
+            fi
         fi
     fi
 
@@ -534,6 +544,7 @@ configure_memory_hook() {
     if [ -f "$CLAUDE_SETTINGS" ]; then
         # Settings file exists — add hooks if not present
         if command -v jq &>/dev/null; then
+            # shellcheck disable=SC2016
             HOOK_CMD='SESSION_ID=$(jq -r '"'"'.session_id // empty'"'"' 2>/dev/null); MARKER="/tmp/claude-memory-saved-${SESSION_ID}"; if [ -f "$MARKER" ]; then echo '"'"'{"continue": true}'"'"'; else touch "$MARKER"; echo '"'"'{"continue": false, "stopReason": "MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop."}'"'"'; fi'
 
             jq --arg cmd "$HOOK_CMD" '.hooks = (.hooks // {}) | .hooks.Stop = [{"hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]' "$CLAUDE_SETTINGS" > "${CLAUDE_SETTINGS}.tmp" \
@@ -584,9 +595,11 @@ configure_no_flicker() {
         local changed=false
 
         if ! grep -q 'CLAUDE_CODE_NO_FLICKER' "$rc" 2>/dev/null; then
-            echo "" >> "$rc"
-            echo "# Claude Code — no-flicker fullscreen rendering" >> "$rc"
-            echo "export CLAUDE_CODE_NO_FLICKER=1" >> "$rc"
+            {
+                echo ""
+                echo "# Claude Code — no-flicker fullscreen rendering"
+                echo "export CLAUDE_CODE_NO_FLICKER=1"
+            } >> "$rc"
             changed=true
         fi
 
@@ -615,7 +628,7 @@ configure_no_flicker() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 2 Complete — Dev Tools Installed${NC}"
+    echo -e "${GREEN}  Step 3 Complete — Developer & Utility Tools Installed${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Installed:"
@@ -648,7 +661,7 @@ print_summary() {
         echo -e "  ${YELLOW}Scroll up to see which ones and install them manually.${NC}"
         echo ""
     fi
-    echo "  Next: Run Step 3 to set up FidgetFlo (multi-agent orchestration)"
+    echo "  Next: Run Step 4 to set up FidgetFlo (multi-agent orchestration)"
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
@@ -664,7 +677,7 @@ main() {
 
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 2 — Dev Tools${NC}"
+    echo -e "${BLUE}  Step 3 — Developer & Utility Tools${NC}"
     echo -e "${BLUE}  10 tools • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
@@ -690,7 +703,7 @@ main() {
 
     # Success marker — consumed by install.sh wrapper for step-skip logic
     mkdir -p "$HOME/.cli-maxxing"
-    touch "$HOME/.cli-maxxing/step-2.done"
+    touch "$HOME/.cli-maxxing/step-3.done"
 }
 
 main "$@"
