@@ -313,9 +313,10 @@ if grep -q '\.local/bin' "$SHELL_RC" 2>/dev/null; then
     HC_PASS=$((HC_PASS + 1))
 else
     warn "HEALTH: ~/.local/bin not on PATH, adding now..."
-    echo "" >> "$SHELL_RC"
-    echo '# Local bin (cbrain, cbraintg, ctg)' >> "$SHELL_RC"
-    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$SHELL_RC"
+    # SC2016: $HOME inside single quotes is intentional — written to shell rc
+    # where it must expand at login time, not at install time.
+    # shellcheck disable=SC2016
+    { echo ""; echo '# Local bin (cbrain, cbraintg, ctg)'; echo 'export PATH="$HOME/.local/bin:$PATH"'; } >> "$SHELL_RC"
     success "HEALTH: ~/.local/bin PATH — fixed"
     HC_PASS=$((HC_PASS + 1))
 fi
@@ -388,7 +389,7 @@ if command -v claude &>/dev/null; then
     success "HEALTH: Claude Code — installed"
     HC_PASS=$((HC_PASS + 1))
 else
-    NVM_CLAUDE=$(ls -1 "$HOME"/.nvm/versions/node/*/bin/claude 2>/dev/null | head -n1)
+    NVM_CLAUDE=$(find "$HOME/.nvm/versions/node" -name "claude" -path "*/bin/claude" 2>/dev/null | head -n1)
     if [ -n "${NVM_CLAUDE:-}" ] && [ -x "$NVM_CLAUDE" ]; then
         info "HEALTH: Claude Code found at $NVM_CLAUDE (not on current shell's PATH — open a new shell or source ~/.zshrc to use it)"
         HC_PASS=$((HC_PASS + 1))
