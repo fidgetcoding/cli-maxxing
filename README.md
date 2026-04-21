@@ -43,7 +43,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [Step 1](#step-1---cli-tools) | CLI Tools | Git, Node.js, Claude Code, shell aliases — the foundation | ~10 min |
 | [Step 2](#step-2---bonus-software) | Bonus Software | Ghostty (terminal) + Arc (browser) — optional but highly recommended | ~4 min |
 | [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
-| [Step 4](#step-4---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
+| [Step 4](#step-4---fidgetflo) | FidgetFlo | Multi-agent orchestration — swarms, hives, persistent memory, Opus locked | ~3 min |
 | [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit (pick what you use; Morgen recommended) | ~5 min |
 | [Step 6](#step-6---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 7](#step-7---github) | GitHub | GitHub MCP + /gitfix skill — repos, issues, PRs, code search, full-repo doc sync (requires PAT) | ~2 min |
@@ -88,7 +88,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 3 — Developer & Utility Tools](#step-3---developer--utility-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
 
-**[Step 4 — FidgetFlo + Context Hub](#step-4---fidgetflo--context-hub)** is where you set up FidgetFlo and Context Hub. FidgetFlo is the multi-agent orchestration layer that turns Claude into a full team of AI agents. Context Hub stops Claude from hallucinating when writing code that calls APIs.
+**[Step 4 — FidgetFlo](#step-4---fidgetflo)** is where you set up [FidgetFlo](https://github.com/lorecraft-io/fidgetflo), the multi-agent orchestration layer that turns Claude into a full team of AI agents — `/fswarm`, `/fmini`, `/fhive`, persistent memory, Opus-locked.
 
 **[Step 5 — Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools — notes, calendars, meetings, workflows, browser automation, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, or SwiftKit. All optional, install only what you need.
 
@@ -346,125 +346,86 @@ A "stop hook" fires every time you end a Claude session (Ctrl+C or `/exit`). Cla
 
 ---
 
-## Step 4 - FidgetFlo + Context Hub
+## Step 4 - FidgetFlo
 
 [Back to top](#quick-navigation)
 
-This step installs [**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo), a multi-agent swarming layer that turns Claude from a single assistant into a coordinated team of AI agents, plus [Context Hub](https://github.com/andrewyng/context-hub), which stops those agents from hallucinating when writing code that calls external APIs.
-
-### FidgetFlo
-
-[**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo) is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It adds to Claude Code:
-
-- **Multi-agent swarms on demand** — `/fswarm` (15 agents), `/fmini` (5 agents), `/fhive` (queen-led autonomous).
-- **Opus locked by default** — no silent downgrades to Haiku or Sonnet. Every spawned agent runs on Opus.
-- **Persistent agent memory** — context survives across sessions, agents share what they learn.
-- **Self-healing workflows** — failed steps detect + recover instead of just stopping.
-
-Want the deep dive? Architecture, agent catalog (60+ types), memory system, hook pipeline, topology options — all in the [FidgetFlo repo →](https://github.com/lorecraft-io/fidgetflo)
-
-### Context Hub
-
-Built by [@andrewyng](https://github.com/andrewyng) ([repo](https://github.com/andrewyng/context-hub)). Andrew Ng is one of the most respected names in AI. He built this tool to solve a real problem: AI agents hallucinating API calls.
-
-When Claude writes code that calls an external API, it's working from its training data, which can be outdated or just wrong. Context Hub fixes that by giving Claude access to curated, up-to-date API documentation on demand.
-
-- **Accurate API docs.** Claude can look up the real function signatures, parameters, and usage patterns instead of guessing from memory.
-- **Persistent annotations.** You and Claude can add notes to docs that carry over across sessions. If you figure out a quirk with an API, it stays documented.
-- **Less hallucination.** This is the big one. Claude stops making up function names that don't exist.
-
-Together, FidgetFlo and Context Hub are what take you from "using AI" to actually being an AI super user.
-
-### Swarm Skills
-
-Step 4 also installs three slash commands that let you launch multi-agent swarms on demand:
-
-- **`/fswarm <task>`** — Launches 15 agents immediately. You describe the task, Claude assigns roles (architect, coders, testers, security auditor, etc.) and they all work in parallel. Use this when you know what you want done and want brute-force execution.
-
-- **`/fmini <task>`** — Launches 5 agents immediately. Same architecture as `/fswarm` but with a tighter team: architect, developer, tester, reviewer, and researcher. Use this for focused tasks where you don't need the full battalion.
-
-- **`/fhive <goal>`** — Launches a queen agent that autonomously manages everything. You describe the goal, the queen decides how to break it down, what workers to spawn, and how to coordinate them. Use this when you want to set a direction and step back.
-
-#### Swarm tiers — extended thinking
-
-Subagents inherit the parent session's model (Opus stays Opus) but do **not** inherit its extended-thinking setting. The `/effort` slider does not tether to spawned agents, so the only way to get deep thinking inside a swarm is to bake a trigger phrase into each Agent's prompt. That's what these tier variants do:
-
-| Tier | Mini (5 agents) | Swarm (15 agents) | Trigger appended | Thinking budget |
-|------|-----------------|-------------------|------------------|-----------------|
-| 0    | `/fmini`        | `/fswarm`         | *(none)*         | 0               |
-| 1    | `/fmini1`       | `/fswarm1`        | `Think.`         | ~4k             |
-| 2    | `/fmini2`       | `/fswarm2`        | `Think hard.`    | ~10k            |
-| 3    | `/fmini3`       | `/fswarm3`        | `Think harder.`  | ~31k            |
-| max  | `/fminimax`     | `/fswarmmax`      | `Ultrathink.`    | ~32k (max)      |
-
-Natural-language aliases also work: "hard"/"deep" → tier 2, "harder"/"deeper" → tier 3, "max"/"mega"/"ultra" → max.
-
-Base `/fswarm` and `/fmini` are unchanged — the tier variants are purely additive. Use `/fminimax` for architecture reasoning or hairy debugging where you want a small team thinking hard; use `/fmini2` for routine feature work that still benefits from a bit of deliberation; reach for `/fswarm3` or `/fswarmmax` when you need 15 agents each chewing on a problem at full depth.
-
-All 10 commands enforce Opus-only (never Haiku or Sonnet) and all share the same FidgetFlo `/tmp/` signal files, so the statusline indicators (🐝 for `/fswarm*`, 🍯 for `/fmini*`) fire for every tier.
-
-All three skills signal the statusline so you can see live indicators while agents are working.
+[**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo) is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It turns Claude Code from a single assistant into a coordinated team of AI agents: multi-agent swarms on demand, persistent memory, self-healing workflows, and all agents Opus-locked by default (no silent downgrade to Haiku/Sonnet).
 
 ### Run Step 4
 
-You should still have a Claude session open from Step 3. If you closed it, open your terminal and type `cskip` to start a new Claude session. Remember, you can press **Shift+Tab** at any time to toggle auto-approve on or off.
-
-Once you're inside the Claude session, paste this and hit Enter:
+Still in a `cskip` session? Good. Paste this:
 
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up FidgetFlo and Context Hub: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-4/step-4-install.sh)
+> run this command to set up FidgetFlo: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-4/step-4-install.sh)
 > ```
 
+If Claude tells you to restart your terminal, close the window, reopen, `cskip` again, and tell Claude to pick up where it left off.
 
-Claude will run the install for you. Same as Step 3. If Claude tells you to restart your terminal, close the window, reopen your terminal, type `cskip`, and let Claude know where you left off.
+### Commands
 
-### Quick note: what's an MCP?
+| Command | What it does |
+|---------|-------------|
+| `/fswarm <task>` | Launches 15 agents in parallel — architect, backend devs, testers, security auditor, etc. Brute-force execution. |
+| `/fmini <task>` | Launches 5 agents — architect, dev, tester, reviewer, researcher. Tighter team for focused work. |
+| `/fhive <goal>` | Queen agent takes full control — decides what workers to spawn and how to coordinate. Set the goal, step back. |
+| `/w4w` | Word-for-word, line-for-line. Maximum attention, zero skipping. |
 
-You'll see "MCP" mentioned here and in future steps. MCP stands for Model Context Protocol. Think of it as a plugin system for Claude. When you connect an MCP to Claude Code, you're giving Claude access to a new tool or data source it didn't have before. Claude can then use that tool automatically whenever it's relevant. You don't have to manage it. You just connect it once and Claude takes it from there.
+#### Thinking tiers
+
+Subagents inherit the parent's model (Opus stays Opus) but **not** its `/effort` setting — the slider doesn't tether to spawned agents. These tier variants bake the trigger into each Agent prompt:
+
+| Tier | Mini (5 agents) | Swarm (15 agents) | Trigger appended | Budget |
+|------|-----------------|-------------------|------------------|--------|
+| 0    | `/fmini`        | `/fswarm`         | *(none)*         | 0      |
+| 1    | `/fmini1`       | `/fswarm1`        | `Think.`         | ~4k    |
+| 2    | `/fmini2`       | `/fswarm2`        | `Think hard.`    | ~10k   |
+| 3    | `/fmini3`       | `/fswarm3`        | `Think harder.`  | ~31k   |
+| max  | `/fminimax`     | `/fswarmmax`      | `Ultrathink.`    | ~32k   |
+
+Natural-language aliases work too: "hard"/"deep" → tier 2, "harder"/"deeper" → tier 3, "max"/"mega"/"ultra" → max. All variants are Opus-only and fire the 🐝 `/fswarm*` / 🍯 `/fmini*` statusline indicators.
 
 ### What This Step Installs
 
 | Component | What it does |
 |-----------|-------------|
-| FidgetFlo CLI | This is the command-line tool that manages everything below. |
-| MCP Server Connection | This connects FidgetFlo to Claude Code so they can talk to each other (see above). |
-| FidgetFlo Daemon | This runs in the background and coordinates agents, memory, and tasks. |
-| Memory System | This gives your agents persistent, searchable memory across sessions. |
-| Smart Model Routing | This is disabled by default so you always get Opus. Can be turned on later to save up to 75% on costs by routing simple tasks to cheaper models. |
-| Opus Lock | This locks all tasks to Opus so nothing silently downgrades to a weaker model. You're paying for Opus, so you should always get Opus. |
-| Context Hub | This gives Claude access to curated, up-to-date API documentation so it stops hallucinating function names. |
-| Context Hub Skill | This teaches Claude when and how to look up API docs automatically before writing integration code. |
-| Swarm Skill (`/fswarm`) | Type `/fswarm` followed by any task and Claude immediately launches 15 parallel agents to tackle it. A lead architect coordinates backend devs, testers, security auditors, and more — all working simultaneously. |
-| Mini Swarm Skill (`/fmini`) | Type `/fmini` followed by any task and Claude launches 5 focused agents — architect, developer, tester, reviewer, and researcher. Same parallel execution as `/fswarm`, just a tighter team for focused work. |
-| Hive Skill (`/fhive`) | Type `/fhive` followed by a goal and a queen agent takes full control. She decides what workers to spawn, how to coordinate them, and when the work is done. You set the goal and step back. |
-| Attention Skill (`/w4w`) | Word-for-word, line-for-line mode. Maximum attention to detail for critical tasks. |
-| TypeScript | Required by some FidgetFlo features. Installed globally. |
-| agentic-flow | Enables embeddings and advanced routing capabilities. |
-| Statusline | A real-time status bar that shows your active tools, model, session time, and context usage. When a swarm or hive is running, you'll see live indicators so you always know what's happening. |
+| FidgetFlo CLI + daemon | Coordinates agents, memory, and tasks in the background. |
+| MCP Server | Wires FidgetFlo into Claude Code. |
+| Memory System | Persistent, searchable memory shared across agents + sessions. |
+| Opus Lock | All tasks and spawned agents run on Opus — no silent downgrade to Haiku/Sonnet. |
+| Swarm + Hive + `/w4w` skills | The commands above. |
+| TypeScript + agentic-flow | Required deps (embeddings, advanced routing). |
+| Statusline | Live indicators for swarms, hives, model, session time, and context usage. |
+
+**Want the deep dive?** Architecture, agent catalog (60+ types), memory system, hook pipeline, topology options — all in the [FidgetFlo repo →](https://github.com/lorecraft-io/fidgetflo)
 
 ### After Step 4
 
-Your core tools are installed. Continue to Step 5 for productivity tools. Or open a new `cskip` session and try something ambitious. FidgetFlo kicks in automatically when the task calls for it.
+Your core tools are installed. Continue to Step 5 for productivity tools — or open a new `cskip` session and try something ambitious. FidgetFlo kicks in automatically when the task calls for it.
 
-### MCP Server Setup
+<details>
+<summary><strong>What's an MCP?</strong></summary>
 
-Claude Code can connect to MCP (Model Context Protocol) servers for extended capabilities. After running Step 4 (FidgetFlo), the MCP server is configured automatically.
+MCP stands for Model Context Protocol — a plugin system for Claude. Connect an MCP once and Claude gets access to a new tool or data source, which it picks up automatically when relevant.
 
-For manual MCP setup or troubleshooting, see the [Claude Code MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp-servers).
+</details>
 
-#### Verify MCP Connection
+<details>
+<summary><strong>Verify the FidgetFlo MCP is connected</strong></summary>
 
-After setup, verify the MCP server is connected:
 ```bash
 claude mcp list
 ```
 
-If the FidgetFlo MCP server isn't showing, re-add it:
+If FidgetFlo isn't listed, re-add it:
+
 ```bash
 claude mcp add fidgetflo -- npx -y fidgetflo@latest
 ```
+
+</details>
 
 ---
 

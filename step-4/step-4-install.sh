@@ -1412,8 +1412,9 @@ main() {
     init_config
     init_memory_and_deps
     configure_model_defaults
-    install_context_hub
-    configure_context_hub_skill
+    # Context Hub dropped 2026-04-20 — never used in practice; skill + MCP never
+    # invoked in any session log. install_context_hub / configure_context_hub_skill
+    # functions remain defined above for reference but are no longer called.
     install_swarm_skills
     run_self_test
     print_summary
