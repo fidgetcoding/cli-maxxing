@@ -148,7 +148,7 @@ if [ "$SKIP_TOKEN" = false ]; then
     echo ""
 
     # Trim whitespace
-    BOT_TOKEN=$(echo "$BOT_TOKEN" | xargs)
+    BOT_TOKEN="${BOT_TOKEN#"${BOT_TOKEN%%[![:space:]]*}"}"; BOT_TOKEN="${BOT_TOKEN%"${BOT_TOKEN##*[![:space:]]}"}"
 
     if [ -z "$BOT_TOKEN" ]; then
         echo ""
@@ -175,6 +175,7 @@ if [ "$SKIP_TOKEN" = false ]; then
         success "Token saved to $TOKEN_FILE (permissions: 600)"
     fi
 fi
+unset BOT_TOKEN EXISTING_TOKEN
 
 # =============================================================================
 # Access Policy Configuration

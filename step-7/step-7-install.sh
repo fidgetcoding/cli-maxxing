@@ -209,6 +209,7 @@ PYEOF
     else
         soft_fail "GitHub MCP installation could not be verified"
     fi
+    unset GITHUB_TOKEN GITHUB_TOKEN_VALUE
 }
 
 # -----------------------------------------------------------------------------
