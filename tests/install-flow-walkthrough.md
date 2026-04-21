@@ -33,32 +33,6 @@
 
 ---
 
-## Bonus: Ghostty
-
-**File:** `bonus-ghostty/bonus-ghostty.sh`
-
-| Section | Expected Behavior | Result |
-|---------|-------------------|--------|
-| Install Ghostty | `brew install --cask ghostty` | PASS |
-| Config | Writes to `~/Library/Application Support/com.mitchellh.ghostty/config` | PASS |
-| g2/g4 functions | Added to `~/.zshrc` | PASS |
-
-**Bugs found:** None.
-
----
-
-## Bonus: Arc Browser
-
-**File:** `bonus-arc/bonus-arc.sh`
-
-| Section | Expected Behavior | Result |
-|---------|-------------------|--------|
-| Install Arc | `brew install --cask arc` | PASS |
-
-**Bugs found:** None.
-
----
-
 ## Step 2 -- Bonus Software (Ghostty + Arc)
 
 **File:** `step-2/step-2-install.sh`
