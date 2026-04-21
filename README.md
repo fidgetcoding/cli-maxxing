@@ -286,37 +286,17 @@ Chromium-based with a sidebar instead of a tab bar, Spaces for context switching
 
 [Back to top](#quick-navigation)
 
-This step installs the development tools that Claude uses when working on your projects. Things like file converters, search tools, and other utilities that make Claude more capable.
+Installs the dev tools Claude leans on when working on your projects — file converters, search tools, PDF/doc utilities — plus **no-flicker mode** (fullscreen rendering, no screen jumping) and a **memory auto-save hook** (Claude remembers context between sessions).
 
-#### 2a. Open Your Terminal
+### Run Step 3
 
-If you haven't already, open a fresh terminal window (press **Ctrl+C** first if something is still running in the old one, then close it).
+In a fresh terminal, launch Claude in auto-approve mode:
 
-#### 2b. Launch Claude
+```bash
+cskip
+```
 
-> [!IMPORTANT]
-> **Type this in your terminal and hit Enter:**
-> ```bash
-> cskip
-> ```
-
-If this is your first time, Claude will automatically open a browser and ask you to log in. Sign in with your Anthropic account.
-
-Once you're in a Claude session, you can ask it questions, and it will help you through the rest of the process. This is where it stops being manual and starts being a conversation.
-
-> **Reminder:** You can press **Shift+Tab** at any time to toggle auto-approve permissions on or off without restarting Claude.
-
-#### Why auto-approve mode?
-
-When Claude runs in normal mode, it asks your permission before every single action. Every file it reads, every command it runs. During a setup that installs 10+ tools, that means dozens of approval prompts. There's no sound or notification when Claude is waiting for you, so if you look away for a moment, the whole process just sits there frozen until you come back and type "y".
-
-**Auto-approve mode (`cskip`) lets Claude run without stopping to ask.** It will install everything in one smooth pass. You can watch it work in real time, you just don't have to babysit it.
-
-You can always switch back to normal mode later for regular work. This is just for setup.
-
-#### 2c. Run the install
-
-Once you're inside the Claude session, paste this and hit Enter:
+First time? Claude opens a browser to log in with your Anthropic account. Once you're inside the session, paste this:
 
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
@@ -324,49 +304,45 @@ Once you're inside the Claude session, paste this and hit Enter:
 > run this command to install my dev tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
 > ```
 
+Claude runs the install. If it asks you to restart your terminal, close the window, reopen, `cskip` again, and tell Claude to pick up where it left off.
 
-Claude will run the install for you. You can watch it work. If Claude tells you to restart your terminal at any point, just close the window, reopen your terminal, type `cskip` again, and let Claude know where you left off. It'll pick right back up.
+> **Why `cskip`?** Auto-approve mode lets Claude run this install (10+ tools) in one smooth pass instead of asking permission for every action. Press **Shift+Tab** anytime to toggle it off without restarting. Normal `claude` mode is fine for daily use — `cskip` is just for setup.
 
 ### What This Step Installs
 
-These are the tools that Claude will install for you:
-
 | Tool | What it does |
 |------|-------------|
-| Python 3 + pip | This runs Python scripts and tools. |
-| Pandoc | This converts documents like Word and PowerPoint files into text. |
-| xlsx2csv | This converts spreadsheets into a readable format. |
-| pdftotext | This extracts text from PDF files. |
-| jq | This reads and edits config files. |
-| ripgrep | This searches through code fast. Claude Code uses it internally. |
-| GitHub CLI | This lets you manage GitHub from your terminal. |
-| tree | This shows your folder structure visually. |
-| fzf | This helps you find files and commands quickly. |
-| wget | This downloads files from the web. |
-| weasyprint | This converts HTML files to PDF. Used by Claude for generating documents. |
-| No-flicker mode | This enables fullscreen rendering in Claude Code. The screen stops jumping and flickering while Claude is working. Scroll speed is set to 3 (matches vim). |
-| Memory auto-save hook | This makes Claude automatically save important notes from your conversation when you end a session. You don't have to do anything. It just works in the background. |
+| Python 3 + pip | Runs Python scripts and tools. |
+| Pandoc | Converts Word / PowerPoint / Markdown between formats. |
+| xlsx2csv | Converts spreadsheets to readable CSV. |
+| pdftotext | Extracts text from PDFs. |
+| jq | Reads and edits JSON config files. |
+| ripgrep | Fast code search — Claude Code uses it internally. |
+| GitHub CLI | Manage GitHub from your terminal. |
+| tree | Shows your folder structure visually. |
+| fzf | Fuzzy-finder for files and commands. |
+| wget | Downloads files from the web. |
+| weasyprint | Converts HTML to PDF (Claude uses this to generate docs). |
+| No-flicker mode | Fullscreen rendering in Claude Code — screen stops jumping while Claude works. Scroll speed set to 3. |
+| Memory auto-save hook | Claude auto-saves important context when a session ends, so it remembers across sessions. |
 
-### What's no-flicker mode?
+<details>
+<summary><strong>No-flicker mode details</strong></summary>
 
-Step 2 turns on fullscreen rendering in Claude Code. This is a research preview feature (requires Claude Code v2.1.89 or later, which Step 1 installs). Without it, the screen jumps and flashes while Claude is working — text scrolls past and the input box bounces around. With no-flicker mode on, the screen stays still. Your input box stays pinned to the bottom, and everything updates cleanly in place. It works by setting `CLAUDE_CODE_NO_FLICKER=1` in your shell profile.
+Research-preview feature (Claude Code v2.1.89+). Without it, the input box bounces while Claude streams output. With it on, input stays pinned to the bottom and everything updates cleanly.
 
-It also sets your scroll speed to 3, so scrolling through the conversation with your mouse wheel feels smooth. You can also scroll with PgUp/PgDn or Ctrl+Home/End. Click on collapsed tool results to expand them, and click URLs to open them.
+Sets `CLAUDE_CODE_NO_FLICKER=1` and `CLAUDE_CODE_SCROLL_SPEED=3` in your shell profile. Scroll with mouse wheel, PgUp/PgDn, or Ctrl+Home/End. Click collapsed tool results to expand, click URLs to open.
 
-If you ever want to turn it off, open your `~/.zshrc` (or `~/.bashrc`) and delete these two lines:
+To disable: remove both `export` lines from `~/.zshrc` (or `~/.bashrc`) and restart your terminal. Or set `CLAUDE_CODE_NO_FLICKER=0` for a temporary off-switch.
 
-```
-export CLAUDE_CODE_NO_FLICKER=1
-export CLAUDE_CODE_SCROLL_SPEED=3
-```
+</details>
 
-Then close and reopen your terminal. You can also set `CLAUDE_CODE_NO_FLICKER=0` to disable it temporarily without removing the lines.
+<details>
+<summary><strong>Memory auto-save hook details</strong></summary>
 
-### What's the memory hook?
+A "stop hook" fires every time you end a Claude session (Ctrl+C or `/exit`). Claude reviews the conversation and saves anything important to memory — decisions, preferences, project context. Next session, it already knows. Nothing to configure; just keep using Claude and memory builds up over time.
 
-Step 2 also sets up something called a "stop hook." Every time you end a Claude session (by pressing Ctrl+C or typing `/exit`), Claude will automatically review the conversation and save anything important to memory. Things like decisions you made, preferences you mentioned, or context about what you were working on. Next time you start a session, Claude already knows that stuff. You don't have to repeat yourself.
-
-You don't need to do anything to make this work. It's already configured. Just keep using Claude normally and it'll build up memory over time.
+</details>
 
 ---
 
