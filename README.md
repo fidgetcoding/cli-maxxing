@@ -876,7 +876,6 @@ Open your terminal and run `cskip` to start a Claude session, then paste the upd
 > bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)
 > ```
 
-
 ---
 
 ## Uninstall
