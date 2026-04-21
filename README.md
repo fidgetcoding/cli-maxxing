@@ -901,7 +901,7 @@ Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), `ctg`/`cbrain`/`c
 
 - Claude Code shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and scripts (`ctg`, `cbrain`, `cbraintg` in `~/.local/bin/`)
 - All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub — design + media MCPs are managed by [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing); Obsidian is managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)
-- All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `get-api-docs`, `gitfix`, `safetycheck` — UI/UX Pro Max + Taste Skill pack + Remotion are managed by creativity-maxxing
+- All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `gitfix`, `safetycheck` — UI/UX Pro Max + Taste Skill pack + Remotion are managed by creativity-maxxing
 - Dev tools: pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler
 - Whisper models (`~/.whisper/`)
 - Motion Calendar config (`~/.motion-mcp/`)

@@ -151,7 +151,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Tool | Installed in | How it activates | Example prompt |
 |------|-------------|-----------------|----------------|
 | UI/UX Pro Max | creativity-maxxing | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
-| Taste Skill (8 variants) | creativity-maxxing | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-skill", "redesign this with soft-skill" | "Build a premium landing page" · "Redesign this dashboard with taste-skill" |
+| Taste Skill (8 variants) | creativity-maxxing | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-ui", "redesign this with high-end-visual-design" | "Build a premium landing page" · "Redesign this dashboard" |
 | 21st.dev Magic | creativity-maxxing | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
 | Remotion | creativity-maxxing | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
 | YouTube Transcripts | creativity-maxxing | Natural language — paste a YouTube link and ask for the transcript | "Get the transcript of this video: https://youtube.com/..." |

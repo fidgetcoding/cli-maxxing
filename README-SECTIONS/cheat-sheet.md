@@ -135,6 +135,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Superhuman | Step 5 | Natural language — email triage + drafting via Superhuman's official remote MCP | "Triage my inbox" · "Draft a reply to the latest thread" |
 | Google Drive | Step 5 | Natural language — browse, search, and read Docs / Sheets / PDFs / shared folders via Google's official hosted MCP | "Find the latest Q3 planning doc in my Drive" |
 | Telegram | Step 6 | Automatic when launched with `ctg` or `cbraintg` — reads and replies to Telegram messages | (messages arrive automatically from connected chats) |
+| GitHub | Step 7 | Natural language — repos, issues, PRs, code search, branches, commits | "List open PRs on cli-maxxing" · "Search my repos for any file that uses MORGEN_API_KEY" |
 | Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |
 | No-Flicker Mode | Step 3 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 3 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
@@ -145,7 +146,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 
 > **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
-> **Add-on tools** are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed.
+> **Add-on tools** (Canva, Figma, Excalidraw, Gamma) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed.
 
 ---
 

@@ -74,31 +74,28 @@
 
 ---
 
-## Step 3 -- Ruflo + Context Hub
+## Step 3 -- Developer & Utility Tools
 
 **File:** `step-3/step-3-install.sh`
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
-| `install_ruflo` | `npm install -g ruflo@latest` | PASS |
-| `configure_mcp` | `claude mcp add ruflo` | PASS |
-| `start_daemon` | May not find PID in CWD | MINOR -- warns, continues |
-| `init_config` | Creates `.claude-flow/config.yaml` in CWD | NOTE: CWD dependent |
-| `configure_model_defaults` | Writes to `.claude-flow/config.json` in CWD | NOTE: CWD dependent |
-| Swarm skills | Creates skill dirs in `~/.claude/skills/` | PASS |
-| Statusline (line 530) | `grep -qiE "(2ndBrain\|MASTER\|Second-Brain\|Vault)"` | PASS -- **BUG WAS FIXED** |
+| `source_runtime_path` | Hydrates PATH: brew, nvm, `~/.local/bin` | PASS |
+| `detect_os` | Detects `mac`, shell `zsh`, RC `~/.zshrc` | PASS |
+| Python, Pandoc, etc. | All Homebrew-based | PASS |
+| `configure_memory_hook` | Writes Stop hook to `~/.claude/settings.json` | PASS |
+| `configure_no_flicker` | Writes `CLAUDE_CODE_NO_FLICKER=1` to `~/.zshrc` | PASS |
 
 ### PREVIOUSLY REPORTED BUG (FIXED): statusline.sh 2ndBrain detection
 
 **Old code:** `grep -qiE "OBSIDIAN/(2ndBrain|MASTER)"`
-**Current code:** `grep -qiE "(2ndBrain|MASTER|Second-Brain|Vault)"`
+**Current code:** Primary check via `~/.claude/.mogging-vault` marker; fallback `grep -qiE "OBSIDIAN/(2ndBrain|MASTER)|/BRAIN2?(/|$)"`
 
-The `OBSIDIAN/` prefix requirement has been removed. The pattern now matches any path containing `2ndBrain`, `MASTER`, `Second-Brain`, or `Vault`. The vault at `~/Desktop/2ndBrain` will correctly trigger the brain indicator.
+The `OBSIDIAN/` prefix requirement has been removed. The script first reads the vault path from the marker file written by 2ndBrain-mogging's installer; the regex fallback catches legacy vault names. The vault at `~/Desktop/BRAIN2` will correctly trigger the brain indicator.
 
-**Verified in all 3 locations:**
-- `step-3/step-3-install.sh` line 530
-- `step-final/step-final-install.sh` line 67
-- `templates/statusline.sh` line 29
+**Verified in:**
+- `step-final/step-final-install.sh` (statusline install)
+- `templates/statusline.sh` (canonical statusline script)
 
 ---
 
@@ -160,9 +157,9 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 
 ---
 
-## Step 9 -- Safety Check
+## Step 8 -- Safety Check
 
-**File:** `step-9/step-9-install.sh`
+**File:** `step-8/step-8-install.sh`
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
@@ -198,7 +195,7 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 | Steps 1-3 | Run via `curl \| bash` | PASS |
 | Step 6 | Detects non-interactive, exits cleanly with instructions | PASS |
 | Step 8 | Token prompt gets EOF, skip path activates | PASS -- **BUG WAS FIXED** |
-| Step 9 | Downloads skill | PASS |
+| Step 8 | Downloads skill | PASS |
 | Final | Installs statusline with correct vault detection | PASS -- **BUG WAS FIXED** |
 
 ---
@@ -217,7 +214,7 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 
 | # | Issue | Location | Impact |
 |---|-------|----------|--------|
-| 1 | Step 3 writes config to CWD | `step-3/step-3-install.sh` | Ruflo config files land in whatever directory user opened terminal in |
+| 1 | Step 4 writes config to CWD | `step-4/step-4-install.sh` | FidgetFlo config files land in whatever directory user opened terminal in |
 | 2 | Statusline vault name false positives | All 3 statusline locations | If CWD contains "Vault" anywhere in the path (e.g., `/some/Vault-backup/project`), brain indicator shows incorrectly. Very unlikely edge case. |
 | 3 | Step 8 invalid token accepted | `step-8/step-8-install.sh:133-140` | Invalid token format is warned but saved anyway ("Saving anyway -- you can fix it later"). This is intentional leniency but means a typo gets stored. |
 
