@@ -324,8 +324,15 @@ install_n8n() {
     # Basic sanity check — must start with http:// or https://
     if [[ ! "$N8N_URL" =~ ^https?:// ]]; then
         warn "URL must start with http:// or https:// — got: $N8N_URL"
-        warn "Skipping n8n setup. Re-run Step 6 with a valid URL."
+        warn "Skipping n8n setup. Re-run Step 5 with a valid URL."
         return
+    fi
+
+    # Warn if using plaintext HTTP with a potentially token-bearing endpoint
+    if [[ "$N8N_URL" =~ ^http:// ]]; then
+        warn "WARNING: URL uses http:// (unencrypted). Any Bearer token set below"
+        warn "will be transmitted in plaintext. Use https:// for production n8n instances."
+        echo ""
     fi
 
     echo -e "${BLUE}  Optional: if you set Bearer Token auth on the MCP trigger,${NC}"

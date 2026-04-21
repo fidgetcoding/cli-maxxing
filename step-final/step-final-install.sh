@@ -137,6 +137,8 @@ if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
     rm -f "$SWARM_LOCK" 2>/dev/null
   else
     AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
+    # Sanitize: keep only digits to prevent injection from a malicious lock-file write
+    AGENT_COUNT="${AGENT_COUNT//[^0-9]/}"
     if [ -n "$AGENT_COUNT" ]; then
       SWARM="🐝 ${AGENT_COUNT}"
     else
@@ -166,6 +168,8 @@ if [ -f "$MINI_LOCK" ] 2>/dev/null; then
     rm -f "$MINI_LOCK" 2>/dev/null
   else
     MINI_AGENT_COUNT=$(cat "$MINI_LOCK" 2>/dev/null || echo "")
+    # Sanitize: keep only digits to prevent injection from a malicious lock-file write
+    MINI_AGENT_COUNT="${MINI_AGENT_COUNT//[^0-9]/}"
     if [ -n "$MINI_AGENT_COUNT" ]; then
       MINI="🍯 ${MINI_AGENT_COUNT}"
     else

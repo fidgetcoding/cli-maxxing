@@ -133,9 +133,9 @@ install_skill() {
     SKILL_FILE="$SKILL_DIR/SKILL.md"
     # Pinned to a specific commit SHA — prevents rug-pull via mutable branch ref
     # To update: change the SHA to the new commit and update SKILL_SHA256 to match
-    SKILL_COMMIT="7b449b652d946a8eef9aca65f0c8e182b4fb80f7"
+    SKILL_COMMIT="8993188f4743021a93735fe60331569130bd6b89"
     SKILL_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/${SKILL_COMMIT}/step-8/safetycheck-skill/SKILL.md"
-    SKILL_SHA256="77e1ef1127fa35cd860925a652b96dd062ab080d438787b3bde348176597ab12"
+    SKILL_SHA256="112800e733571f6e8f837e37148c45dc398833d4ff8c2b32f98e7877cfaa300d"
 
     info "Creating skill directory..."
     mkdir -p "$SKILL_DIR"

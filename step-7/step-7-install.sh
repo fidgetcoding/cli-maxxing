@@ -181,10 +181,11 @@ install_github() {
 
     # Inject the token directly into the config entry (claude mcp add --scope user
     # does not support -e flags in all CLI versions, so we patch the env block).
-    python3 - "$GITHUB_TOKEN" <<'PYEOF'
+    # Token is passed via stdin (not argv) to avoid leaking it in `ps` output.
+    printf '%s' "$GITHUB_TOKEN" | python3 - <<'PYEOF'
 import sys, json, os
 
-token = sys.argv[1]
+token = sys.stdin.read().strip()
 config_path = os.path.expanduser("~/.claude.json")
 
 with open(config_path) as f:
