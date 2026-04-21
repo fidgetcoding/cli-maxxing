@@ -80,12 +80,12 @@ else
 fi
 echo ""
 
-# Step 1
-echo -e "${YELLOW}>>> Step 1 — Get Claude Running${NC}"
+# Step 1 — Claude
+echo -e "${YELLOW}>>> Step 1 — Claude${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
 # BUG A fix: Step 1 installs brew+nvm; re-source them into this shell so the
-# remaining curl|bash steps (Ghostty/Arc/2/3/9/final) can actually find them.
+# remaining curl|bash steps (2/3/4/7/8/final) can actually find them.
 reload_path
 
 # Hard gate: if claude didn't land, stop everything. Every downstream step
@@ -113,37 +113,31 @@ if ! command -v claude &>/dev/null || ! claude --version &>/dev/null; then
 fi
 echo ""
 
-# Bonus — Ghostty Terminal (optional, won't reinstall if already present)
-echo -e "${YELLOW}>>> Bonus — Ghostty Terminal${NC}"
-echo ""
-curl -fsSL "$BASE_URL/bonus-ghostty/bonus-ghostty.sh" | bash
-echo ""
-
-# Bonus — Arc Browser (optional, macOS-only, won't reinstall if already present)
-echo -e "${YELLOW}>>> Bonus — Arc Browser${NC}"
-echo ""
-curl -fsSL "$BASE_URL/bonus-arc/bonus-arc.sh" | bash
-echo ""
-
-# Step 2
-echo -e "${YELLOW}>>> Step 2 — Dev Tools${NC}"
+# Step 2 — Bonus Software (Ghostty + Arc)
+echo -e "${YELLOW}>>> Step 2 — Bonus Software${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-2/step-2-install.sh" | bash
 echo ""
 
-# Step 3
-echo -e "${YELLOW}>>> Step 3 — fidgetflo + Context Hub${NC}"
+# Step 3 — Developer & Utility Tools
+echo -e "${YELLOW}>>> Step 3 — Developer & Utility Tools${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-3/step-3-install.sh" | bash
 echo ""
 
-# Step 9 (SafetyCheck)
-echo -e "${YELLOW}>>> Step 9 — SafetyCheck${NC}"
+# Step 4 — FidgetFlo + Context Hub
+echo -e "${YELLOW}>>> Step 4 — FidgetFlo + Context Hub${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-9/step-9-install.sh" | bash
+curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
 echo ""
 
-# Final Step (Status Line — wrap-up)
+# Step 8 — Safety Check
+echo -e "${YELLOW}>>> Step 8 — Safety Check${NC}"
+echo ""
+curl -fsSL "$BASE_URL/step-8/step-8-install.sh" | bash
+echo ""
+
+# Final Step — Status Line (wrap-up)
 echo -e "${YELLOW}>>> Final Step — Status Line${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-final/step-final-install.sh" | bash
@@ -156,7 +150,7 @@ echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━
 echo ""
 
 # Breadcrumb check — list any expected steps that did NOT touch their .done file.
-EXPECTED_CRUMBS=(step-1 step-2 step-3 step-9 step-final ghostty arc)
+EXPECTED_CRUMBS=(step-1 ghostty arc step-3 step-4 step-8 step-final)
 MISSING_CRUMBS=()
 for crumb in "${EXPECTED_CRUMBS[@]}"; do
   if [ ! -f "$HOME/.cli-maxxing/${crumb}.done" ]; then
@@ -181,14 +175,14 @@ echo "  Swarm tiers:        /fswarm{1,2,3,max}, /fmini{1,2,3,max} — 1=think, 2
 echo ""
 echo "  Three steps require interactive input — run them separately:"
 echo ""
-echo "    Step 6 (Productivity Tools — Notion, Morgen, n8n, Playwright, etc.):"
+echo "    Step 5 (Productivity Tools — Notion, Morgen, n8n, Playwright, etc.):"
+echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)"
+echo ""
+echo "    Step 6 (Telegram — optional, skip if you don't have a bot token):"
 echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
 echo ""
-echo "    Step 8 (Telegram — optional, skip if you don't have a bot token):"
-echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)"
-echo ""
-echo "    Step 10 (Developer Tools — GitHub MCP, optional, for devs):"
-echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-10/step-10-install.sh)"
+echo "    Step 7 (GitHub — MCP + /gitfix skill, optional, for devs):"
+echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
 echo ""
 echo "  Companion repos (install after this):"
 echo "    Design + media:  bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh)"

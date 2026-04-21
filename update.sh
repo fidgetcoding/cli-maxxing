@@ -65,8 +65,8 @@ main() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
-    # Step 1
-    echo -e "${YELLOW}>>> Running Step 1 — Get Claude Running${NC}"
+    # Step 1 — Claude
+    echo -e "${YELLOW}>>> Running Step 1 — Claude${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
     # Re-hydrate in case step-1 just installed brew/nvm for the first time and
@@ -74,46 +74,46 @@ main() {
     source_runtime_path
     echo ""
 
-    # Bonus — Ghostty Terminal (optional, won't reinstall if already present)
-    echo -e "${YELLOW}>>> Running Bonus — Ghostty Terminal${NC}"
-    echo ""
-    curl -fsSL "$BASE_URL/bonus-ghostty/bonus-ghostty.sh" | bash
-    echo ""
-
-    # Bonus — Arc Browser (optional, macOS-only, won't reinstall if already present)
-    echo -e "${YELLOW}>>> Running Bonus — Arc Browser${NC}"
-    echo ""
-    curl -fsSL "$BASE_URL/bonus-arc/bonus-arc.sh" | bash
-    echo ""
-
-    # Step 2
-    echo -e "${YELLOW}>>> Running Step 2 — Dev Tools${NC}"
+    # Step 2 — Bonus Software (Ghostty + Arc, idempotent)
+    echo -e "${YELLOW}>>> Running Step 2 — Bonus Software${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-2/step-2-install.sh" | bash
     echo ""
 
-    # Step 3 — refreshes fidgetflo/agentic-flow + skill files (/gitfix, /w4w, /fswarm*, /fmini*, /fhive, get-api-docs)
-    echo -e "${YELLOW}>>> Running Step 3 — FidgetFlo + Context Hub${NC}"
+    # Step 3 — Developer & Utility Tools
+    echo -e "${YELLOW}>>> Running Step 3 — Developer & Utility Tools${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-3/step-3-install.sh" | bash
     echo ""
 
-    # Step 6 (Productivity Tools)
-    echo -e "${YELLOW}>>> Running Step 6 — Productivity Tools${NC}"
+    # Step 4 — refreshes fidgetflo/agentic-flow + skill files (/w4w, /fswarm*, /fmini*, /fhive, get-api-docs)
+    echo -e "${YELLOW}>>> Running Step 4 — FidgetFlo + Context Hub${NC}"
+    echo ""
+    curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
+    echo ""
+
+    # Step 5 (Productivity Tools)
+    echo -e "${YELLOW}>>> Running Step 5 — Productivity Tools${NC}"
+    echo ""
+    curl -fsSL "$BASE_URL/step-5/step-5-install.sh" | bash
+    echo ""
+
+    # Step 6 (Telegram)
+    echo -e "${YELLOW}>>> Running Step 6 — Telegram${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-6/step-6-install.sh" | bash
     echo ""
 
-    # Step 8 (Telegram)
-    echo -e "${YELLOW}>>> Running Step 8 — Telegram${NC}"
+    # Step 7 (GitHub MCP + /gitfix)
+    echo -e "${YELLOW}>>> Running Step 7 — GitHub${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-8/step-8-install.sh" | bash
+    curl -fsSL "$BASE_URL/step-7/step-7-install.sh" | bash
     echo ""
 
-    # Step 9 — refreshes /safetycheck skill
-    echo -e "${YELLOW}>>> Running Step 9 — SafetyCheck${NC}"
+    # Step 8 — refreshes /safetycheck skill
+    echo -e "${YELLOW}>>> Running Step 8 — Safety Check${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-9/step-9-install.sh" | bash
+    curl -fsSL "$BASE_URL/step-8/step-8-install.sh" | bash
     echo ""
 
     # Final Step (Status Line — wrap-up)

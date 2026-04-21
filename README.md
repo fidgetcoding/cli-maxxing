@@ -523,23 +523,18 @@ You don't need to do anything to make this work. It's already configured. Just k
 
 [Back to top](#quick-navigation)
 
-This step installs FidgetFlo, a multi-agent swarming layer that turns Claude from a single assistant into a full team of coordinated AI agents. Each agent focuses on a particular task, work is split up, done with more attention to detail: power in numbers. It also installs Context Hub, which makes sure those agents don't hallucinate when writing code that talks to external APIs.
+This step installs [**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo), a multi-agent swarming layer that turns Claude from a single assistant into a coordinated team of AI agents, plus [Context Hub](https://github.com/andrewyng/context-hub), which stops those agents from hallucinating when writing code that calls external APIs.
 
 ### FidgetFlo
 
-Built by [@ruvnet](https://github.com/ruvnet) ([repo](https://github.com/ruvnet/fidgetflo)). This is an open-source multi-agent orchestration system that sits on top of Claude Code.
+[**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo) is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It adds to Claude Code:
 
-> **Note:** We made one change from the default FidgetFlo setup. Out of the box, FidgetFlo uses a model routing system that can silently send some of your tasks to cheaper, weaker models like Haiku instead of Opus. If you're paying for Opus, you should always get Opus. Our install locks everything to Opus and disables the auto-downgrading. You can always turn routing back on later if you want to save on costs, but we default to giving you the best answers every time.
+- **Multi-agent swarms on demand** — `/fswarm` (15 agents), `/fmini` (5 agents), `/fhive` (queen-led autonomous).
+- **Opus locked by default** — no silent downgrades to Haiku or Sonnet. Every spawned agent runs on Opus.
+- **Persistent agent memory** — context survives across sessions, agents share what they learn.
+- **Self-healing workflows** — failed steps detect + recover instead of just stopping.
 
-> This applies to all agents in the swarm — every agent spawned by `/fswarm`, `/fhive`, or `/fmini` runs on Opus. No agent is silently downgraded to a cheaper model.
-
-Claude Code is already powerful on its own. But FidgetFlo takes it to another level by adding coordinated multi-agent workflows, persistent memory, and smart cost optimization on top:
-
-- **Multiple agents working in parallel.** Claude can spin up several agents at once, each focused on a different part of your task. A researcher, a coder, a reviewer, all working simultaneously instead of one after the other.
-- **Smart model routing (optional, disabled by default).** FidgetFlo can route simple tasks to cheaper models to save costs. We disable this by default and lock everything to Opus so you always get the best reasoning. If you want to enable cost savings later, you can turn routing back on. But we'd rather you get the best results out of the box.
-- **Autonomous execution.** You describe what you want, and FidgetFlo figures out how to break it down, assign it, and execute it. You don't have to micromanage every step.
-- **Persistent memory.** FidgetFlo has its own memory system that agents share. Context doesn't get lost between tasks or sessions. Your agents remember what they learned.
-- **Self-healing workflows.** If something fails, FidgetFlo can detect it and recover automatically instead of just stopping.
+Want the deep dive? Architecture, agent catalog (60+ types), memory system, hook pipeline, topology options — all in the [FidgetFlo repo →](https://github.com/lorecraft-io/fidgetflo)
 
 ### Context Hub
 
@@ -555,7 +550,7 @@ Together, FidgetFlo and Context Hub are what take you from "using AI" to actuall
 
 ### Swarm Skills
 
-Step 3 also installs three slash commands that let you launch multi-agent swarms on demand:
+Step 4 also installs three slash commands that let you launch multi-agent swarms on demand:
 
 - **`/fswarm <task>`** — Launches 15 agents immediately. You describe the task, Claude assigns roles (architect, coders, testers, security auditor, etc.) and they all work in parallel. Use this when you know what you want done and want brute-force execution.
 
@@ -583,9 +578,9 @@ All 10 commands enforce Opus-only (never Haiku or Sonnet) and all share the same
 
 All three skills signal the statusline so you can see live indicators while agents are working.
 
-### Run Step 3
+### Run Step 4
 
-You should still have a Claude session open from Step 2. If you closed it, open your terminal and type `cskip` to start a new Claude session. Remember, you can press **Shift+Tab** at any time to toggle auto-approve on or off.
+You should still have a Claude session open from Step 3. If you closed it, open your terminal and type `cskip` to start a new Claude session. Remember, you can press **Shift+Tab** at any time to toggle auto-approve on or off.
 
 Once you're inside the Claude session, paste this and hit Enter:
 
@@ -596,7 +591,7 @@ Once you're inside the Claude session, paste this and hit Enter:
 > ```
 
 
-Claude will run the install for you. Same as Step 2. If Claude tells you to restart your terminal, close the window, reopen your terminal, type `cskip`, and let Claude know where you left off.
+Claude will run the install for you. Same as Step 3. If Claude tells you to restart your terminal, close the window, reopen your terminal, type `cskip`, and let Claude know where you left off.
 
 ### Quick note: what's an MCP?
 
@@ -622,13 +617,13 @@ You'll see "MCP" mentioned here and in future steps. MCP stands for Model Contex
 | agentic-flow | Enables embeddings and advanced routing capabilities. |
 | Statusline | A real-time status bar that shows your active tools, model, session time, and context usage. When a swarm or hive is running, you'll see live indicators so you always know what's happening. |
 
-### After Step 3
+### After Step 4
 
 Your core tools are installed. Continue to Step 5 for productivity tools. Or open a new `cskip` session and try something ambitious. FidgetFlo kicks in automatically when the task calls for it.
 
 ### MCP Server Setup
 
-Claude Code can connect to MCP (Model Context Protocol) servers for extended capabilities. After running Step 3 (FidgetFlo), the MCP server is configured automatically.
+Claude Code can connect to MCP (Model Context Protocol) servers for extended capabilities. After running Step 4 (FidgetFlo), the MCP server is configured automatically.
 
 For manual MCP setup or troubleshooting, see the [Claude Code MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp-servers).
 

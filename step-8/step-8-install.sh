@@ -2,9 +2,9 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 8 — Telegram
-# Connect Claude to Telegram — send and receive messages from your phone
-# Run after Step 7 (Second Brain) or earlier — requires Step 1 for aliases
+# Step 9 — Safety Check — Security Auditing
+# Installs the /safetycheck Claude Code skill for running security audits
+# Run after Step 1 — requires Claude Code installed
 # =============================================================================
 
 RED='\033[0;31m'
@@ -13,291 +13,367 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+ERRORS=0
+
 info()    { echo -e "${BLUE}[INFO]${NC} $1"; }
 success() { echo -e "${GREEN}[OK]${NC} $1"; }
 warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
+soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
 # -----------------------------------------------------------------------------
-# Ensure runtime PATH (brew, nvm, ~/.local/bin) is visible.
-# Defense-in-depth: users typically run Step 8 in a fresh terminal after
-# Steps 1-7 completed, but installers/nvm don't always source their shell
-# rc files in non-login shells. This makes `node`, `npm`, `claude`, `ctg`,
-# and `cbraintg` resolvable regardless of how the user invoked the script.
+# source_runtime_path — load brew/nvm/~/.local/bin into current PATH so that
+# prereq checks (node, claude, etc.) see what's actually installed on disk
+# even if the parent shell never sourced its rc files. Idempotent.
 # -----------------------------------------------------------------------------
 source_runtime_path() {
-    # Homebrew shellenv — try the first brew binary we find.
-    local brew_bin
-    for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
-        if [ -x "$brew_bin" ]; then
-            eval "$("$brew_bin" shellenv)" 2>/dev/null || true
-            break
-        fi
-    done
+    # 1. Homebrew shellenv (macOS + Linuxbrew) — adds brew-managed bins to PATH
+    if command -v brew &>/dev/null; then
+        eval "$(brew shellenv)" 2>/dev/null || true
+    elif [ -x "/opt/homebrew/bin/brew" ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null || true
+    elif [ -x "/usr/local/bin/brew" ]; then
+        eval "$(/usr/local/bin/brew shellenv)" 2>/dev/null || true
+    elif [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true
+    fi
 
-    # nvm — source it if installed so `node`/`npm` resolve.
+    # 2. nvm — source the script so `node` / `claude` (if installed via npm -g
+    # under a node version) become visible in this shell
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
-        . "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        \. "$NVM_DIR/nvm.sh" 2>/dev/null || true
     fi
 
-    # ~/.local/bin — prepend if not already on PATH.
-    if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
+    # 3. Prepend ~/.local/bin to PATH (idempotent — skip if already first/present)
+    case ":$PATH:" in
+        *":$HOME/.local/bin:"*) ;;
+        *) export PATH="$HOME/.local/bin:$PATH" ;;
+    esac
 }
 
-source_runtime_path
+# -----------------------------------------------------------------------------
+# 1. Detect OS
+# -----------------------------------------------------------------------------
+detect_os() {
+    case "$(uname -s)" in
+        Darwin)       OS="mac" ;;
+        Linux)        OS="linux" ;;
+        MINGW*|MSYS*|CYGWIN*) fail "Windows is not supported. This script is for macOS and Linux only." ;;
+        *)            fail "Unsupported OS: $(uname -s). This script supports macOS and Linux only." ;;
+    esac
+    info "Detected OS: $OS"
 
-echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Step 8 — Telegram${NC}"
-echo -e "${BLUE}  Connect Claude to Telegram — message Claude from your phone${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
+    case "${SHELL:-/bin/bash}" in
+        */zsh)  USER_SHELL="zsh";  SHELL_RC="$HOME/.zshrc" ;;
+        */bash) USER_SHELL="bash"; SHELL_RC="$HOME/.bashrc" ;;
+        *)      USER_SHELL="bash"; SHELL_RC="$HOME/.bashrc" ;;
+    esac
+    info "Detected shell: $USER_SHELL ($SHELL_RC)"
+}
 
-# =============================================================================
-# Prerequisites
-# =============================================================================
-info "Checking prerequisites..."
-echo ""
-
-PREREQ_PASS=true
-
-# Check Claude Code installed
-if command -v claude &>/dev/null; then
-    success "Claude Code is installed"
-else
-    warn "Claude Code not found — run Step 1 first"
-    PREREQ_PASS=false
-fi
-
-# Check ctg command (installed as ~/.local/bin/ctg script by Step 1)
-if [ -x "$HOME/.local/bin/ctg" ]; then
-    success "ctg command found at ~/.local/bin/ctg"
-else
-    warn "ctg not found at ~/.local/bin/ctg — re-run Step 1 to set it up"
-    PREREQ_PASS=false
-fi
-
-# Check cbraintg command
-if [ -x "$HOME/.local/bin/cbraintg" ]; then
-    success "cbraintg command found at ~/.local/bin/cbraintg"
-else
-    warn "cbraintg not found at ~/.local/bin/cbraintg — re-run Step 1 to set it up"
-    PREREQ_PASS=false
-fi
-
-echo ""
-
-if [ "$PREREQ_PASS" = false ]; then
-    warn "Some prerequisites are missing. The bot token can still be configured,"
-    warn "but you will need to re-run Step 1 before launching Claude with Telegram."
-    echo ""
-fi
-
-# =============================================================================
-# Check Existing Configuration
-# =============================================================================
-CONFIG_DIR="$HOME/.claude/channels/telegram"
-TOKEN_FILE="$CONFIG_DIR/.env"
-ACCESS_FILE="$CONFIG_DIR/access.json"
-SKIP_TOKEN=false
-
-if [ -f "$TOKEN_FILE" ] && grep -q 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/null; then
-    EXISTING_TOKEN=$(grep 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/null | cut -d= -f2)
-    # Mask the token for display
-    if [ ${#EXISTING_TOKEN} -gt 12 ]; then
-        MASKED="${EXISTING_TOKEN:0:4}...${EXISTING_TOKEN: -4}"
-    else
-        MASKED="****"
-    fi
-    echo -e "${YELLOW}Telegram bot token already configured: ${MASKED}${NC}"
-    echo ""
-    read -p "Reconfigure with a new token? (y/N): " RECONFIGURE
-    if [[ ! "$RECONFIGURE" =~ ^[Yy]$ ]]; then
-        info "Keeping existing configuration."
-        echo ""
-        SKIP_TOKEN=true
-    fi
-fi
-
-# =============================================================================
-# BotFather Instructions + Token Prompt
-# =============================================================================
-if [ "$SKIP_TOKEN" = false ]; then
-    echo ""
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Create Your Telegram Bot${NC}"
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo ""
-    echo "  1. Open Telegram on your phone or desktop"
-    echo "  2. Search for @BotFather and start a chat"
-    echo "  3. Send the command:  /newbot"
-    echo "  4. Choose a display name (e.g. \"Claude Assistant\")"
-    echo "  5. Choose a username — must end in \"bot\" (e.g. \"my_claude_bot\")"
-    echo "  6. BotFather will reply with a token that looks like:"
-    echo ""
-    echo -e "     ${BLUE}1234567890:ABCDefGhIJKlmNOPQrstUVwxyz${NC}"
-    echo ""
-    echo "  Copy that token now."
+# -----------------------------------------------------------------------------
+# 2. Verify prerequisites
+# -----------------------------------------------------------------------------
+verify_prerequisites() {
+    info "Checking prerequisites..."
     echo ""
 
-    # Prompt for token — empty input skips setup
-    read -rsp "Paste your bot token here (press Enter to skip): " BOT_TOKEN
-    echo ""
+    PREREQ_PASS=true
 
-    # Trim whitespace
-    BOT_TOKEN=$(echo "$BOT_TOKEN" | xargs)
-
-    if [ -z "$BOT_TOKEN" ]; then
-        echo ""
-        info "Telegram setup skipped. You can add your token later by re-running Step 8."
-        SKIP_TOKEN=true
-    else
-        # Validate token format: digits, colon, alphanumeric + dash/underscore
-        if [[ "$BOT_TOKEN" =~ ^[0-9]+:[A-Za-z0-9_-]+$ ]]; then
-            success "Token format looks valid"
+    # Check Node.js
+    if command -v node &>/dev/null; then
+        NODE_MAJOR=$(node -v | sed 's/v//' | cut -d. -f1)
+        if [ "$NODE_MAJOR" -ge 18 ]; then
+            success "Node.js $(node -v) installed"
         else
-            warn "Token format doesn't look right. Expected: 1234567890:ABC-DEF..."
-            warn "Should be digits, a colon, then letters/numbers/dashes."
-            warn "Saving anyway — you can fix it later in $TOKEN_FILE"
+            warn "Node.js $(node -v) found but too old — need v18+"
+            PREREQ_PASS=false
         fi
-
-        echo ""
-
-        # Save token
-        info "Saving bot token..."
-        mkdir -p "$CONFIG_DIR"
-        chmod 700 "$CONFIG_DIR"
-        echo "TELEGRAM_BOT_TOKEN=$BOT_TOKEN" > "$TOKEN_FILE"
-        chmod 600 "$TOKEN_FILE"
-        success "Token saved to $TOKEN_FILE (permissions: 600)"
+    else
+        warn "Node.js not found — run Step 1 first"
+        PREREQ_PASS=false
     fi
-fi
 
-# =============================================================================
-# Access Policy Configuration
-# =============================================================================
-info "Configuring access policy..."
+    # Check Claude Code (fallback-check nvm glob in case PATH is stale)
+    if command -v claude &>/dev/null; then
+        success "Claude Code is installed"
+    else
+        NVM_CLAUDE=$(ls -1 "$HOME"/.nvm/versions/node/*/bin/claude 2>/dev/null | head -n1)
+        if [ -n "${NVM_CLAUDE:-}" ] && [ -x "$NVM_CLAUDE" ]; then
+            info "Claude Code found at $NVM_CLAUDE (not on PATH — source ~/.zshrc or open a new shell to use it)"
+        else
+            warn "Claude Code not found — run Step 1 first"
+            PREREQ_PASS=false
+        fi
+    fi
 
-mkdir -p "$CONFIG_DIR"
-chmod 700 "$CONFIG_DIR"
+    # Check curl (needed for download)
+    if command -v curl &>/dev/null; then
+        success "curl is available"
+    else
+        fail "curl is required but not found. Install curl and try again."
+    fi
 
-if [ -f "$ACCESS_FILE" ] && [ "$SKIP_TOKEN" = true ]; then
-    success "Access policy already configured at $ACCESS_FILE"
-else
-    cat > "$ACCESS_FILE" << 'POLICY'
-{
-  "defaultPolicy": "ask",
-  "allowedChats": []
+    echo ""
+
+    if [ "$PREREQ_PASS" = false ]; then
+        warn "Some prerequisites are missing. The skill can still be installed,"
+        warn "but you will need Step 1 completed to use it."
+        echo ""
+    fi
 }
-POLICY
-    chmod 600 "$ACCESS_FILE"
-    success "Access policy written to $ACCESS_FILE"
-    info "Default policy: \"ask\" — Claude will prompt before accepting new chats"
-fi
 
-echo ""
+# -----------------------------------------------------------------------------
+# 3. Install the /safetycheck skill
+# -----------------------------------------------------------------------------
+install_skill() {
+    SKILL_DIR="$HOME/.claude/skills/safetycheck"
+    SKILL_FILE="$SKILL_DIR/SKILL.md"
+    # Pinned to a specific commit SHA — prevents rug-pull via mutable branch ref
+    # To update: change the SHA to the new commit and update SKILL_SHA256 to match
+    SKILL_COMMIT="7b449b652d946a8eef9aca65f0c8e182b4fb80f7"
+    SKILL_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/${SKILL_COMMIT}/step-9/safetycheck-skill/SKILL.md"
+    SKILL_SHA256="77e1ef1127fa35cd860925a652b96dd062ab080d438787b3bde348176597ab12"
 
-# =============================================================================
-# Your Telegram Commands
-# =============================================================================
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Your Telegram Commands${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-echo -e "  ${GREEN}ctg${NC}        Launch Claude with Telegram (from any directory)"
-echo -e "  ${GREEN}cbraintg${NC}   Launch Claude with Telegram inside your 2ndBrain vault"
-echo ""
+    info "Creating skill directory..."
+    mkdir -p "$SKILL_DIR"
+    success "Created $SKILL_DIR"
 
-# =============================================================================
-# Self-Test
-# =============================================================================
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}  Running Self-Test${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
+    # Check for existing skill file
+    if [ -f "$SKILL_FILE" ]; then
+        if [ ! -t 0 ]; then
+            # Non-interactive (curl | bash) — overwrite silently
+            info "Updating existing /safetycheck skill..."
+        else
+            echo ""
+            echo -e "${YELLOW}Existing /safetycheck skill found at $SKILL_FILE${NC}"
+            read -p "Overwrite with latest version? (Y/n): " OVERWRITE
+            if [[ "$OVERWRITE" =~ ^[Nn]$ ]]; then
+                info "Keeping existing skill file."
+                return
+            fi
+        fi
+    fi
 
-TEST_PASS=0
-TEST_FAIL=0
+    info "Downloading /safetycheck skill..."
+    if curl -fsSL "$SKILL_URL" -o "$SKILL_FILE" 2>/dev/null; then
+        success "Skill downloaded to $SKILL_FILE"
+    else
+        warn "Download failed — attempting fallback install..."
+        # Fallback: if the download fails (e.g., repo not yet public),
+        # check if the script was run from the CLI-MAXXING repo itself
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        LOCAL_SKILL="$SCRIPT_DIR/safetycheck-skill/SKILL.md"
 
-# Test 1: Bot token file exists
-if [ -f "$TOKEN_FILE" ]; then
-    success "TEST: Bot token file exists"
-    TEST_PASS=$((TEST_PASS + 1))
-else
-    echo -e "${RED}[FAIL]${NC} TEST: Bot token file not found at $TOKEN_FILE"
-    TEST_FAIL=$((TEST_FAIL + 1))
-fi
+        if [ -f "$LOCAL_SKILL" ]; then
+            cp "$LOCAL_SKILL" "$SKILL_FILE"
+            success "Skill installed from local copy"
+        else
+            soft_fail "Could not download or find the skill file"
+            return
+        fi
+    fi
 
-# Test 2: Token format valid
-if [ -f "$TOKEN_FILE" ]; then
-    SAVED_TOKEN=$(grep 'TELEGRAM_BOT_TOKEN=' "$TOKEN_FILE" 2>/dev/null | cut -d= -f2)
-    if [[ "$SAVED_TOKEN" =~ ^[0-9]+:[A-Za-z0-9_-]+$ ]]; then
-        success "TEST: Token format is valid"
+    # Verify the file is non-empty
+    if [ ! -s "$SKILL_FILE" ]; then
+        soft_fail "Skill file downloaded but is empty — try again later"
+        rm -f "$SKILL_FILE"
+        return
+    fi
+
+    # Verify SHA-256 integrity — protects against corrupted download or tampered content
+    if command -v shasum &>/dev/null; then
+        ACTUAL_SHA=$(shasum -a 256 "$SKILL_FILE" | cut -d' ' -f1)
+        if [ "$ACTUAL_SHA" = "$SKILL_SHA256" ]; then
+            success "Skill file integrity verified (sha256 match)"
+        else
+            soft_fail "Skill file sha256 mismatch — file may be corrupt or tampered. Expected: ${SKILL_SHA256:0:16}..."
+        fi
+    elif command -v sha256sum &>/dev/null; then
+        ACTUAL_SHA=$(sha256sum "$SKILL_FILE" | cut -d' ' -f1)
+        if [ "$ACTUAL_SHA" = "$SKILL_SHA256" ]; then
+            success "Skill file integrity verified (sha256 match)"
+        else
+            soft_fail "Skill file sha256 mismatch — file may be corrupt or tampered. Expected: ${SKILL_SHA256:0:16}..."
+        fi
+    fi
+
+    # Verify the file contains expected content
+    if grep -q "safetycheck" "$SKILL_FILE" 2>/dev/null; then
+        success "Skill file content verified"
+    else
+        soft_fail "Skill file does not contain expected content — may be corrupt"
+    fi
+
+    echo ""
+}
+
+# -----------------------------------------------------------------------------
+# Self-test — verify everything actually works
+# -----------------------------------------------------------------------------
+run_self_test() {
+    echo ""
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}  Running Self-Test${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    TEST_PASS=0
+    TEST_FAIL=0
+    SKILL_FILE="$HOME/.claude/skills/safetycheck/SKILL.md"
+
+    # Test 1: Skill directory exists
+    if [ -d "$HOME/.claude/skills/safetycheck" ]; then
+        success "TEST: Skill directory exists at ~/.claude/skills/safetycheck/"
         TEST_PASS=$((TEST_PASS + 1))
     else
-        echo -e "${RED}[FAIL]${NC} TEST: Token format invalid"
+        echo -e "${RED}[FAIL]${NC} TEST: Skill directory not found"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
-else
-    echo -e "${RED}[FAIL]${NC} TEST: Cannot validate token (file missing)"
-    TEST_FAIL=$((TEST_FAIL + 1))
-fi
 
-# Test 3: ctg command (script at ~/.local/bin/ctg, installed by Step 1)
-if [ -x "$HOME/.local/bin/ctg" ]; then
-    success "TEST: ctg command installed at ~/.local/bin/ctg"
-    TEST_PASS=$((TEST_PASS + 1))
-else
-    echo -e "${RED}[FAIL]${NC} TEST: ctg not found at ~/.local/bin/ctg — re-run Step 1"
-    TEST_FAIL=$((TEST_FAIL + 1))
-fi
+    # Test 2: Skill file exists
+    if [ -f "$SKILL_FILE" ]; then
+        success "TEST: SKILL.md exists at $SKILL_FILE"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md not found at $SKILL_FILE"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
 
-# Test 4: cbraintg command exists and is executable
-if [ -x "$HOME/.local/bin/cbraintg" ]; then
-    success "TEST: cbraintg command installed at ~/.local/bin/cbraintg"
-    TEST_PASS=$((TEST_PASS + 1))
-else
-    echo -e "${RED}[FAIL]${NC} TEST: cbraintg not found or not executable"
-    TEST_FAIL=$((TEST_FAIL + 1))
-fi
+    # Test 3: Skill file is non-empty
+    if [ -s "$SKILL_FILE" ]; then
+        SKILL_SIZE=$(wc -c < "$SKILL_FILE" | xargs)
+        success "TEST: SKILL.md is non-empty ($SKILL_SIZE bytes)"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md is empty"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
 
-echo ""
-echo "  $TEST_PASS tests passed, $TEST_FAIL failed."
+    # Test 4: Skill file contains expected content
+    if grep -q "safetycheck" "$SKILL_FILE" 2>/dev/null; then
+        success "TEST: SKILL.md contains safetycheck references"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md does not contain expected content"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
 
-if [ "$TEST_FAIL" -gt 0 ]; then
+    # Test 5: Skill file contains all 20 checks
+    CHECK_COUNT=$(grep -c "^#\{2,4\} Check [0-9][0-9]*" "$SKILL_FILE" 2>/dev/null || echo "0")
+    if [ "$CHECK_COUNT" -ge 20 ]; then
+        success "TEST: SKILL.md defines all 20 security checks"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md only has $CHECK_COUNT/20 checks"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Test 6: Claude Code is installed (fallback-check nvm glob if PATH is stale)
+    if command -v claude &>/dev/null; then
+        success "TEST: Claude Code is available"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        NVM_CLAUDE=$(ls -1 "$HOME"/.nvm/versions/node/*/bin/claude 2>/dev/null | head -n1)
+        if [ -n "${NVM_CLAUDE:-}" ] && [ -x "$NVM_CLAUDE" ]; then
+            info "TEST: Claude Code found at $NVM_CLAUDE (not on PATH — open a new shell to pick it up)"
+            TEST_PASS=$((TEST_PASS + 1))
+        else
+            echo -e "${RED}[FAIL]${NC} TEST: Claude Code not found — install via Step 1"
+            TEST_FAIL=$((TEST_FAIL + 1))
+        fi
+    fi
+
     echo ""
-    echo -e "  ${YELLOW}Some tests failed. Scroll up to see which tests failed — re-run the relevant step to fix.${NC}"
-fi
+    if [ "$TEST_FAIL" -eq 0 ]; then
+        echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC}"
+    else
+        echo -e "  ${GREEN}$TEST_PASS passed${NC}, ${RED}$TEST_FAIL failed${NC}."
+        echo -e "  ${YELLOW}Scroll up to see what went wrong.${NC}"
+    fi
+    echo ""
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+}
 
-# =============================================================================
-# Complete
-# =============================================================================
-echo ""
-echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Step 8 Complete — Telegram Configured${NC}"
-echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-echo "  Next steps:"
-echo ""
-echo "  1. Launch Claude with Telegram connected:"
-echo ""
-echo -e "     ${GREEN}ctg${NC}          — from any directory"
-echo -e "     ${GREEN}cbraintg${NC}     — from your 2ndBrain vault"
-echo ""
-echo "  2. Inside Claude, tell it:"
-echo ""
-echo -e "     ${BLUE}\"pair my Telegram bot\"${NC}"
-echo ""
-echo "     Claude will walk you through connecting your first chat."
-echo ""
-echo -e "  ${YELLOW}Tip: Use ctg from any directory, or cbraintg to also${NC}"
-echo -e "  ${YELLOW}open your 2ndBrain vault with Telegram connected.${NC}"
-echo ""
+# -----------------------------------------------------------------------------
+# Summary
+# -----------------------------------------------------------------------------
+print_summary() {
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${GREEN}  Step 9 Complete — /safetycheck Installed (20 checks)${NC}"
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo "  Installed:"
+    echo "    Skill file     ~/.claude/skills/safetycheck/SKILL.md"
+    echo ""
+    echo "  How to use:"
+    echo ""
+    echo -e "    Type ${GREEN}/safetycheck${NC} in Claude Code to run a security audit"
+    echo ""
+    echo "  What it checks:"
+    echo ""
+    echo "    API Security (checks 1-8):"
+    echo "    1. Exposed API Keys        — hardcoded secrets, git history, MCP config"
+    echo "    2. Rate Limiting            — endpoint protection middleware"
+    echo "    3. Input Sanitization       — eval, innerHTML, SQL injection, tool handlers"
+    echo "    4. RLS / Database Security  — parameterized queries, RLS policies"
+    echo "    5. Dependency Vulns         — npm audit, MCP SDK CVEs, lockfile hygiene"
+    echo "    6. Gitignore Hygiene        — .env, *.pem, MCP config files"
+    echo "    7. CI/CD & GitHub Security  — workflows, dependabot, SECURITY.md"
+    echo "    8. Error Handling           — raw error exposure, tool response leakage"
+    echo ""
+    echo "    MCP Security (checks 9-20, activated when MCP project detected):"
+    echo "    9.  Tool Description Integrity — injection markers, file paths, cross-tool refs"
+    echo "    10. Unicode Smuggling          — invisible chars, zero-width, tag characters"
+    echo "    11. Encoded Payloads           — Base64/hex in tool metadata"
+    echo "    12. MCP Transport Security     — HTTP vs HTTPS, DNS rebinding CVEs"
+    echo "    13. MCP Authentication         — bearer auth on HTTP MCP endpoints"
+    echo "    14. Token Scope & Lifecycle    — over-broad scopes, plaintext tokens"
+    echo "    15. Input Schema Validation    — tool schemas, additionalProperties"
+    echo "    16. Tool Response Sanitization — stack traces in tool results"
+    echo "    17. CORS / Origin Validation   — wildcard CORS on MCP endpoints"
+    echo "    18. Supply Chain & Config      — @latest pins, lockfile, .mcp.json hygiene"
+    echo "    19. Audit Logging              — structured logging, MCP notifications"
+    echo "    20. Rug-Pull Defense           — tool mutation, version pinning"
+    echo ""
+    if [ "$ERRORS" -gt 0 ]; then
+        echo -e "  ${YELLOW}Warnings: $ERRORS non-critical issue(s) during install.${NC}"
+        echo -e "  ${YELLOW}Scroll up to see details.${NC}"
+        echo ""
+    fi
+    echo -e "  ${YELLOW}Tip: Run /safetycheck in any project. MCP projects get${NC}"
+    echo -e "  ${YELLOW}12 additional security checks automatically.${NC}"
+    echo ""
+    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+}
 
-# Breadcrumb for /doctor and re-run detection.
-mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
-touch "$HOME/.cli-maxxing/step-8.done" 2>/dev/null || true
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
+main() {
+    # Refresh PATH before any prereq check so we see node/claude that were
+    # installed in earlier steps but haven't been picked up by this shell yet.
+    source_runtime_path
+
+    echo ""
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}  Step 9 — Safety Check${NC}"
+    echo -e "${BLUE}  Install the /safetycheck security audit skill${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    detect_os
+    verify_prerequisites
+    install_skill
+    run_self_test
+    print_summary
+
+    # Mark step complete (best-effort — don't fail the run if mkdir/touch can't write)
+    mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
+    touch "$HOME/.cli-maxxing/step-9.done" 2>/dev/null || true
+}
+
+main "$@"
