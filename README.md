@@ -775,7 +775,6 @@ See the [2ndBrain-mogging troubleshooting guide](https://github.com/lorecraft-io
 
 See [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) — vault setup is handled there. If your vault exists but isn't found, set `VAULT_PATH=/path/to/your/vault cbrain`.
 
-
 ### A step failed or something is missing
 
 Run the update command — it re-runs every step, skips what's already installed, fills in any gaps:
