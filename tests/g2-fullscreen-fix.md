@@ -64,18 +64,18 @@ Run `g2` again while neither window is fullscreen. It should behave identically 
 ## How to re-test after future changes
 
 1. Edit `~/.zshrc` (canonical) first. Run `source ~/.zshrc` and repeat the manual repro above.
-2. Propagate the change into `bonus-ghostty.sh` inside the `TILING_EOF` heredoc. Remember to rename any inner `EOF` to `APPLESCRIPT` or another unique tag.
+2. Propagate the change into `step-2/ghostty-install.sh` inside the `TILING_EOF` heredoc. Remember to rename any inner `EOF` to `APPLESCRIPT` or another unique tag.
 3. Re-run the install script on a scratch account (or against a throwaway `$SHELL_RC`) and grep the result for `g2()` and `AXFullScreen` to confirm the heredoc expanded correctly.
 4. Syntax-check both files:
    ```bash
-   bash -n bonus-ghostty/bonus-ghostty.sh
+   bash -n step-2/ghostty-install.sh
    bash -n step-final/step-final-install.sh
    ```
 5. Balance-check heredocs:
    ```bash
-   grep -c "<<'TILING_EOF'" bonus-ghostty/bonus-ghostty.sh    # expect 1
-   grep -c '^TILING_EOF$'   bonus-ghostty/bonus-ghostty.sh    # expect 1
-   grep -c "<<'APPLESCRIPT'" bonus-ghostty/bonus-ghostty.sh   # expect 2
-   grep -c '^APPLESCRIPT$'  bonus-ghostty/bonus-ghostty.sh    # expect 2
+   grep -c "<<'TILING_EOF'" step-2/ghostty-install.sh    # expect 1
+   grep -c '^TILING_EOF$'   step-2/ghostty-install.sh    # expect 1
+   grep -c "<<'APPLESCRIPT'" step-2/ghostty-install.sh   # expect 2
+   grep -c '^APPLESCRIPT$'  step-2/ghostty-install.sh    # expect 2
    ```
 6. Run the manual repro on the real machine. Automated tests are not feasible here — the fix depends on the macOS Accessibility API and a GUI app, neither of which can be exercised from CI.
