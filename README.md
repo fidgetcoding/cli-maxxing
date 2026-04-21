@@ -581,7 +581,12 @@ You now have your productivity stack connected to Claude. Ask about your schedul
 
 [Back to top](#quick-navigation)
 
-This step connects Claude to Telegram so you can message it from your phone. You create a bot on Telegram using @BotFather (free, takes about 2 minutes), then the script configures it locally. After setup, you can send Claude messages, photos, and files from anywhere — your phone, tablet, or any device with Telegram installed. The `ctg` command (already installed in Step 1) launches Claude with Telegram connected, and `cbraintg` does the same but also opens your 2ndBrain vault (requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)). This step is optional but makes Claude accessible from your pocket.
+This step connects Claude to Telegram so you can message it from your phone. You create a bot on Telegram using @BotFather (free, takes about 2 minutes), then the script configures it locally. After setup, you can send Claude messages, photos, and files from any device with Telegram installed. Optional, but it makes Claude accessible from your pocket.
+
+Two launcher commands come with it (both installed back in Step 1):
+
+- **`ctg`** — launches Claude with Telegram connected from any directory. Use this when you want to drive a regular Claude session from your phone.
+- **`cbraintg`** — same as `ctg`, but also opens your 2ndBrain vault on launch. Use this when you want Claude to have vault context while answering Telegram messages. *(Requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) installed.)*
 
 ### What It Sets Up
 
@@ -593,7 +598,7 @@ This step connects Claude to Telegram so you can message it from your phone. You
 | `ctg` command | Launch Claude with Telegram from any directory (installed in Step 1) |
 | `cbraintg` command | Launch Claude with Telegram inside your 2ndBrain vault (installed in Step 1) |
 
-### Run Step 8
+### Run Step 6
 
 > [!NOTE]
 > Step 6 is interactive — it will ask you to create a bot on Telegram and paste the token. The whole process takes about 2 minutes.
