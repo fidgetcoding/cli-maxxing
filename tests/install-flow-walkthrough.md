@@ -1,6 +1,6 @@
 # CLI-MAXXING Install Flow Walkthrough -- Regression Test
 
-> **Note:** This walkthrough covers Steps 1, 3, 6, and Final. Steps 2 (Bonus Software), 4 (FidgetFlo), 5 (Productivity Tools), 7 (GitHub), and 8 (Safety Check) are present in the repo but not fully covered in this regression test. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for their respective test walkthroughs.
+> **Note:** This walkthrough covers Steps 1, 2, 3, 5, 6, 8, and Final. Steps 4 (FidgetFlo) and 7 (GitHub) are present in the repo but not included in this regression test. See [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) and [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) for their respective test walkthroughs.
 
 **Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/2ndBrain`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
@@ -103,12 +103,12 @@ The `OBSIDIAN/` prefix requirement has been removed. The script first reads the 
 
 **File:** `step-5/step-5-install.sh`
 
-Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging), NOT here.
+Installs 10 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging), NOT here.
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
 | Non-interactive mode | Detects pipe (`[ ! -t 0 ]`), auto-detects already-installed MCPs, re-enters only the `"already installed"` guards; if nothing found, prints "run directly" instructions and exits cleanly | PASS |
-| Interactive menu | Numbered 1-7: Notion, Granola, n8n, GCal, Morgen, Motion, Playwright. Morgen (5) flagged as recommended default | PASS |
+| Interactive menu | Numbered 1-10: Notion, Granola, n8n, GCal, Morgen, Motion, Playwright, SwiftKit, Superhuman, Google Drive. Morgen (5) flagged as recommended default | PASS |
 | (1) Notion | Prompts for integration token, registers via `-e NOTION_TOKEN=...` | PASS |
 | (2) Granola | Registers HTTP transport to `https://mcp.granola.ai/mcp` (no credentials — Granola app handles auth) | PASS |
 | (3) n8n | Prompts for user's own n8n instance URL + optional Bearer token, registers via `--transport http` with `-H "Authorization: Bearer …"` if provided | PASS |
@@ -116,17 +116,20 @@ Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-moggi
 | (5) Morgen *(recommended)* | Prompts for API key + optional IANA timezone, registers via `-e MORGEN_API_KEY=... -e MORGEN_TIMEZONE=...`. No local `.env` — credentials live in Claude Code's MCP config | PASS |
 | (6) Motion Calendar | Prompts for Motion API key, Firebase API key, Firebase refresh token, Motion user ID. Writes `~/.motion-mcp/.env` (chmod 700/600). Registers via `claude mcp add motion` | PASS |
 | (7) Playwright | No credentials required. Registers Microsoft's official `@playwright/mcp` via `claude mcp add playwright -- npx -y @playwright/mcp@latest`. Chromium binaries auto-download on first use. | PASS |
+| (8) SwiftKit | Prompts for API key, registers hosted SwiftKit MCP. | PASS |
+| (9) Superhuman | No local credentials — one-time browser OAuth on first use. | PASS |
+| (10) Google Drive | No local credentials — one-time browser OAuth on first use via Google's hosted MCP. | PASS |
 | Obsidian | NOT in this repo — see 2ndBrain-mogging | N/A |
-| Self-test | `check_registered` covers all 7 tools, verifies Motion + GCal `.env` files exist for their respective installs | PASS |
+| Self-test | `check_registered` covers all tools, verifies Motion + GCal `.env` files exist for their respective installs | PASS |
 | Summary | Prints tool-count + "what you can do now" hints per installed tool | PASS |
 
-**Notes:** When run via `update.sh` (pipe), correctly auto-detects already-registered MCPs and exits after verification without prompting. First-time users must run directly in terminal for credential input. Morgen is promoted as the default calendar+task tool; Motion and Google Calendar are documented as secondary (install only for specific features the primary tool doesn't cover). Playwright is the only MCP in Step 6 with no credential prompts — it registers directly and downloads its own browser binaries on first use.
+**Notes:** When run via `update.sh` (pipe), correctly auto-detects already-registered MCPs and exits after verification without prompting. First-time users must run directly in terminal for credential input. Morgen is promoted as the default calendar+task tool; Motion and Google Calendar are documented as secondary (install only for specific features the primary tool doesn't cover). Playwright is the only MCP in Step 5 with no credential prompts — it registers directly and downloads its own browser binaries on first use.
 
 ---
 
-## Step 8 -- Telegram
+## Step 6 -- Telegram
 
-**File:** `step-8/step-8-install.sh`
+**File:** `step-6/step-6-install.sh`
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
@@ -146,7 +149,7 @@ Installs 7 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-moggi
 read -r -p "Paste your bot token here (press Enter to skip): " BOT_TOKEN
 BOT_TOKEN=$(echo "$BOT_TOKEN" | xargs)
 if [ -z "$BOT_TOKEN" ]; then
-    info "Telegram setup skipped. You can add your token later by re-running Step 8."
+    info "Telegram setup skipped. You can add your token later by re-running Step 6."
     SKIP_TOKEN=true
 else
     # validate and save...
@@ -178,7 +181,7 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
 | Install statusline.sh | Writes to `~/.claude/statusline.sh` | PASS |
-| 2ndBrain check (line 67) | `grep -qiE "(2ndBrain\|MASTER\|Second-Brain\|Vault)"` | PASS -- **BUG WAS FIXED** |
+| 2ndBrain check | Reads `~/.claude/.mogging-vault` marker; fallback regex for legacy vault names | PASS -- **BUG WAS FIXED** |
 | Settings.json | Merges statusLine config via jq | PASS |
 | Project override cleanup | Removes project-level statusLine overrides | PASS |
 | Health check | Verifies aliases, tools, config | PASS |
@@ -193,9 +196,9 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|
 | Steps 1-3 | Run via `curl \| bash` | PASS |
-| Step 6 | Detects non-interactive, exits cleanly with instructions | PASS |
-| Step 8 | Token prompt gets EOF, skip path activates | PASS -- **BUG WAS FIXED** |
-| Step 8 | Downloads skill | PASS |
+| Step 5 | Detects non-interactive, exits cleanly with instructions | PASS |
+| Step 6 | Token prompt gets EOF, skip path activates | PASS -- **BUG WAS FIXED** |
+| Step 8 | Downloads safetycheck skill | PASS |
 | Final | Installs statusline with correct vault detection | PASS -- **BUG WAS FIXED** |
 
 ---
@@ -207,7 +210,7 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 | # | Bug | Status | Current Code |
 |---|-----|--------|--------------|
 | 1 | Telegram token infinite loop | **FIXED** | Single `read` with skip path, no `while true` loop |
-| 2 | Statusline hardcoded `OBSIDIAN/` path | **FIXED** | Pattern now `(2ndBrain\|MASTER\|Second-Brain\|Vault)` without directory prefix |
+| 2 | Statusline hardcoded `OBSIDIAN/` path | **FIXED** | Now reads `~/.claude/.mogging-vault` marker first; regex fallback for legacy vault names |
 | 3 | Obsidian MCP internal errors | **UPSTREAM** | Install script is correct; upstream `obsidian-mcp` package may error. Fallback instructions provided. |
 
 ### Remaining Edge Cases (Low Severity)
@@ -216,7 +219,7 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 |---|-------|----------|--------|
 | 1 | Step 4 writes config to CWD | `step-4/step-4-install.sh` | FidgetFlo config files land in whatever directory user opened terminal in |
 | 2 | Statusline vault name false positives | All 3 statusline locations | If CWD contains "Vault" anywhere in the path (e.g., `/some/Vault-backup/project`), brain indicator shows incorrectly. Very unlikely edge case. |
-| 3 | Step 8 invalid token accepted | `step-8/step-8-install.sh:133-140` | Invalid token format is warned but saved anyway ("Saving anyway -- you can fix it later"). This is intentional leniency but means a typo gets stored. |
+| 3 | Step 6 invalid token accepted | `step-6/step-6-install.sh:133-140` | Invalid token format is warned but saved anyway ("Saving anyway -- you can fix it later"). This is intentional leniency but means a typo gets stored. |
 
 ### Test Verdict
 
