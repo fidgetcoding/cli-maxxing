@@ -1,5 +1,11 @@
 <a id="top"></a>
 
+<div align="center">
+
+![cli-maxxing](https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/cli-maxxing.png)
+
+</div>
+
 # CLI Maxxing
 
 **Everything you need to start working with AI-powered development tools; one command per step.**
