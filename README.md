@@ -445,7 +445,7 @@ Once installed, these tools work through natural language. No commands to memori
 
 Claude picks the right tool automatically based on what you ask. You never need to think about which MCP is handling it.
 
-Step 5 installs eight optional tools in this order:
+Step 5 installs nine optional tools in this order:
 
 1. **Notion** — pages, databases, knowledge management
 2. **Granola** — meeting transcripts and notes
@@ -455,6 +455,7 @@ Step 5 installs eight optional tools in this order:
 6. **Motion Calendar** — Motion-specific events, teammate visibility
 7. **Playwright** — browser automation via Microsoft's official `@playwright/mcp`
 8. **SwiftKit** — hosted MCP toolkit with 100+ tools across services
+9. **Superhuman** — email triage + drafting via the official Superhuman MCP
 
 > **Calendar recommendation:** Morgen (5) is the recommended default calendar + task tool. It unifies Google, Outlook, iCloud, and native tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary — install them only if you specifically need direct access to those accounts.
 >
@@ -546,7 +547,16 @@ Built by [SwiftKit](https://swiftkit.sh). A hosted MCP service that bundles 100+
 
 > **Requires:** A SwiftKit account and API key from [swiftkit.sh](https://swiftkit.sh). Sign up, generate a key (starts with `sk_live_` or `sk_test_`), and paste it when the setup script asks.
 
-### Run Step 6
+### Superhuman
+
+Built by [Superhuman](https://superhuman.com). Official remote MCP connector — gives Claude structured access to your inbox: triage, read, draft, and send. Great if you live in Superhuman and want Claude to write first-pass replies or summarize a long thread.
+
+- **HTTP transport.** Hosted endpoint at `mcp.mail.superhuman.com/mcp` — nothing to install locally.
+- **OAuth auth.** First call opens a browser to authorize Claude against your Superhuman account. Expect occasional re-auth prompts (remote MCP TTL).
+
+> **Requires:** An active [Superhuman](https://superhuman.com) subscription. After registration, the first tool use will trigger a one-time OAuth flow in your default browser.
+
+### Run Step 5
 
 You should still have a Claude session open. If you closed it, open your terminal and type `cskip` to start a new Claude session.
 
@@ -570,8 +580,9 @@ Once you're inside the Claude session, paste this and hit Enter:
 | Motion Calendar MCP | Motion-specific MCP for teammate visibility and full event search. Secondary. |
 | Playwright MCP | Microsoft's official browser automation — runs a separate Chromium instance (not your browser), uses accessibility-tree snapshots instead of pixels. Lets Claude log into and operate web apps that have no API. No credentials. |
 | SwiftKit MCP | Hosted MCP toolkit by [SwiftKit](https://swiftkit.sh) — 100+ tools across services behind a single HTTP endpoint. Bearer token auth, nothing to install locally. |
+| Superhuman MCP | Official remote MCP from [Superhuman](https://superhuman.com) — inbox triage, read/draft/send from Claude. OAuth browser flow on first use. |
 
-### After Step 6
+### After Step 5
 
 You now have your productivity stack connected to Claude. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. If you skipped any tools, you can always come back and re-run Step 5 to add them. For the Obsidian MCP and vault access, install [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging).
 
