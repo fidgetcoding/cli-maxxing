@@ -80,8 +80,8 @@ else
 fi
 echo ""
 
-# Step 1 — Claude
-echo -e "${YELLOW}>>> Step 1 — Claude${NC}"
+# Step 1 — CLI Tools
+echo -e "${YELLOW}>>> Step 1 — CLI Tools${NC}"
 echo ""
 curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
 # BUG A fix: Step 1 installs brew+nvm; re-source them into this shell so the

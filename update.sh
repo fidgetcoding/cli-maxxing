@@ -65,8 +65,8 @@ main() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
-    # Step 1 — Claude
-    echo -e "${YELLOW}>>> Running Step 1 — Claude${NC}"
+    # Step 1 — CLI Tools
+    echo -e "${YELLOW}>>> Running Step 1 — CLI Tools${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
     # Re-hydrate in case step-1 just installed brew/nvm for the first time and

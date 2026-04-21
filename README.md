@@ -40,7 +40,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [How It Works](#how-it-works) | Overview | How the steps fit together | |
 | [Install Everything](#install-everything) | One-shot | Run all steps at once | ~20 min |
 | [Keyboard + Command Cheat Sheet](#keyboard--command-cheat-sheet) | Commands & Shortcuts | Hotkeys, typing, and commands for your terminal | |
-| [Step 1](#step-1---claude) | Claude | Sets up the foundation on your machine | ~5 min |
+| [Step 1](#step-1---cli-tools) | CLI Tools | Git, Node.js, Claude Code, shell aliases — the foundation | ~5 min |
 | [Step 2](#step-2---bonus-software) | Bonus Software | Ghostty (terminal) + Arc (browser) — optional but highly recommended | ~4 min |
 | [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 4](#step-4---fidgetflo--context-hub) | FidgetFlo + Context Hub | Multi-agent orchestration, API docs, Opus locked | ~3 min |
@@ -82,7 +82,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 
 Run the steps in order. Each one builds on the last.
 
-**[Step 1 — Claude](#step-1---claude)** is the only part that feels "techy." This step gets the bare essentials on your machine so Claude (your AI assistant) can run. You paste one command and it handles the rest, but there are a few manual steps after it finishes, like logging into Claude. This is the most hands-on part of the entire process. After Step 1, you can ask Claude questions at any point. If something doesn't make sense, just ask. That's the whole point.
+**[Step 1 — CLI Tools](#step-1---cli-tools)** is the only part that feels "techy." This step gets the bare essentials on your machine so Claude (your AI assistant) can run — Git, Node.js, Claude Code, and shell aliases. You paste one command and it handles the rest, but there are a few manual steps after it finishes, like logging into Claude. This is the most hands-on part of the entire process. After Step 1, you can ask Claude questions at any point. If something doesn't make sense, just ask. That's the whole point.
 
 **[Step 2 — Bonus Software](#step-2---bonus-software)** is optional but highly recommended. It installs two tools that make your day-to-day flow noticeably smoother: **Ghostty**, a GPU-accelerated terminal with Cmd+Click support for URLs and file paths, and **Arc**, a Chromium-based browser with a sidebar instead of a tab bar, Spaces for context switching, and built-in ad blocking. You don't need either to continue — everything works in any terminal and any browser — but if you want the best terminal + browser setup, this is it.
 
@@ -161,7 +161,7 @@ Everything else — aliases, slash commands, natural-language tools, troubleshoo
 
 ---
 
-## Step 1 - Claude
+## Step 1 - CLI Tools
 
 [Back to top](#quick-navigation)
 
@@ -1003,7 +1003,7 @@ Run the steps in this order:
 
 | Step | Name | What it does |
 |------|------|-------------|
-| 1 | Claude | Git, Node.js, Claude Code, shell aliases |
+| 1 | CLI Tools | Git, Node.js, Claude Code, shell aliases |
 | 2 | Bonus Software | Ghostty (GPU-accelerated terminal) + Arc (power-user browser). Optional but recommended. |
 | 3 | Developer & Utility Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 4 | FidgetFlo + Context Hub | Multi-agent orchestration + API docs |
