@@ -718,14 +718,7 @@ pipx install xlsx2csv
 
 ### I want to completely remove everything
 
-Run the uninstall script:
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/uninstall.sh)
-```
-
-This removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg`/`cbrain`/`cbraintg` scripts in `~/.local/bin/`, all MCP servers, skills, and breadcrumbs this setup dropped. See the [Uninstall](#uninstall) section below for the full list.
-
-It does **not** remove Homebrew, nvm, Node.js, or Claude Code itself — those are general-purpose tools you might use outside of cli-maxxing. The uninstall script will show you how to remove them manually if you want a completely clean machine.
+See the [Uninstall](#uninstall) section below — one script reverses the whole stack.
 
 ### Telegram: pressing Enter skips setup
 
@@ -869,7 +862,7 @@ Open your terminal and run `cskip` to start a Claude session, then paste the upd
 
 [Back to top](#quick-navigation)
 
-If you need to remove everything installed by this setup, the uninstall script reverses all steps. It removes Claude Code, MCP servers, skills, shell aliases, dev tools, and brew packages. Your Obsidian vault and notes are never touched.
+One script reverses the whole stack. Your Obsidian vault, notes, and Claude account are never touched.
 
 > [!IMPORTANT]
 > **Paste this into your terminal:**
@@ -877,22 +870,25 @@ If you need to remove everything installed by this setup, the uninstall script r
 > bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/uninstall.sh)
 > ```
 
-**What it removes:**
-- Claude Code + shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and scripts (`ctg`, `cbrain`, `cbraintg` in `~/.local/bin/`)
-- All MCP servers (FidgetFlo, Notion, Granola, n8n, Morgen, Motion Calendar, Playwright, SwiftKit) — Magic, YouTube Transcript, yt-dlp, Whisper, and Obsidian are managed by the companion repos
-- All skills (fswarm, fmini, fhive, w4w, get-api-docs, gitfix, safetycheck) — UI/UX Pro Max, Taste Skill pack, and Remotion are managed by creativity-maxxing
-- Dev tools (pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler)
-- Whisper models (~/.whisper/)
-- Motion Calendar config (~/.motion-mcp/)
-- Google Calendar config (~/.google-calendar-mcp/)
-- Arc Browser (if installed via the bonus script)
-- Ghostty config (the app itself is kept — only the config file installed by this setup is removed)
+Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), `ctg`/`cbrain`/`cbraintg` scripts, all MCPs this setup installed, all FidgetFlo skills + `/w4w` + `/safetycheck` + `/gitfix`, dev tools, Whisper models, Arc Browser, and the Ghostty config.
+
+**Keeps:** Homebrew, Git, Node.js, Claude Code itself, your Obsidian vault + notes, your Claude account — general-purpose tools + your data. The script prints manual-removal commands at the end if you want a fully clean machine.
+
+<details>
+<summary><strong>Full list of what gets removed</strong></summary>
+
+- Claude Code shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and scripts (`ctg`, `cbrain`, `cbraintg` in `~/.local/bin/`)
+- All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub — design + media MCPs are managed by [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing); Obsidian is managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)
+- All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `get-api-docs`, `gitfix`, `safetycheck` — UI/UX Pro Max + Taste Skill pack + Remotion are managed by creativity-maxxing
+- Dev tools: pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler
+- Whisper models (`~/.whisper/`)
+- Motion Calendar config (`~/.motion-mcp/`)
+- Google Calendar config (`~/.google-calendar-mcp/`)
+- Arc Browser (if installed via Step 2)
+- Ghostty config (the app itself is kept)
 - Status line config
 
-**What it does NOT remove:**
-- Homebrew, Git, Node.js (other tools may depend on these — the script shows you how to remove them manually if you want)
-- Your Obsidian vault and notes
-- Your Claude account
+</details>
 
 ---
 
