@@ -102,7 +102,22 @@ install_gh() {
         brew install gh || { soft_fail "GitHub CLI installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
+            # Download keyring to a temp file first so a curl failure can't
+            # poison /usr/share/keyrings with an empty/truncated file.
+            local keyring_tmp
+            keyring_tmp="$(mktemp)" || { soft_fail "Could not create temp file"; return; }
+            if ! curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$keyring_tmp"; then
+                rm -f "$keyring_tmp"
+                soft_fail "Failed to download GitHub CLI keyring"
+                return
+            fi
+            if ! [ -s "$keyring_tmp" ]; then
+                rm -f "$keyring_tmp"
+                soft_fail "Downloaded GitHub CLI keyring is empty"
+                return
+            fi
+            sudo install -m 0644 "$keyring_tmp" /usr/share/keyrings/githubcli-archive-keyring.gpg
+            rm -f "$keyring_tmp"
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
             if sudo apt-get update -qq && sudo apt-get install -y -qq gh; then
                 :
@@ -133,8 +148,10 @@ choose_tools() {
         info "Non-interactive mode detected (running via curl pipe)"
         CHOICES=""
 
-        # Auto-detect already-installed tools
-        if claude mcp list 2>/dev/null | grep -q "github" 2>/dev/null; then
+        # Auto-detect already-installed tools.
+        # Anchor to start-of-line + literal name + ":" so we don't match
+        # user-defined MCP servers like "my-github-fork" or "github-mirror".
+        if claude mcp list 2>/dev/null | grep -qE '^github:' 2>/dev/null; then
             CHOICES="$CHOICES 1"
             INSTALLED_GITHUB=true
         fi
@@ -143,12 +160,16 @@ choose_tools() {
             info "Found already-installed tools — verifying configuration"
             return
         else
+            # No GitHub MCP yet and we can't prompt — still install /gitfix (no creds needed).
             echo ""
-            echo -e "${YELLOW}  Step 7 requires interactive input for API credentials.${NC}"
-            echo -e "${YELLOW}  Run it directly in your terminal:${NC}"
+            echo -e "${YELLOW}  Step 7 requires interactive input to set up the GitHub MCP.${NC}"
+            echo -e "${YELLOW}  Run it directly in your terminal to finish:${NC}"
             echo ""
             echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
             echo ""
+            info "Continuing with non-interactive /gitfix install..."
+            install_gitfix
+            run_self_test
             print_summary
             exit 0
         fi
@@ -167,9 +188,10 @@ choose_tools() {
     echo ""
 
     if [ -z "$CHOICES" ]; then
-        warn "No tools selected. Nothing to install."
-        print_summary
-        exit 0
+        # GitHub MCP is optional, but /gitfix is always installed in Step 7.
+        # Return instead of exiting so main() can still install /gitfix.
+        warn "No GitHub MCP selected — continuing to install /gitfix."
+        return
     fi
 }
 
@@ -179,7 +201,7 @@ choose_tools() {
 install_github() {
     info "Installing GitHub MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "github"; then
+    if claude mcp list 2>/dev/null | grep -qE '^github:'; then
         success "GitHub MCP already installed"
         INSTALLED_GITHUB=true
         return
@@ -202,7 +224,7 @@ install_github() {
     echo ""
 
     read -rsp "  GitHub Personal Access Token (ghp_...): " GITHUB_TOKEN
-    echo " [saved]"
+    echo " [captured]"
     echo ""
 
     if [ -z "$GITHUB_TOKEN" ]; then
@@ -224,6 +246,11 @@ install_github() {
     # Inject the token directly into the config entry (claude mcp add --scope user
     # does not support -e flags in all CLI versions, so we patch the env block).
     # Token is passed via env var (not argv) to avoid leaking it in `ps` output.
+    if ! command -v python3 &>/dev/null; then
+        soft_fail "python3 not found — cannot inject token into MCP config. Install python3 and re-run Step 7, or add GITHUB_PERSONAL_ACCESS_TOKEN to ~/.claude.json manually."
+        unset GITHUB_TOKEN GITHUB_TOKEN_VALUE
+        return
+    fi
     GITHUB_TOKEN_VALUE="$GITHUB_TOKEN" python3 - <<'PYEOF'
 import json, os
 
@@ -245,7 +272,7 @@ else:
     print("WARNING: github entry not found in MCP config — token not injected.")
 PYEOF
 
-    if claude mcp list 2>/dev/null | grep -q "github"; then
+    if claude mcp list 2>/dev/null | grep -qE '^github:'; then
         success "GitHub MCP installed"
         INSTALLED_GITHUB=true
     else
@@ -307,8 +334,10 @@ run_self_test() {
 
     check_registered() {
         local label="$1"
-        local needle="$2"
-        if claude mcp list 2>/dev/null | grep -q "$needle"; then
+        local name="$2"
+        # Anchor to start-of-line + literal name + ":" so we don't match
+        # user-defined MCP servers whose names contain the target as a substring.
+        if claude mcp list 2>/dev/null | grep -qE "^${name}:"; then
             success "TEST: $label MCP registered"
             TEST_PASS=$((TEST_PASS + 1))
         else

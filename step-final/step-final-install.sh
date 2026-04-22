@@ -348,7 +348,11 @@ fi
 # --- ctg script (token-guarded — not an alias) ---
 # Migrate: remove stale alias if step-1 hasn't cleaned it up yet
 if grep -q 'alias ctg=' "$SHELL_RC" 2>/dev/null; then
+    # sed -i.bak works on both BSD (macOS) and GNU sed. The .bak file is
+    # only needed as a safety net during the edit — clean it up afterward
+    # so we don't leave ~/.zshrc.bak lying around.
     sed -i.bak '/alias ctg=/d' "$SHELL_RC"
+    rm -f "${SHELL_RC}.bak"
     warn "HEALTH: removed stale ctg alias from $SHELL_RC — replaced by ~/.local/bin/ctg"
 fi
 if [ -x "$HOME/.local/bin/ctg" ]; then

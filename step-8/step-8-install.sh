@@ -158,8 +158,19 @@ install_skill() {
     fi
 
     info "Downloading /safetycheck skill..."
-    if curl -fsSL "$SKILL_URL" -o "$SKILL_FILE" 2>/dev/null; then
-        success "Skill downloaded to $SKILL_FILE"
+
+    # Stage the download in a temp file so we can verify SHA-256 BEFORE the
+    # file lands at the skill path. Without this, a bad file could be written
+    # to disk and then only flagged on the next line — the tampered skill
+    # would still be visible to Claude until the user re-runs Step 8.
+    SKILL_TMP="$(mktemp "${TMPDIR:-/tmp}/safetycheck-skill.XXXXXX")" || {
+        soft_fail "Could not create temp file for skill download"
+        return
+    }
+
+    SOURCE=""
+    if curl -fsSL "$SKILL_URL" -o "$SKILL_TMP" 2>/dev/null && [ -s "$SKILL_TMP" ]; then
+        SOURCE="download"
     else
         warn "Download failed — attempting fallback install..."
         # Fallback: if the download fails (e.g., repo not yet public),
@@ -167,45 +178,59 @@ install_skill() {
         SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
         LOCAL_SKILL="$SCRIPT_DIR/safetycheck-skill/SKILL.md"
 
-        if [ -f "$LOCAL_SKILL" ]; then
-            cp "$LOCAL_SKILL" "$SKILL_FILE"
-            success "Skill installed from local copy"
+        if [ -f "$LOCAL_SKILL" ] && [ -s "$LOCAL_SKILL" ]; then
+            cp "$LOCAL_SKILL" "$SKILL_TMP"
+            SOURCE="local"
         else
+            rm -f "$SKILL_TMP"
             soft_fail "Could not download or find the skill file"
             return
         fi
     fi
 
-    # Verify the file is non-empty
-    if [ ! -s "$SKILL_FILE" ]; then
-        soft_fail "Skill file downloaded but is empty — try again later"
-        rm -f "$SKILL_FILE"
+    # Verify the staged file is non-empty before SHA check
+    if [ ! -s "$SKILL_TMP" ]; then
+        rm -f "$SKILL_TMP"
+        soft_fail "Skill file is empty — try again later"
         return
     fi
 
-    # Verify SHA-256 integrity — protects against corrupted download or tampered content
+    # Verify SHA-256 integrity BEFORE moving into place — protects against
+    # corrupted download, MITM, or tampered upstream content.
+    ACTUAL_SHA=""
     if command -v shasum &>/dev/null; then
-        ACTUAL_SHA=$(shasum -a 256 "$SKILL_FILE" | cut -d' ' -f1)
-        if [ "$ACTUAL_SHA" = "$SKILL_SHA256" ]; then
-            success "Skill file integrity verified (sha256 match)"
-        else
-            soft_fail "Skill file sha256 mismatch — file may be corrupt or tampered. Expected: ${SKILL_SHA256:0:16}..."
-        fi
+        ACTUAL_SHA=$(shasum -a 256 "$SKILL_TMP" | cut -d' ' -f1)
     elif command -v sha256sum &>/dev/null; then
-        ACTUAL_SHA=$(sha256sum "$SKILL_FILE" | cut -d' ' -f1)
-        if [ "$ACTUAL_SHA" = "$SKILL_SHA256" ]; then
-            success "Skill file integrity verified (sha256 match)"
-        else
-            soft_fail "Skill file sha256 mismatch — file may be corrupt or tampered. Expected: ${SKILL_SHA256:0:16}..."
-        fi
+        ACTUAL_SHA=$(sha256sum "$SKILL_TMP" | cut -d' ' -f1)
     fi
 
-    # Verify the file contains expected content
-    if grep -q "safetycheck" "$SKILL_FILE" 2>/dev/null; then
-        success "Skill file content verified"
+    if [ -n "$ACTUAL_SHA" ]; then
+        if [ "$ACTUAL_SHA" = "$SKILL_SHA256" ]; then
+            success "Skill file integrity verified (sha256 match)"
+        else
+            rm -f "$SKILL_TMP"
+            soft_fail "Skill file sha256 mismatch — refusing to install. Expected: ${SKILL_SHA256:0:16}..., got: ${ACTUAL_SHA:0:16}..."
+            return
+        fi
     else
-        soft_fail "Skill file does not contain expected content — may be corrupt"
+        warn "Neither shasum nor sha256sum found — installing without integrity check"
     fi
+
+    # Verify expected content keyword
+    if ! grep -q "safetycheck" "$SKILL_TMP" 2>/dev/null; then
+        rm -f "$SKILL_TMP"
+        soft_fail "Skill file does not contain expected content — refusing to install"
+        return
+    fi
+
+    # Atomic move into place — skill at $SKILL_FILE only after every check passes.
+    mv "$SKILL_TMP" "$SKILL_FILE"
+    if [ "$SOURCE" = "download" ]; then
+        success "Skill downloaded to $SKILL_FILE"
+    else
+        success "Skill installed from local copy"
+    fi
+    success "Skill file content verified"
 
     echo ""
 }
