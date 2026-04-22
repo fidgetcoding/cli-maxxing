@@ -120,10 +120,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 |------|-------------|-----------------|----------------|
 | UI/UX Pro Max | creativity-maxxing | Natural language — asks about UI, design, layouts, interfaces | "Build me a dashboard with a sidebar" |
 | Taste Skill (8 variants) | creativity-maxxing | Natural language — anything frontend/design. Stops generic AI "slop" output. Name a variant to force it: "use minimalist-ui", "redesign this with industrial-brutalist-ui" | "Build a premium landing page" · "Redesign this dashboard" |
-| 21st.dev Magic | creativity-maxxing | Natural language — building components, pulls from 21st.dev library | "Create a hero section with a CTA" |
 | Remotion | creativity-maxxing | Natural language — video, animation, motion graphics | "Make a 30-second intro video" |
-| YouTube Transcripts | creativity-maxxing | Natural language — paste a YouTube link and ask for the transcript | "Get the transcript of this video: https://youtube.com/..." |
-| IG/Social Transcription | creativity-maxxing | Natural language — paste an Instagram, TikTok, or social media link | "Transcribe this reel: https://instagram.com/reel/..." |
 | Notion | Step 5 | Natural language — pages, databases, knowledge management | "Search my Notion for the meeting notes" |
 | Granola | Step 5 | Natural language — meeting transcripts and notes | "What did we cover in my last meeting?" |
 | n8n (your own) | Step 5 | Natural language — trigger and inspect your own n8n workflows | "Run my lead-qualification workflow on this email" |
@@ -140,13 +137,10 @@ These activate on their own when Claude detects a relevant task via natural lang
 | No-Flicker Mode | Step 3 | Automatic — fullscreen rendering, no screen jumping while Claude works | (always on — set via environment variable) |
 | Memory Hook | Step 3 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
-| Figma | Add-on | Natural language or paste a Figma URL — design-to-code, inspect designs | "Turn this Figma into React components" |
-| Excalidraw | Add-on | Natural language — diagrams, flowcharts, whiteboard sketches | "Draw a system architecture diagram" |
-| Gamma | Add-on | Natural language — presentations, documents, webpages | "Create a pitch deck for my startup" |
 
 > **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
-> **Add-on tools** (Canva, Figma, Excalidraw, Gamma) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed.
+> **Add-on tools** (Canva) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed. Figma, Excalidraw, and Gamma live in [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing).
 
 ---
 

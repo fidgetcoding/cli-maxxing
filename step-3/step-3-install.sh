@@ -3,7 +3,8 @@ set -uo pipefail
 
 # =============================================================================
 # Step 3 — Developer & Utility Tools
-# Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, gh, tree, fzf, wget, weasyprint
+# Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, tree, fzf, wget, weasyprint
+# GitHub CLI (gh) is installed by Step 7 alongside the GitHub MCP + /gitfix skill.
 # Run this in your terminal after completing Step 2
 # Usage: curl -fsSL <hosted-url>/step-3/step-3-install.sh | bash
 # =============================================================================
@@ -314,39 +315,6 @@ install_ripgrep() {
 }
 
 # -----------------------------------------------------------------------------
-# GitHub CLI
-# -----------------------------------------------------------------------------
-install_gh() {
-    if command -v gh &>/dev/null; then
-        success "GitHub CLI already installed ($(gh --version | head -1))"
-        return
-    fi
-
-    info "Installing GitHub CLI..."
-    if [ "$OS" = "mac" ]; then
-        brew install gh || { soft_fail "GitHub CLI installation failed"; return; }
-    else
-        if command -v apt-get &>/dev/null; then
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            if sudo apt-get update -qq && sudo apt-get install -y -qq gh; then
-                :
-            else
-                soft_fail "GitHub CLI installation failed"
-                return
-            fi
-        elif command -v dnf &>/dev/null; then
-            sudo dnf install -y gh || { soft_fail "GitHub CLI installation failed"; return; }
-        else
-            soft_fail "Could not install GitHub CLI — install manually: https://cli.github.com"
-            return
-        fi
-    fi
-
-    command -v gh &>/dev/null && success "GitHub CLI installed ($(gh --version | head -1))"
-}
-
-# -----------------------------------------------------------------------------
 # tree
 # -----------------------------------------------------------------------------
 install_tree() {
@@ -473,7 +441,6 @@ run_self_test() {
         "pdftotext:pdftotext" \
         "jq:jq" \
         "rg:ripgrep" \
-        "gh:GitHub CLI" \
         "tree:tree" \
         "fzf:fzf" \
         "wget:wget" \
@@ -638,7 +605,6 @@ print_summary() {
     echo "    pdftotext      $(command -v pdftotext &>/dev/null && echo 'installed' || echo '—')"
     echo "    jq             $(jq --version 2>/dev/null || echo '—')"
     echo "    ripgrep        $(rg --version 2>/dev/null | head -1 || echo '—')"
-    echo "    GitHub CLI     $(gh --version 2>/dev/null | head -1 || echo '—')"
     echo "    tree           $(command -v tree &>/dev/null && echo 'installed' || echo '—')"
     echo "    fzf            $(fzf --version 2>/dev/null | cut -d' ' -f1 || echo '—')"
     echo "    wget           $(command -v wget &>/dev/null && echo 'installed' || echo '—')"
@@ -679,7 +645,7 @@ main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BLUE}  Step 3 — Developer & Utility Tools${NC}"
-    echo -e "${BLUE}  11 tools • macOS + Linux${NC}"
+    echo -e "${BLUE}  10 tools • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -692,7 +658,6 @@ main() {
     install_pdftotext
     install_jq
     install_ripgrep
-    install_gh
     install_tree
     install_fzf
     install_wget

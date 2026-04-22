@@ -205,7 +205,16 @@ uninstall_safetycheck() {
 # -----------------------------------------------------------------------------
 uninstall_github() {
     echo ""
-    echo -e "${BLUE}--- Step 7: GitHub MCP + /gitfix ---${NC}"
+    echo -e "${BLUE}--- Step 7: GitHub CLI + MCP + /gitfix ---${NC}"
+
+    # gh CLI — installed by Step 7 (pre-2026-04 installs had it in Step 3, so
+    # removal here catches both layouts).
+    if command -v gh &>/dev/null || brew list gh &>/dev/null 2>&1; then
+        brew uninstall gh 2>/dev/null || true
+        success "brew: gh (GitHub CLI)"
+    else
+        skip "brew: gh (not found)"
+    fi
 
     if claude mcp list 2>/dev/null | grep -qi "github" 2>/dev/null; then
         claude mcp remove github 2>/dev/null || true
@@ -337,7 +346,7 @@ uninstall_dev_tools() {
     echo ""
     echo -e "${BLUE}--- Step 3: Developer & Utility Tools ---${NC}"
 
-    for tool in pandoc poppler jq ripgrep gh tree fzf wget weasyprint; do
+    for tool in pandoc poppler jq ripgrep tree fzf wget weasyprint; do
         if command -v "$tool" &>/dev/null || brew list "$tool" &>/dev/null 2>&1; then
             brew uninstall "$tool" 2>/dev/null || true
             success "brew: $tool"

@@ -2,8 +2,10 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 7 — GitHub MCP + /gitfix
-# Installs GitHub MCP server and the /gitfix skill.
+# Step 7 — GitHub CLI + MCP + /gitfix
+# Installs the `gh` CLI (terminal binary), the GitHub MCP server, and the
+# /gitfix skill. `gh` installs unconditionally (no credentials needed); the
+# MCP install is gated on a Personal Access Token.
 # Run after completing Steps 1-6. Run this in your terminal.
 # =============================================================================
 
@@ -22,6 +24,7 @@ fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
 # Track what was installed this run
+INSTALLED_GH=false
 INSTALLED_GITHUB=false
 INSTALLED_GITFIX=false
 
@@ -80,6 +83,45 @@ verify_prerequisites() {
         fail "Claude Code not found. Run Step 1 first."
     fi
     success "Prerequisites verified"
+}
+
+# -----------------------------------------------------------------------------
+# GitHub CLI (`gh`) — terminal binary. Installs unconditionally: no credentials
+# required, used by Claude via Bash (`gh pr create`, etc.) and by /gitfix for
+# branch / diff inspection. Idempotent — skips when already present.
+# -----------------------------------------------------------------------------
+install_gh() {
+    if command -v gh &>/dev/null; then
+        success "GitHub CLI already installed ($(gh --version | head -1))"
+        INSTALLED_GH=true
+        return
+    fi
+
+    info "Installing GitHub CLI..."
+    if [ "$OS" = "mac" ]; then
+        brew install gh || { soft_fail "GitHub CLI installation failed"; return; }
+    else
+        if command -v apt-get &>/dev/null; then
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            if sudo apt-get update -qq && sudo apt-get install -y -qq gh; then
+                :
+            else
+                soft_fail "GitHub CLI installation failed"
+                return
+            fi
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y gh || { soft_fail "GitHub CLI installation failed"; return; }
+        else
+            soft_fail "Could not install GitHub CLI — install manually: https://cli.github.com"
+            return
+        fi
+    fi
+
+    if command -v gh &>/dev/null; then
+        success "GitHub CLI installed ($(gh --version | head -1))"
+        INSTALLED_GH=true
+    fi
 }
 
 # -----------------------------------------------------------------------------
@@ -275,7 +317,18 @@ run_self_test() {
         fi
     }
 
-    if $INSTALLED_GITHUB; then check_registered "GitHub" "github"; else info "TEST: GitHub — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
+    # gh CLI install is unconditional in Step 7, so this test always runs.
+    # A failure here means install_gh hit a soft_fail (unsupported package
+    # manager, sudo denied, etc.) — scroll up for the install-time message.
+    if command -v gh &>/dev/null; then
+        success "TEST: gh CLI installed ($(gh --version | head -1))"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: gh CLI not found on PATH"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    if $INSTALLED_GITHUB; then check_registered "GitHub" "github"; else info "TEST: GitHub MCP — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     if $INSTALLED_GITFIX; then
         success "TEST: /gitfix skill installed"
@@ -302,13 +355,14 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 7 Complete — GitHub + /gitfix${NC}"
+    echo -e "${GREEN}  Step 7 Complete — GitHub CLI + MCP + /gitfix${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
     INSTALLED_COUNT=0
 
-    if $INSTALLED_GITHUB; then echo "  GitHub  — repos, issues, PRs, code search"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_GH; then echo "  gh CLI  — GitHub from your terminal ($(gh --version 2>/dev/null | head -1))"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_GITHUB; then echo "  GitHub MCP — repos, issues, PRs, code search"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_GITFIX; then
         echo "  /gitfix — full-repo consistency audit: docs, scripts, and README all in sync"
         INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
@@ -350,13 +404,14 @@ main() {
 
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 7 — GitHub MCP + /gitfix${NC}"
-    echo -e "${BLUE}  GitHub MCP + /gitfix skill • macOS + Linux${NC}"
+    echo -e "${BLUE}  Step 7 — GitHub CLI + MCP + /gitfix${NC}"
+    echo -e "${BLUE}  gh CLI + GitHub MCP + /gitfix skill • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
     detect_os
     verify_prerequisites
+    install_gh
     choose_tools
 
     # Process each selection in the canonical order

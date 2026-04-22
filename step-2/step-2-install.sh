@@ -41,7 +41,7 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 echo -e "${YELLOW}  NEXT: Continue to Step 3${NC}"
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "  Run Step 3 to install developer tools (Python, jq, ripgrep, gh, etc.):"
+echo "  Run Step 3 to install developer tools (Python, jq, ripgrep, tree, fzf, etc.):"
 echo ""
 echo -e "     ${GREEN}bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)${NC}"
 echo ""

@@ -322,7 +322,6 @@ Claude runs the install. If it asks you to restart your terminal, close the wind
 | pdftotext | Extracts text from PDFs. |
 | jq | Reads and edits JSON config files. |
 | ripgrep | Fast code search — Claude Code uses it internally. |
-| GitHub CLI | Manage GitHub from your terminal. |
 | tree | Shows your folder structure visually. |
 | fzf | Fuzzy-finder for files and commands. |
 | wget | Downloads files from the web. |
@@ -529,9 +528,10 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 
 [Back to top](#quick-navigation)
 
-The GitHub bundle — optional, for devs. Installs two things:
+The GitHub bundle — optional, for devs. Installs three things:
 
-- **GitHub MCP** ([`@modelcontextprotocol/server-github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github)) — Claude gets direct access to your repos: issues, PRs, files, code search, branches, commits. *"List open PRs on cli-maxxing"*, *"search my repos for any file that uses MORGEN_API_KEY"* — it just works.
+- **GitHub CLI (`gh`)** — the terminal binary. Claude shells out to it via Bash for everyday ops (`gh pr create`, `gh issue list`, `gh repo view`). Installs unconditionally — no credentials required. Run `gh auth login` once after install to sign in.
+- **GitHub MCP** ([`@modelcontextprotocol/server-github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github)) — Claude gets direct tool-call access to your repos: issues, PRs, files, code search, branches, commits. *"List open PRs on cli-maxxing"*, *"search my repos for any file that uses MORGEN_API_KEY"* — it just works. Requires a Personal Access Token.
 - **`/gitfix` skill** — full-repo doc sync. Reads every install script, skill file, and doc, finds drift between code and docs, fixes it. Run it after any significant change so the README stops lying.
 
 ### Before You Run It
@@ -555,7 +555,8 @@ Script prompts for your PAT, registers the GitHub MCP (token stored in `~/.claud
 
 | Component | What it does |
 |-----------|-------------|
-| GitHub MCP | Exposes GitHub API ops as Claude tools — read/write repos, issues, PRs, code search, branches, commits. |
+| GitHub CLI (`gh`) | Terminal binary. Claude uses it via Bash for PRs, issues, code search, branch ops. Run `gh auth login` once after install. |
+| GitHub MCP | Exposes GitHub API ops as Claude tools — read/write repos, issues, PRs, code search, branches, commits. Needs a Personal Access Token. |
 | `/gitfix` skill | Full-repo doc sync. Fixes drift between code and docs. Works on any repo, no token needed. |
 
 ### After Step 7
@@ -861,7 +862,7 @@ Run the steps in this order:
 | 4 | FidgetFlo | Multi-agent orchestration — swarms, hives, persistent memory, Opus-locked |
 | 5 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit + Superhuman + Google Drive (all optional — pick what you use; Morgen recommended) |
 | 6 | Telegram | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
-| 7 | GitHub | GitHub MCP (repos, issues, PRs, code search — requires PAT) + `/gitfix` skill for full-repo doc sync |
+| 7 | GitHub | GitHub CLI (`gh`) + GitHub MCP (repos, issues, PRs, code search — MCP requires PAT) + `/gitfix` skill for full-repo doc sync |
 | 8 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
 | **Final** | **Status Line** | **Status indicators + system health check** |
 
@@ -897,7 +898,7 @@ One script reverses the whole stack. Your Obsidian vault, notes, and Claude acco
 > bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/uninstall.sh)
 > ```
 
-Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script, all MCPs this setup installed, all FidgetFlo skills + `/w4w` + `/safetycheck` + `/gitfix`, dev tools, Whisper models, Arc Browser, and the Ghostty config. `cbrain` and `cbraintg` are managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) and are not touched here.
+Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script, all MCPs this setup installed, all FidgetFlo skills + `/w4w` + `/safetycheck` + `/gitfix`, dev tools, Arc Browser, and the Ghostty config. `cbrain` and `cbraintg` are managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) and are not touched here. The YouTube / Instagram transcription stack (yt-dlp, whisper-mcp, ffmpeg, Whisper models) lives in [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) — run its uninstaller separately if you installed it.
 
 **Keeps:** Homebrew, Git, Node.js, Claude Code itself, your Obsidian vault + notes, your Claude account — general-purpose tools + your data. The script prints manual-removal commands at the end if you want a fully clean machine.
 
@@ -907,8 +908,8 @@ Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script,
 - Claude Code shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and the `ctg` script (`~/.local/bin/ctg`). `cbrain` and `cbraintg` are managed by 2ndBrain-mogging — not removed here.
 - All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub — design + media MCPs are managed by [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing); Obsidian is managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)
 - All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `gitfix`, `safetycheck` — UI/UX Pro Max + Taste Skill pack + Remotion are managed by creativity-maxxing
-- Dev tools: pandoc, jq, ripgrep, gh, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler
-- Whisper models (`~/.whisper/`)
+- Dev tools: pandoc, jq, ripgrep, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler
+- GitHub CLI (`gh` — installed by Step 7 alongside the GitHub MCP + /gitfix skill)
 - Motion Calendar config (`~/.motion-mcp/`)
 - Google Calendar config (`~/.google-calendar-mcp/`)
 - Arc Browser (if installed via Step 2)
