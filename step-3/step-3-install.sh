@@ -432,8 +432,9 @@ run_self_test() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
-    TEST_PASS=0
-    TEST_FAIL=0
+    local TEST_PASS=0
+    local TEST_FAIL=0
+    local cmd_check cmd name rc NO_FLICKER_FOUND
 
     for cmd_check in \
         "python3:Python 3" \
@@ -467,6 +468,9 @@ run_self_test() {
 
     # No-flicker mode — check across all rc files we write to
     NO_FLICKER_FOUND=""
+    # SHELL_RCS is a whitespace-separated list here; intentional word-split is safe
+    # because we control the values (only $HOME/.zshrc and $HOME/.bashrc are ever added).
+    # shellcheck disable=SC2086
     for rc in $SHELL_RCS; do
         if [ -f "$rc" ] && grep -q 'CLAUDE_CODE_NO_FLICKER' "$rc" 2>/dev/null; then
             NO_FLICKER_FOUND="${NO_FLICKER_FOUND}${rc} "
@@ -495,7 +499,8 @@ run_self_test() {
 # Auto-save memory hook — saves conversation context on session end
 # -----------------------------------------------------------------------------
 configure_memory_hook() {
-    CLAUDE_SETTINGS="$HOME/.claude/settings.json"
+    local CLAUDE_SETTINGS="$HOME/.claude/settings.json"
+    local HOOK_CMD
 
     # Create .claude dir if needed
     mkdir -p "$HOME/.claude"
@@ -509,10 +514,15 @@ configure_memory_hook() {
     info "Configuring memory auto-save hook..."
 
     if [ -f "$CLAUDE_SETTINGS" ]; then
-        # Settings file exists — add hooks if not present
+        # Settings file exists — add hooks if not present.
+        # SESSION_ID is sanitized to [A-Za-z0-9_-] before the filesystem
+        # touches it, so a malformed value (containing '/' or '..') cannot
+        # escape /tmp or cause path confusion. Claude Code owns this value
+        # today, but the sanitizer is defense-in-depth against future
+        # changes in what the stop-hook JSON carries.
         if command -v jq &>/dev/null; then
             # shellcheck disable=SC2016
-            HOOK_CMD='SESSION_ID=$(jq -r '"'"'.session_id // empty'"'"' 2>/dev/null); MARKER="/tmp/claude-memory-saved-${SESSION_ID}"; if [ -f "$MARKER" ]; then echo '"'"'{"continue": true}'"'"'; else touch "$MARKER"; echo '"'"'{"continue": false, "stopReason": "MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop."}'"'"'; fi'
+            HOOK_CMD='SESSION_ID=$(jq -r '"'"'.session_id // empty'"'"' 2>/dev/null); SESSION_ID="${SESSION_ID//[^A-Za-z0-9_-]/}"; if [ -z "$SESSION_ID" ]; then SESSION_ID="nosid"; fi; MARKER="/tmp/claude-memory-saved-${SESSION_ID}"; if [ -f "$MARKER" ]; then echo '"'"'{"continue": true}'"'"'; else touch "$MARKER"; echo '"'"'{"continue": false, "stopReason": "MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop."}'"'"'; fi'
 
             jq --arg cmd "$HOOK_CMD" '.hooks = (.hooks // {}) | .hooks.Stop = [{"hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]' "$CLAUDE_SETTINGS" > "${CLAUDE_SETTINGS}.tmp" \
                 && mv "${CLAUDE_SETTINGS}.tmp" "$CLAUDE_SETTINGS"
@@ -521,7 +531,9 @@ configure_memory_hook() {
             warn "jq not available yet, skipping hook config. Run Step 3 again after jq installs."
         fi
     else
-        # No settings file — create one with the hook
+        # No settings file — create one with the hook. SESSION_ID is sanitized
+        # to [A-Za-z0-9_-] before it touches the filesystem so a malformed
+        # value cannot escape /tmp. Matches the jq-merge branch above.
         cat > "$CLAUDE_SETTINGS" << 'SETTINGS_EOF'
 {
   "hooks": {
@@ -530,7 +542,7 @@ configure_memory_hook() {
         "hooks": [
           {
             "type": "command",
-            "command": "SESSION_ID=$(jq -r '.session_id // empty' 2>/dev/null); MARKER=\"/tmp/claude-memory-saved-${SESSION_ID}\"; if [ -f \"$MARKER\" ]; then echo '{\"continue\": true}'; else touch \"$MARKER\"; echo '{\"continue\": false, \"stopReason\": \"MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop.\"}'; fi",
+            "command": "SESSION_ID=$(jq -r '.session_id // empty' 2>/dev/null); SESSION_ID=\"${SESSION_ID//[^A-Za-z0-9_-]/}\"; if [ -z \"$SESSION_ID\" ]; then SESSION_ID=\"nosid\"; fi; MARKER=\"/tmp/claude-memory-saved-${SESSION_ID}\"; if [ -f \"$MARKER\" ]; then echo '{\"continue\": true}'; else touch \"$MARKER\"; echo '{\"continue\": false, \"stopReason\": \"MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop.\"}'; fi",
             "timeout": 5
           }
         ]
@@ -551,15 +563,18 @@ SETTINGS_EOF
 # launch. Idempotent via grep markers.
 # -----------------------------------------------------------------------------
 configure_no_flicker() {
-    FLICKER_ANY_CHANGED=false
-    FLICKER_ANY_WRITTEN=""
+    local FLICKER_ANY_CHANGED=false
+    local FLICKER_ANY_WRITTEN=""
+    local rc changed
 
+    # SHELL_RCS is a whitespace-separated list; intentional word-split is safe.
+    # shellcheck disable=SC2086
     for rc in $SHELL_RCS; do
         # Only write to files that already exist — never materialize a .bashrc
         # on a zsh-only macOS user and vice versa.
         [ -f "$rc" ] || continue
 
-        local changed=false
+        changed=false
 
         if ! grep -q 'CLAUDE_CODE_NO_FLICKER' "$rc" 2>/dev/null; then
             {
@@ -611,7 +626,9 @@ print_summary() {
     echo "    weasyprint     $(command -v weasyprint &>/dev/null && echo 'installed' || echo '—')"
     echo ""
     # Report no-flicker status across all rc files we may have written to
-    NO_FLICKER_STATUS="—"
+    local NO_FLICKER_STATUS="—"
+    local rc
+    # shellcheck disable=SC2086
     for rc in $SHELL_RCS; do
         if [ -f "$rc" ] && grep -q 'CLAUDE_CODE_NO_FLICKER' "$rc" 2>/dev/null; then
             NO_FLICKER_STATUS="enabled"
