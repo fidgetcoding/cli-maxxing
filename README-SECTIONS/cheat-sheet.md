@@ -131,6 +131,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | SwiftKit | Step 5 | Natural language — hosted toolkit for iOS / macOS / Swift dev (100+ tools). Default for anything Apple-platform | "Build me a SwiftUI login screen" |
 | Superhuman | Step 5 | Natural language — email triage + drafting via Superhuman's official remote MCP | "Triage my inbox" · "Draft a reply to the latest thread" |
 | Google Drive | Step 5 | Natural language — browse, search, and read Docs / Sheets / PDFs / shared folders via Google's official hosted MCP | "Find the latest Q3 planning doc in my Drive" |
+| Vercel | Step 5 | Natural language — deployments, build logs, runtime logs, domains, env vars via Vercel's official remote MCP | "List my recent deployments" · "Show build logs for the last failed deploy" |
 | Telegram | Step 6 | Automatic when launched with `ctg` or `cbraintg` — reads and replies to Telegram messages | (messages arrive automatically from connected chats) |
 | GitHub | Step 7 | Natural language — repos, issues, PRs, code search, branches, commits | "List open PRs on cli-maxxing" · "Search my repos for any file that uses MORGEN_API_KEY" |
 | Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |

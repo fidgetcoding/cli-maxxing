@@ -50,7 +50,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [Step 2](#step-2---bonus-software) | Bonus Software | Ghostty (terminal) + Arc (browser) — optional but highly recommended | ~4 min |
 | [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 4](#step-4---fidgetflo) | FidgetFlo | Multi-agent orchestration — swarms, hives, persistent memory, Opus-locked | ~3 min |
-| [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit + Superhuman + Google Drive (pick what you use; Morgen recommended) | ~5 min |
+| [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit + Superhuman + Google Drive + Vercel (pick what you use; Morgen recommended) | ~5 min |
 | [Step 6](#step-6---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 7](#step-7---github) | GitHub | GitHub MCP + /gitfix skill — repos, issues, PRs, code search, full-repo doc sync (requires PAT) | ~2 min |
 | [Step 8](#step-8---safety-check) | Safety Check | Security auditing — scan any project for vulnerabilities + full MCP security checks | ~2 min |
@@ -95,7 +95,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 4 — FidgetFlo](#step-4---fidgetflo)** is where you set up [FidgetFlo](https://github.com/lorecraft-io/fidgetflo), the multi-agent orchestration layer that turns Claude into a full team of AI agents — `/fswarm`, `/fmini`, `/fhive`, persistent memory, Opus-locked.
 
-**[Step 5 — Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools — notes, calendars, email, meetings, workflows, browser automation, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, SwiftKit, Superhuman, or Google Drive. All optional, install only what you need.
+**[Step 5 — Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools — notes, calendars, email, meetings, workflows, browser automation, deployments, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, or Vercel. All optional, install only what you need.
 
 **[Step 6 — Telegram](#step-6---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected — messages show up in your session in real time. This step is completely optional; everything else works without it.
 
@@ -442,7 +442,7 @@ Connects Claude to the productivity tools you already use. Everything's optional
 
 Claude picks the right tool automatically based on what you ask. Pick whichever apply:
 
-1. **Notion** · 2. **Granola** · 3. **n8n** · 4. **Google Calendar** · 5. **Morgen** ⭐ · 6. **Motion Calendar** · 7. **Playwright** · 8. **SwiftKit** · 9. **Superhuman** · 10. **Google Drive**
+1. **Notion** · 2. **Granola** · 3. **n8n** · 4. **Google Calendar** · 5. **Morgen** ⭐ · 6. **Motion Calendar** · 7. **Playwright** · 8. **SwiftKit** · 9. **Superhuman** · 10. **Google Drive** · 11. **Vercel**
 
 > **Morgen (5) is the recommended default** — it unifies Google, Outlook, iCloud, and native calendars + tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary — install only if you need those accounts directly.
 >
@@ -473,6 +473,7 @@ The script asks which tools you want, then walks you through each one's credenti
 | 8 | **SwiftKit** ([swiftkit.sh](https://swiftkit.sh)) | Hosted MCP toolkit for **iOS / macOS / Swift development** — 100+ tools for writing, building, and shipping Apple-platform code behind one HTTP endpoint. Default for anything iPhone/iOS/Swift-related. Nothing to install locally. | Account + API key (`sk_live_` or `sk_test_`). |
 | 9 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
 | 10 | **Google Drive** | Browse, search, and read Google Drive files — Docs, Sheets, PDFs, shared folders — via Google's official hosted MCP at `drivemcp.googleapis.com`. | Google account. One-time browser OAuth on first use. |
+| 11 | **Vercel** ([vercel.com](https://vercel.com)) | Deployments, build logs, runtime logs, domain management, environment variables, and project config via Vercel's official remote MCP. | Vercel account. One-time browser OAuth on first use. |
 
 > **Playwright scope note:** Microsoft explicitly says "Playwright MCP is not a security boundary." Treat anything Claude loads through it the same as any browser session you'd drive manually.
 >
@@ -813,7 +814,7 @@ Once you're inside Claude, type:
 /mcp
 ```
 
-This shows every MCP server and its connection status. Everything you installed — FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub (if you ran Step 7), Obsidian (from 2ndBrain-mogging), and design tools (from creativity-maxxing) — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
+This shows every MCP server and its connection status. Everything you installed — FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, Vercel, GitHub (if you ran Step 7), Obsidian (from 2ndBrain-mogging), and design tools (from creativity-maxxing) — should show as **Connected**. If anything shows as failed or disconnected, just tell Claude:
 
 > "One of my MCP servers isn't connecting — can you troubleshoot it?"
 
@@ -836,7 +837,7 @@ That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with a
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
 - All permissions skipped — Claude acts immediately, no approval prompts
-- Full access to everything: `/fswarm` (+ tiers `1`/`2`/`3`/`max`), `/fmini` (+ tiers `1`/`2`/`3`/`max`), `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, Obsidian, design tools, video tools — all of it
+- Full access to everything: `/fswarm` (+ tiers `1`/`2`/`3`/`max`), `/fmini` (+ tiers `1`/`2`/`3`/`max`), `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, Vercel, Obsidian, design tools, video tools — all of it
 - Your status line shows what's active at a glance
 
 **When to use something else:**

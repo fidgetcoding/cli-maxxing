@@ -34,6 +34,7 @@ INSTALLED_PLAYWRIGHT=false
 INSTALLED_SWIFTKIT=false
 INSTALLED_SUPERHUMAN=false
 INSTALLED_GDRIVE=false
+INSTALLED_VERCEL=false
 # Pre-existing installs (credentials managed outside this script).
 # Only Motion tracks this because Motion persists credentials to a local .env
 # the self-test checks for; Morgen/Notion/n8n credentials live inside Claude's
@@ -147,6 +148,10 @@ choose_tools() {
             CHOICES="$CHOICES 10"
             INSTALLED_GDRIVE=true
         fi
+        if claude mcp list 2>/dev/null | grep -q "vercel" 2>/dev/null; then
+            CHOICES="$CHOICES 11"
+            INSTALLED_VERCEL=true
+        fi
 
         if [ -n "$CHOICES" ]; then
             info "Found already-installed tools — verifying configuration"
@@ -177,6 +182,7 @@ choose_tools() {
     echo "    8) SwiftKit         — hosted MCP toolkit (100+ tools across services)"
     echo "    9) Superhuman       — email triage + drafting via the official Superhuman MCP"
     echo "   10) Google Drive     — browse, search, read Docs/Sheets/PDFs via Google's official MCP"
+    echo "   11) Vercel           — deployments, logs, domains, env vars via Vercel's official MCP"
     echo ""
     echo -e "${YELLOW}  Note: Morgen (5) is the recommended calendar+task tool.${NC}"
     echo -e "${YELLOW}  Motion (6) and Google Calendar (4) are secondary —${NC}"
@@ -728,6 +734,39 @@ install_gdrive() {
 }
 
 # -----------------------------------------------------------------------------
+# Install Vercel MCP (official remote MCP — OAuth on first use)
+# -----------------------------------------------------------------------------
+install_vercel() {
+    info "Installing Vercel MCP server..."
+
+    if claude mcp list 2>/dev/null | grep -q "vercel"; then
+        success "Vercel MCP already installed"
+        INSTALLED_VERCEL=true
+        return
+    fi
+
+    echo ""
+    echo -e "${BLUE}  Vercel's official remote MCP. Claude gets direct access to your${NC}"
+    echo -e "${BLUE}  Vercel projects: deployments, logs, domains, env vars, previews.${NC}"
+    echo ""
+    echo -e "${BLUE}  Auth: OAuth flow on first tool use. Your default browser${NC}"
+    echo -e "${BLUE}  will open — approve Claude against your Vercel account.${NC}"
+    echo ""
+
+    claude mcp add --scope user --transport sse \
+        vercel https://mcp.vercel.com/sse 2>/dev/null \
+        || claude mcp add --scope user --transport http \
+        vercel https://mcp.vercel.com/sse 2>/dev/null
+
+    if claude mcp list 2>/dev/null | grep -q "vercel"; then
+        success "Vercel MCP installed (authorize on first use)"
+        INSTALLED_VERCEL=true
+    else
+        soft_fail "Vercel MCP installation could not be verified — try manually: claude mcp add --scope user --transport sse vercel https://mcp.vercel.com/sse"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -763,6 +802,7 @@ run_self_test() {
     if $INSTALLED_SWIFTKIT;  then check_registered "SwiftKit"     "swiftkit";        else info "TEST: SwiftKit — skipped";        TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_SUPERHUMAN; then check_registered "Superhuman"  "superhuman";      else info "TEST: Superhuman — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
     if $INSTALLED_GDRIVE;    then check_registered "Google Drive" "gdrive";          else info "TEST: Google Drive — skipped";    TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_VERCEL;    then check_registered "Vercel"       "vercel";          else info "TEST: Vercel — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     # Credential-file checks for tools that persist a local .env
     if $INSTALLED_GCAL; then
@@ -820,6 +860,7 @@ print_summary() {
     if $INSTALLED_SWIFTKIT;  then echo "  SwiftKit          — hosted MCP toolkit with 100+ tools across services (swiftkit.sh)";     INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_SUPERHUMAN; then echo "  Superhuman        — email triage + drafting from Claude (superhuman.com)"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_GDRIVE;    then echo "  Google Drive      — read Drive files (Docs, Sheets, PDFs) via Google's official MCP"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
+    if $INSTALLED_VERCEL;    then echo "  Vercel            — deployments, logs, domains, env vars (Vercel's official remote MCP)"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
 
     if [ "$INSTALLED_COUNT" -eq 0 ]; then
         echo "  No tools were installed."
@@ -867,6 +908,10 @@ print_summary() {
             echo "    - Ask Claude \"find the doc about X in my Drive\" or \"summarize this shared sheet\""
             echo "    - Browser opens on first use for one-time OAuth against your Google account"
         fi
+        if $INSTALLED_VERCEL; then
+            echo "    - Ask Claude \"list my Vercel deployments\" or \"show the build logs for my last deploy\""
+            echo "    - Browser opens on first use for one-time OAuth against your Vercel account"
+        fi
     fi
 
     echo ""
@@ -911,6 +956,7 @@ main() {
             8) if ! $INSTALLED_SWIFTKIT;   then install_swiftkit;   else success "SwiftKit already configured";   fi ;;
             9) if ! $INSTALLED_SUPERHUMAN; then install_superhuman; else success "Superhuman already configured"; fi ;;
            10) if ! $INSTALLED_GDRIVE;     then install_gdrive;     else success "Google Drive already configured"; fi ;;
+           11) if ! $INSTALLED_VERCEL;     then install_vercel;     else success "Vercel already configured"; fi ;;
             *) warn "Unknown choice: $CHOICE (skipping)" ;;
         esac
     done

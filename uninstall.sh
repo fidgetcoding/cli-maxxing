@@ -249,13 +249,13 @@ uninstall_telegram() {
 # -----------------------------------------------------------------------------
 # Step 5 — Productivity Tools
 # (Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright,
-#  SwiftKit, Superhuman, Google Drive)
+#  SwiftKit, Superhuman, Google Drive, Vercel)
 # -----------------------------------------------------------------------------
 uninstall_productivity_mcps() {
     echo ""
     echo -e "${BLUE}--- Step 5: Productivity Tools ---${NC}"
 
-    for mcp in notion granola n8n google-calendar morgen motion playwright swiftkit superhuman gdrive; do
+    for mcp in notion granola n8n google-calendar morgen motion playwright swiftkit superhuman gdrive vercel; do
         if claude mcp list 2>/dev/null | grep -qi "$mcp" 2>/dev/null; then
             claude mcp remove "$mcp" 2>/dev/null || true
             success "$mcp MCP"
