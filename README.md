@@ -463,7 +463,7 @@ The script asks which tools you want, then walks you through each one's credenti
 
 | # | Tool | What it does | Needs |
 |---|------|--------------|-------|
-| 1 | **Notion** ([@notionhq](https://github.com/makenotion/notion-mcp-server)) | Search, read, create pages + databases in your Notion workspace. Official, 22 tools. | Integration token from [notion.so/profile/integrations](https://www.notion.so/profile/integrations); share specific pages via page `...` → Connections. |
+| 1 | **Notion** ([@notionhq](https://developers.notion.com/docs/get-started-with-mcp)) | Search, read, create pages + databases in your Notion workspace. Official hosted MCP, 22 tools. | Nothing — browser OAuth on first use. Pick which pages/databases Claude can access during the auth flow. |
 | 2 | **Granola** | Search your Granola meeting transcripts + notes through conversation. | [Granola](https://granola.ai) installed + signed in on Mac. No key. |
 | 3 | **n8n** | HTTP bridge to **your own** n8n instance — trigger and inspect workflows you built. Not a hosted service. | An n8n workflow with an **MCP Server Trigger** node; copy its Production URL. Optional Bearer token. |
 | 4 | **Google Calendar** | Direct Google Calendar access via OAuth. *Secondary — only install if you need a specific Google account bypassing Morgen.* | Google account + ~5min to create OAuth creds (script walks you through). |

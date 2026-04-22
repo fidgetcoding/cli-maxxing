@@ -223,44 +223,24 @@ install_notion() {
     fi
 
     echo ""
-    echo -e "${BLUE}  Notion requires an integration token. Here's how to get one:${NC}"
+    echo -e "${BLUE}  Notion now ships a hosted MCP server — no token needed.${NC}"
+    echo -e "${BLUE}  Auth happens through your browser the first time Claude uses it.${NC}"
     echo ""
-    echo "    1. Go to https://www.notion.so/profile/integrations"
-    echo "    2. Click \"New integration\""
-    echo "    3. Give it a name (e.g. \"Claude Code\")"
-    echo "    4. Select your workspace"
-    echo "    5. Click \"Submit\" and copy the Internal Integration Secret"
-    echo "       (starts with ntn_ or secret_)"
-    echo ""
-    echo -e "${YELLOW}  IMPORTANT: After setup, you also need to share pages with${NC}"
-    echo -e "${YELLOW}  the integration. On any Notion page you want Claude to${NC}"
-    echo -e "${YELLOW}  access, click the ••• menu > Connections > add your${NC}"
-    echo -e "${YELLOW}  integration. Claude can only see pages you explicitly share.${NC}"
+    echo -e "${YELLOW}  When Claude first reads or writes Notion, your browser will${NC}"
+    echo -e "${YELLOW}  open. Sign in and pick which pages/databases Claude can access.${NC}"
     echo ""
 
-    read -rsp "  Notion integration token: " NOTION_TOKEN
-    echo ""
-    echo ""
-
-    if [ -z "$NOTION_TOKEN" ]; then
-        warn "No Notion token provided. You can re-run this step later."
-        return
-    fi
-
-    # Register with the token as an environment variable.
-    claude mcp add --scope user -e NOTION_TOKEN="$NOTION_TOKEN" notion -- npx -y @notionhq/notion-mcp-server 2>/dev/null
+    # Hosted HTTP transport — OAuth handled by Claude Code on first use.
+    # Replaces the legacy @notionhq/notion-mcp-server npm package, which
+    # Notion has flagged for eventual sunset.
+    claude mcp add --scope user --transport http notion https://mcp.notion.com/mcp 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^notion:'; then
         success "Notion MCP installed"
         INSTALLED_NOTION=true
-        echo ""
-        echo -e "${GREEN}  Don't forget: share your Notion pages with the integration!${NC}"
-        echo -e "${GREEN}  On each page: ••• menu > Connections > add your integration.${NC}"
-        echo ""
     else
-        soft_fail "Notion MCP installation could not be verified"
+        soft_fail "Notion MCP installation could not be verified — try manually: claude mcp add --scope user --transport http notion https://mcp.notion.com/mcp"
     fi
-    unset NOTION_TOKEN
 }
 
 # -----------------------------------------------------------------------------
