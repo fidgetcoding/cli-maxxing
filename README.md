@@ -532,7 +532,7 @@ Open a new terminal and run `ctg` to launch Claude with Telegram connected. Insi
 The GitHub bundle — optional, for devs. Installs three things:
 
 - **GitHub CLI (`gh`)** — the terminal binary. Claude shells out to it via Bash for everyday ops (`gh pr create`, `gh issue list`, `gh repo view`). Installs unconditionally — no credentials required. Run `gh auth login` once after install to sign in.
-- **GitHub MCP** ([`@modelcontextprotocol/server-github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github)) — Claude gets direct tool-call access to your repos: issues, PRs, files, code search, branches, commits. *"List open PRs on cli-maxxing"*, *"search my repos for any file that uses MORGEN_API_KEY"* — it just works. Requires a Personal Access Token.
+- **GitHub MCP** ([`github/github-mcp-server`](https://github.com/github/github-mcp-server) — GitHub's official hosted server at `api.githubcopilot.com/mcp`) — Claude gets direct tool-call access to your repos: issues, PRs, files, code search, branches, commits. *"List open PRs on cli-maxxing"*, *"search my repos for any file that uses MORGEN_API_KEY"* — it just works. Requires a Personal Access Token.
 - **`/gitfix` skill** — full-repo doc sync. Reads every install script, skill file, and doc, finds drift between code and docs, fixes it. Run it after any significant change so the README stops lying.
 
 ### Before You Run It

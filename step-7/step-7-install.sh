@@ -239,46 +239,23 @@ install_github() {
         echo ""
     fi
 
-    # Register with the token injected via env var into the MCP server process.
-    # Credentials live in Claude's MCP config only — not written to disk here.
-    claude mcp add --scope user github -- npx -y @modelcontextprotocol/server-github 2>/dev/null
-
-    # Inject the token directly into the config entry (claude mcp add --scope user
-    # does not support -e flags in all CLI versions, so we patch the env block).
-    # Token is passed via env var (not argv) to avoid leaking it in `ps` output.
-    if ! command -v python3 &>/dev/null; then
-        soft_fail "python3 not found — cannot inject token into MCP config. Install python3 and re-run Step 7, or add GITHUB_PERSONAL_ACCESS_TOKEN to ~/.claude.json manually."
-        unset GITHUB_TOKEN GITHUB_TOKEN_VALUE
-        return
-    fi
-    GITHUB_TOKEN_VALUE="$GITHUB_TOKEN" python3 - <<'PYEOF'
-import json, os
-
-token = os.environ.get("GITHUB_TOKEN_VALUE", "").strip()
-config_path = os.path.expanduser("~/.claude.json")
-
-with open(config_path) as f:
-    config = json.load(f)
-
-mcpServers = config.get("mcpServers", {})
-if "github" in mcpServers:
-    mcpServers["github"].setdefault("env", {})
-    mcpServers["github"]["env"]["GITHUB_PERSONAL_ACCESS_TOKEN"] = token
-    config["mcpServers"] = mcpServers
-    with open(config_path, "w") as f:
-        json.dump(config, f, indent=2)
-    print("Token injected into GitHub MCP config.")
-else:
-    print("WARNING: github entry not found in MCP config — token not injected.")
-PYEOF
+    # Register GitHub's official hosted MCP server (https://api.githubcopilot.com/mcp).
+    # Replaces the deprecated `@modelcontextprotocol/server-github` npm package —
+    # that one's been retired in favor of github/github-mcp-server, which runs
+    # as a remote HTTP server behind GitHub's API domain. The PAT is passed as
+    # a Bearer token via -H so it lives in Claude's MCP config, never on disk
+    # in this repo and never in `ps` output.
+    claude mcp add --scope user --transport http github \
+        https://api.githubcopilot.com/mcp \
+        -H "Authorization: Bearer $GITHUB_TOKEN" 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^github:'; then
         success "GitHub MCP installed"
         INSTALLED_GITHUB=true
     else
-        soft_fail "GitHub MCP installation could not be verified"
+        soft_fail "GitHub MCP installation could not be verified — try manually: claude mcp add --scope user --transport http github https://api.githubcopilot.com/mcp -H \"Authorization: Bearer <your-PAT>\""
     fi
-    unset GITHUB_TOKEN GITHUB_TOKEN_VALUE
+    unset GITHUB_TOKEN
 }
 
 # -----------------------------------------------------------------------------
