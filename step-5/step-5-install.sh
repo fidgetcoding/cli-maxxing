@@ -106,49 +106,55 @@ choose_tools() {
         info "Non-interactive mode detected (running via curl pipe)"
         CHOICES=""
 
-        # Auto-detect already-installed tools
-        if claude mcp list 2>/dev/null | grep -q "notion" 2>/dev/null; then
+        # Auto-detect already-installed tools. Anchor each name at the start
+        # of the line followed by ":" — that matches `claude mcp list` output
+        # format ("name: command ...") without matching substrings inside
+        # another MCP's command string.
+        if claude mcp list 2>/dev/null | grep -qE '^notion:' 2>/dev/null; then
             CHOICES="$CHOICES 1"
             INSTALLED_NOTION=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "granola" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^granola:' 2>/dev/null; then
             CHOICES="$CHOICES 2"
             INSTALLED_GRANOLA=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "n8n" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^n8n:' 2>/dev/null; then
             CHOICES="$CHOICES 3"
             INSTALLED_N8N=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "google-calendar" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^google-calendar:' 2>/dev/null; then
             CHOICES="$CHOICES 4"
             INSTALLED_GCAL=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "morgen" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^morgen:' 2>/dev/null; then
             CHOICES="$CHOICES 5"
             INSTALLED_MORGEN=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "^motion\b\|[[:space:]]motion\b" 2>/dev/null; then
+        # Match the "motion" MCP specifically — `claude mcp list` prints lines
+        # shaped like "name: command ...". Use ERE + anchored name prefix so
+        # we don't accidentally match substrings inside other MCP commands.
+        if claude mcp list 2>/dev/null | grep -qE '^motion:' 2>/dev/null; then
             CHOICES="$CHOICES 6"
             INSTALLED_MOTION=true
             MOTION_PREEXISTING=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "playwright" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^playwright:' 2>/dev/null; then
             CHOICES="$CHOICES 7"
             INSTALLED_PLAYWRIGHT=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "swiftkit" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^swiftkit:' 2>/dev/null; then
             CHOICES="$CHOICES 8"
             INSTALLED_SWIFTKIT=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "superhuman" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^superhuman:' 2>/dev/null; then
             CHOICES="$CHOICES 9"
             INSTALLED_SUPERHUMAN=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "gdrive" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^gdrive:' 2>/dev/null; then
             CHOICES="$CHOICES 10"
             INSTALLED_GDRIVE=true
         fi
-        if claude mcp list 2>/dev/null | grep -q "vercel" 2>/dev/null; then
+        if claude mcp list 2>/dev/null | grep -qE '^vercel:' 2>/dev/null; then
             CHOICES="$CHOICES 11"
             INSTALLED_VERCEL=true
         fi
@@ -210,7 +216,7 @@ choose_tools() {
 install_notion() {
     info "Installing Notion MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "notion"; then
+    if claude mcp list 2>/dev/null | grep -qE '^notion:'; then
         success "Notion MCP already installed"
         INSTALLED_NOTION=true
         return
@@ -244,7 +250,7 @@ install_notion() {
     # Register with the token as an environment variable.
     claude mcp add --scope user -e NOTION_TOKEN="$NOTION_TOKEN" notion -- npx -y @notionhq/notion-mcp-server 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "notion"; then
+    if claude mcp list 2>/dev/null | grep -qE '^notion:'; then
         success "Notion MCP installed"
         INSTALLED_NOTION=true
         echo ""
@@ -263,7 +269,7 @@ install_notion() {
 install_granola() {
     info "Installing Granola MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "granola"; then
+    if claude mcp list 2>/dev/null | grep -qE '^granola:'; then
         success "Granola MCP already installed"
         INSTALLED_GRANOLA=true
         return
@@ -280,7 +286,7 @@ install_granola() {
     # HTTP transport — Granola handles auth via the app
     claude mcp add --scope user --transport http granola https://mcp.granola.ai/mcp 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "granola"; then
+    if claude mcp list 2>/dev/null | grep -qE '^granola:'; then
         success "Granola MCP installed"
         INSTALLED_GRANOLA=true
     else
@@ -294,7 +300,7 @@ install_granola() {
 install_n8n() {
     info "Installing n8n MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "n8n"; then
+    if claude mcp list 2>/dev/null | grep -qE '^n8n:'; then
         success "n8n MCP already installed"
         INSTALLED_N8N=true
         return
@@ -357,7 +363,7 @@ install_n8n() {
         claude mcp add --scope user --transport http n8n "$N8N_URL" 2>/dev/null
     fi
 
-    if claude mcp list 2>/dev/null | grep -q "n8n"; then
+    if claude mcp list 2>/dev/null | grep -qE '^n8n:'; then
         success "n8n MCP installed"
         INSTALLED_N8N=true
     else
@@ -372,14 +378,14 @@ install_n8n() {
 install_google_calendar() {
     info "Installing Google Calendar MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "google-calendar"; then
+    if claude mcp list 2>/dev/null | grep -qE '^google-calendar:'; then
         success "Google Calendar MCP already installed"
         INSTALLED_GCAL=true
         return
     fi
 
     # If a primary calendar is already installed, warn that it takes priority
-    if claude mcp list 2>/dev/null | grep -q "morgen\|^motion\b\|[[:space:]]motion\b"; then
+    if claude mcp list 2>/dev/null | grep -qE '^morgen:|^motion:'; then
         echo ""
         echo -e "${YELLOW}  You already have a primary calendar MCP installed${NC}"
         echo -e "${YELLOW}  (Morgen or Motion). Claude will use that by default.${NC}"
@@ -440,7 +446,7 @@ install_google_calendar() {
         -e GOOGLE_CLIENT_SECRET="$GCAL_CLIENT_SECRET" \
         google-calendar -- npx -y google-calendar-mcp 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "google-calendar"; then
+    if claude mcp list 2>/dev/null | grep -qE '^google-calendar:'; then
         success "Google Calendar MCP installed"
         INSTALLED_GCAL=true
         echo ""
@@ -463,7 +469,7 @@ install_google_calendar() {
 install_morgen() {
     info "Installing Morgen MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "morgen"; then
+    if claude mcp list 2>/dev/null | grep -qE '^morgen:'; then
         success "Morgen MCP already installed"
         INSTALLED_MORGEN=true
         return
@@ -505,7 +511,7 @@ install_morgen() {
         -e MORGEN_TIMEZONE="$MORGEN_TIMEZONE" \
         morgen -- npx -y fidgetcoding-morgen-mcp 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "morgen"; then
+    if claude mcp list 2>/dev/null | grep -qE '^morgen:'; then
         success "Morgen MCP installed (timezone: $MORGEN_TIMEZONE)"
         INSTALLED_MORGEN=true
     else
@@ -520,7 +526,7 @@ install_morgen() {
 install_motion_calendar() {
     info "Installing Motion Calendar MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "^motion\b\|[[:space:]]motion\b"; then
+    if claude mcp list 2>/dev/null | grep -qE '^motion:'; then
         success "Motion Calendar MCP already installed"
         INSTALLED_MOTION=true
         MOTION_PREEXISTING=true
@@ -568,7 +574,7 @@ install_motion_calendar() {
     # Register the MCP server (it reads credentials from ~/.motion-mcp/.env)
     claude mcp add --scope user motion -- npx -y fidgetcoding-motion-mcp 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "^motion\b\|[[:space:]]motion\b"; then
+    if claude mcp list 2>/dev/null | grep -qE '^motion:'; then
         success "Motion Calendar MCP installed"
         INSTALLED_MOTION=true
     else
@@ -583,7 +589,7 @@ install_motion_calendar() {
 install_playwright() {
     info "Installing Playwright MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "playwright"; then
+    if claude mcp list 2>/dev/null | grep -qE '^playwright:'; then
         success "Playwright MCP already installed"
         INSTALLED_PLAYWRIGHT=true
         return
@@ -609,7 +615,7 @@ install_playwright() {
     # No credentials needed — register directly.
     claude mcp add playwright -- npx -y @playwright/mcp@latest 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "playwright"; then
+    if claude mcp list 2>/dev/null | grep -qE '^playwright:'; then
         success "Playwright MCP installed"
         INSTALLED_PLAYWRIGHT=true
     else
@@ -623,7 +629,7 @@ install_playwright() {
 install_swiftkit() {
     info "Installing SwiftKit MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "swiftkit"; then
+    if claude mcp list 2>/dev/null | grep -qE '^swiftkit:'; then
         success "SwiftKit MCP already installed"
         INSTALLED_SWIFTKIT=true
         return
@@ -654,7 +660,7 @@ install_swiftkit() {
         -H "Authorization: Bearer $SWIFTKIT_KEY" \
         swiftkit https://mcp.swiftkit.sh/mcp 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "swiftkit"; then
+    if claude mcp list 2>/dev/null | grep -qE '^swiftkit:'; then
         success "SwiftKit MCP installed"
         INSTALLED_SWIFTKIT=true
     else
@@ -669,7 +675,7 @@ install_swiftkit() {
 install_superhuman() {
     info "Installing Superhuman MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "superhuman"; then
+    if claude mcp list 2>/dev/null | grep -qE '^superhuman:'; then
         success "Superhuman MCP already installed"
         INSTALLED_SUPERHUMAN=true
         return
@@ -688,14 +694,15 @@ install_superhuman() {
     echo ""
 
     # No API key to collect — Superhuman uses browser OAuth on first use.
+    # Official endpoint lives on the `mail` subdomain: mcp.mail.superhuman.com.
     claude mcp add --scope user --transport http \
-        superhuman https://mcp.superhuman.com/mcp 2>/dev/null
+        superhuman https://mcp.mail.superhuman.com/mcp 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "superhuman"; then
+    if claude mcp list 2>/dev/null | grep -qE '^superhuman:'; then
         success "Superhuman MCP installed (authorize on first use)"
         INSTALLED_SUPERHUMAN=true
     else
-        soft_fail "Superhuman MCP installation could not be verified — try manually: claude mcp add --transport http superhuman https://mcp.superhuman.com/mcp"
+        soft_fail "Superhuman MCP installation could not be verified — try manually: claude mcp add --transport http superhuman https://mcp.mail.superhuman.com/mcp"
     fi
 }
 
@@ -706,7 +713,7 @@ install_superhuman() {
 install_gdrive() {
     info "Installing Google Drive MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "gdrive"; then
+    if claude mcp list 2>/dev/null | grep -qE '^gdrive:'; then
         success "Google Drive MCP already installed"
         INSTALLED_GDRIVE=true
         return
@@ -725,7 +732,7 @@ install_gdrive() {
         gdrive https://drivemcp.googleapis.com/mcp/v1 2>/dev/null \
         || claude mcp add --transport http gdrive https://drivemcp.googleapis.com/mcp/v1 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "gdrive"; then
+    if claude mcp list 2>/dev/null | grep -qE '^gdrive:'; then
         success "Google Drive MCP installed (authorize on first use)"
         INSTALLED_GDRIVE=true
     else
@@ -739,7 +746,7 @@ install_gdrive() {
 install_vercel() {
     info "Installing Vercel MCP server..."
 
-    if claude mcp list 2>/dev/null | grep -q "vercel"; then
+    if claude mcp list 2>/dev/null | grep -qE '^vercel:'; then
         success "Vercel MCP already installed"
         INSTALLED_VERCEL=true
         return
@@ -753,16 +760,18 @@ install_vercel() {
     echo -e "${BLUE}  will open — approve Claude against your Vercel account.${NC}"
     echo ""
 
-    claude mcp add --scope user --transport sse \
-        vercel https://mcp.vercel.com/sse 2>/dev/null \
-        || claude mcp add --scope user --transport http \
-        vercel https://mcp.vercel.com/sse 2>/dev/null
+    # Official endpoint is the root URL (no /sse path). Vercel docs recommend
+    # --transport http; fall back to sse for older Claude CLI builds.
+    claude mcp add --scope user --transport http \
+        vercel https://mcp.vercel.com 2>/dev/null \
+        || claude mcp add --scope user --transport sse \
+        vercel https://mcp.vercel.com 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "vercel"; then
+    if claude mcp list 2>/dev/null | grep -qE '^vercel:'; then
         success "Vercel MCP installed (authorize on first use)"
         INSTALLED_VERCEL=true
     else
-        soft_fail "Vercel MCP installation could not be verified — try manually: claude mcp add --scope user --transport sse vercel https://mcp.vercel.com/sse"
+        soft_fail "Vercel MCP installation could not be verified — try manually: claude mcp add --scope user --transport http vercel https://mcp.vercel.com"
     fi
 }
 
@@ -776,14 +785,19 @@ run_self_test() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
-    TEST_PASS=0
-    TEST_FAIL=0
-    TEST_SKIP=0
+    local TEST_PASS=0
+    local TEST_FAIL=0
+    local TEST_SKIP=0
 
+    # Anchor each needle at the start of the line followed by ":" — that's
+    # exactly how `claude mcp list` prints registered MCPs (e.g. "motion: ...").
+    # Anchoring prevents false positives where one MCP's command string
+    # contains another MCP's name as a substring (e.g. "notion" inside a
+    # package URL, or "motion" inside "fidgetcoding-motion-mcp").
     check_registered() {
         local label="$1"
         local needle="$2"
-        if claude mcp list 2>/dev/null | grep -q "$needle"; then
+        if claude mcp list 2>/dev/null | grep -qE "^${needle}:"; then
             success "TEST: $label MCP registered"
             TEST_PASS=$((TEST_PASS + 1))
         else
@@ -792,17 +806,17 @@ run_self_test() {
         fi
     }
 
-    if $INSTALLED_NOTION;   then check_registered "Notion"          "notion";          else info "TEST: Notion — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_GRANOLA;  then check_registered "Granola"         "granola";         else info "TEST: Granola — skipped";         TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_N8N;      then check_registered "n8n"             "n8n";             else info "TEST: n8n — skipped";             TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_GCAL;     then check_registered "Google Calendar" "google-calendar"; else info "TEST: Google Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_MORGEN;   then check_registered "Morgen"          "morgen";          else info "TEST: Morgen — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_MOTION;   then check_registered "Motion Calendar" "motion"; else info "TEST: Motion Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_PLAYWRIGHT; then check_registered "Playwright"    "playwright";      else info "TEST: Playwright — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_SWIFTKIT;  then check_registered "SwiftKit"     "swiftkit";        else info "TEST: SwiftKit — skipped";        TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_SUPERHUMAN; then check_registered "Superhuman"  "superhuman";      else info "TEST: Superhuman — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_GDRIVE;    then check_registered "Google Drive" "gdrive";          else info "TEST: Google Drive — skipped";    TEST_SKIP=$((TEST_SKIP + 1)); fi
-    if $INSTALLED_VERCEL;    then check_registered "Vercel"       "vercel";          else info "TEST: Vercel — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_NOTION;    then check_registered "Notion"          "notion";          else info "TEST: Notion — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_GRANOLA;   then check_registered "Granola"         "granola";         else info "TEST: Granola — skipped";         TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_N8N;       then check_registered "n8n"             "n8n";             else info "TEST: n8n — skipped";             TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_GCAL;      then check_registered "Google Calendar" "google-calendar"; else info "TEST: Google Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_MORGEN;    then check_registered "Morgen"          "morgen";          else info "TEST: Morgen — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_MOTION;    then check_registered "Motion Calendar" "motion";          else info "TEST: Motion Calendar — skipped"; TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_PLAYWRIGHT; then check_registered "Playwright"     "playwright";      else info "TEST: Playwright — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_SWIFTKIT;  then check_registered "SwiftKit"        "swiftkit";        else info "TEST: SwiftKit — skipped";        TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_SUPERHUMAN; then check_registered "Superhuman"     "superhuman";      else info "TEST: Superhuman — skipped";      TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_GDRIVE;    then check_registered "Google Drive"    "gdrive";          else info "TEST: Google Drive — skipped";    TEST_SKIP=$((TEST_SKIP + 1)); fi
+    if $INSTALLED_VERCEL;    then check_registered "Vercel"          "vercel";          else info "TEST: Vercel — skipped";          TEST_SKIP=$((TEST_SKIP + 1)); fi
 
     # Credential-file checks for tools that persist a local .env
     if $INSTALLED_GCAL; then
@@ -848,7 +862,7 @@ print_summary() {
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
-    INSTALLED_COUNT=0
+    local INSTALLED_COUNT=0
 
     if $INSTALLED_NOTION;   then echo "  Notion            — search pages, read databases, create content";   INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_GRANOLA;  then echo "  Granola           — meeting transcripts and notes";                   INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
@@ -943,7 +957,9 @@ main() {
     verify_prerequisites
     choose_tools
 
-    # Process each selection in the canonical order
+    # Process each selection in the canonical order.
+    # CHOICES is a space-separated list of digits — intentional word-split.
+    # shellcheck disable=SC2086
     for CHOICE in $CHOICES; do
         case "$CHOICE" in
             1) if ! $INSTALLED_NOTION;  then install_notion;          else success "Notion already configured";          fi ;;

@@ -111,20 +111,22 @@ install_fidgetflo() {
 configure_mcp() {
     info "Adding fidgetflo as MCP server to Claude Code..."
 
-    # Check if already configured
-    if claude mcp list 2>/dev/null | grep -q "fidgetflo" 2>/dev/null; then
+    # Check if already configured. `claude mcp list` prints "<name>: <cmd>...",
+    # so anchor at "^fidgetflo:" — the command (`npx -y fidgetflo`) also contains
+    # the word "fidgetflo", which would false-positive on a plain substring grep.
+    if claude mcp list 2>/dev/null | grep -qE '^fidgetflo:' 2>/dev/null; then
         success "fidgetflo MCP server already configured"
         return
     fi
 
     claude mcp add fidgetflo -- npx -y fidgetflo 2>/dev/null
 
-    if claude mcp list 2>/dev/null | grep -q "fidgetflo" 2>/dev/null; then
+    if claude mcp list 2>/dev/null | grep -qE '^fidgetflo:' 2>/dev/null; then
         success "fidgetflo MCP server added to Claude Code"
     else
         # Try alternative approach — write directly to config
         warn "MCP add command may not have worked. Trying direct config..."
-        CLAUDE_MCP_CONFIG="$HOME/.claude/claude_mcp_config.json"
+        local CLAUDE_MCP_CONFIG="$HOME/.claude/claude_mcp_config.json"
         if [ -f "$CLAUDE_MCP_CONFIG" ]; then
             if ! grep -q "fidgetflo" "$CLAUDE_MCP_CONFIG" 2>/dev/null; then
                 jq '.mcpServers["fidgetflo"] = {"command": "npx", "args": ["-y", "fidgetflo"]}' "$CLAUDE_MCP_CONFIG" > "${CLAUDE_MCP_CONFIG}.tmp" \
@@ -195,7 +197,7 @@ init_config() {
 
     # fidgetflo init may write a verbose statusLine to project-level .claude/settings.json.
     # Remove it so our clean global statusline (Final Step) isn't overridden.
-    PROJECT_SETTINGS=".claude/settings.json"
+    local PROJECT_SETTINGS=".claude/settings.json"
     if [ -f "$PROJECT_SETTINGS" ] && command -v jq &>/dev/null; then
         if jq -e '.statusLine' "$PROJECT_SETTINGS" &>/dev/null; then
             jq 'del(.statusLine)' "$PROJECT_SETTINGS" > "${PROJECT_SETTINGS}.tmp" \
@@ -242,14 +244,14 @@ configure_model_defaults() {
     npx fidgetflo config set --key "model.routing.minModel" --value "opus" 2>/dev/null || true
 
     # Disable automatic model routing (CLI can't pass boolean false, so patch config directly)
-    CONFIG_FILE=".claude-flow/config.json"
+    local CONFIG_FILE=".claude-flow/config.json"
     if [ -f "$CONFIG_FILE" ] && command -v jq &>/dev/null; then
         jq '.scopes.project["model.default"] = "opus" | .scopes.system["model.default"] = "opus" | .scopes.project["model.routing.enabled"] = false | .scopes.system["model.routing.enabled"] = false' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" \
             && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
     fi
 
     # Also patch config.yaml if it exists (init creates this file)
-    YAML_CONFIG=".claude-flow/config.yaml"
+    local YAML_CONFIG=".claude-flow/config.yaml"
     if [ -f "$YAML_CONFIG" ]; then
         if grep -q "default:" "$YAML_CONFIG" 2>/dev/null; then
             sed -i.bak 's/default:.*/default: opus/' "$YAML_CONFIG" && rm -f "${YAML_CONFIG}.bak"
@@ -266,6 +268,9 @@ configure_model_defaults() {
 # -----------------------------------------------------------------------------
 install_swarm_skills() {
     info "Installing swarm skills and statusline..."
+
+    local FSWARM_DIR FHIVE_DIR FMINI_DIR FMINI1_DIR FMINI2_DIR FMINI3_DIR FMINIMAX_DIR
+    local FSWARM1_DIR FSWARM2_DIR FSWARM3_DIR FSWARMMAX_DIR W4W_DIR STATUSLINE_DIR SETTINGS_FILE EXISTING
 
     # --- /fswarm skill ---
     FSWARM_DIR="$HOME/.claude/skills/fswarm"
@@ -1065,8 +1070,9 @@ run_self_test() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
-    TEST_PASS=0
-    TEST_FAIL=0
+    local TEST_PASS=0
+    local TEST_FAIL=0
+    local CONFIG_JSON MODEL_CONFIG MEMORY_OK
 
     # fidgetflo CLI available
     if npx fidgetflo --version &>/dev/null 2>&1; then
@@ -1077,8 +1083,10 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
-    # MCP server configured
-    if claude mcp list 2>/dev/null | grep -q "fidgetflo" 2>/dev/null; then
+    # MCP server configured — anchor on "^fidgetflo:" so a substring in some
+    # other MCP's command string (the package name "fidgetflo" appears in
+    # `npx -y fidgetflo`) can't false-positive this test.
+    if claude mcp list 2>/dev/null | grep -qE '^fidgetflo:' 2>/dev/null; then
         success "TEST: fidgetflo MCP server configured"
         TEST_PASS=$((TEST_PASS + 1))
     else
@@ -1214,7 +1222,7 @@ run_self_test() {
 
     # Model set to Opus (check config.json first, then config.yaml, then CLI)
     CONFIG_JSON=".claude-flow/config.json"
-    if [ -f "$CONFIG_JSON" ] && jq -e '.scopes.project["model.default"] == "opus" or .scopes.system["model.default"] == "opus"' "$CONFIG_JSON" &>/dev/null; then
+    if [ -f "$CONFIG_JSON" ] && command -v jq &>/dev/null && jq -e '.scopes.project["model.default"] == "opus" or .scopes.system["model.default"] == "opus"' "$CONFIG_JSON" &>/dev/null; then
         success "TEST: Model locked to Opus"
         TEST_PASS=$((TEST_PASS + 1))
     elif grep -q "default: opus" ".claude-flow/config.yaml" 2>/dev/null; then

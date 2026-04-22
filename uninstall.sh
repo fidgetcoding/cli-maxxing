@@ -233,7 +233,9 @@ uninstall_github() {
         skip "brew: gh (not found)"
     fi
 
-    if claude mcp list 2>/dev/null | grep -qi "github" 2>/dev/null; then
+    # Anchor on "^github:" so we only match the MCP we actually registered,
+    # not user-defined ones like "my-github-fork" or "github-enterprise".
+    if claude mcp list 2>/dev/null | grep -qE '^github:' 2>/dev/null; then
         claude mcp remove github 2>/dev/null || true
         success "GitHub MCP"
     else
@@ -273,7 +275,10 @@ uninstall_productivity_mcps() {
     echo -e "${BLUE}--- Step 5: Productivity Tools ---${NC}"
 
     for mcp in notion granola n8n google-calendar morgen motion playwright swiftkit superhuman gdrive vercel; do
-        if claude mcp list 2>/dev/null | grep -qi "$mcp" 2>/dev/null; then
+        # Anchor on "^<mcp>:" so we only match the MCP we registered under
+        # that exact name — avoids matching user-defined MCPs that reuse the
+        # same underlying package (e.g. a custom "my-notion" wrapper).
+        if claude mcp list 2>/dev/null | grep -qE "^${mcp}:" 2>/dev/null; then
             claude mcp remove "$mcp" 2>/dev/null || true
             success "$mcp MCP"
         else
@@ -305,16 +310,17 @@ uninstall_fidgetflo_stack() {
     echo ""
     echo -e "${BLUE}--- Step 4: FidgetFlo ---${NC}"
 
-    # FidgetFlo MCP
-    if claude mcp list 2>/dev/null | grep -qi "fidgetflo" 2>/dev/null; then
+    # FidgetFlo MCP — anchor on "^fidgetflo:" so a substring in another MCP's
+    # command (the package name also contains "fidgetflo") can't false-positive.
+    if claude mcp list 2>/dev/null | grep -qE '^fidgetflo:' 2>/dev/null; then
         claude mcp remove fidgetflo 2>/dev/null || true
         success "FidgetFlo MCP server"
     else
         skip "FidgetFlo MCP server (not found)"
     fi
 
-    # Claude-flow MCP
-    if claude mcp list 2>/dev/null | grep -qi "claude-flow" 2>/dev/null; then
+    # Claude-flow MCP — anchor to avoid matching e.g. "claude-flow-v3" forks.
+    if claude mcp list 2>/dev/null | grep -qE '^claude-flow:' 2>/dev/null; then
         claude mcp remove claude-flow 2>/dev/null || true
         success "Claude-flow MCP server"
     else
