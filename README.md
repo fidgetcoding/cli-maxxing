@@ -267,6 +267,16 @@ GPU-accelerated (Metal on Mac, OpenGL on Linux). **Cmd+Click** any URL or file p
 
 </details>
 
+> [!IMPORTANT]
+> **One more step — grant Ghostty Full Disk Access (macOS).** Without this, Ghostty silently fails to read most user files. The install script prints these instructions at the end, but here's the heads-up:
+>
+> 1. Open **System Settings** (Cmd+Space → "System Settings")
+> 2. Go to **Privacy & Security → Full Disk Access**
+> 3. Toggle **Ghostty** ON. If it's not in the list: click **+**, navigate to **/Applications**, select **Ghostty.app**, then enable the toggle.
+> 4. Quit Ghostty fully (Cmd+Q) and reopen it.
+>
+> Shortcut: re-run the install script with `--open-fda` to jump straight to the right pane in System Settings.
+
 ---
 
 ### Arc Browser

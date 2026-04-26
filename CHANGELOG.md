@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Step 5 — `2ndbrain-maxxing` references flipped to `2ndBrain-mogging` across `README-SECTIONS/` and `tests/`.
 
 ### Fixed
+- Step 2 (`step-2/ghostty-install.sh`): post-install summary now includes a yellow "ONE MORE STEP — GRANT FULL DISK ACCESS" section with click-by-click instructions (System Settings → Privacy & Security → Full Disk Access → toggle Ghostty ON, with the `+` → `/Applications` fallback if Ghostty isn't listed). New `--open-fda` flag jumps directly to the right pane via the canonical `x-apple.systempreferences:...?Privacy_AllFiles` URL. Closes item 1 of the WAGMI Apr-22 install-call bug catalog (`project_wagmi_install_bugs_2026_04_22.md`) — every WAGMI teammate hit silent FDA-permission errors on first launch.
 - Step 1-5 — anchored MCP grep patterns at `^<name>:` so substring matches don't trigger false-positive "already installed" detection.
 - Step 5 — BSD grep compat fix in Motion detection (macOS `grep` doesn't support `-P` like GNU does; pattern simplified accordingly).
 - Step 6 — `SAVED_TOKEN` env var unset after self-test validation so a stale value doesn't leak into the next step.

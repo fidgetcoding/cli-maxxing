@@ -20,6 +20,44 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 
 # -----------------------------------------------------------------------------
+# Flags
+#   --open-fda   After install, jump straight to the Full Disk Access pane in
+#                System Settings (macOS only). Default OFF — print instructions
+#                only, never auto-open.
+#   --help|-h    Print usage and exit.
+# -----------------------------------------------------------------------------
+OPEN_FDA=0
+print_help() {
+    cat <<'HELP_EOF'
+Usage: ghostty-install.sh [--open-fda] [--help]
+
+Installs Ghostty (GPU-accelerated terminal), JetBrains Mono, the CLI Maxxing
+Ghostty config, and (on macOS) the g2/g4 window-tiling shell helpers.
+
+Options:
+  --open-fda   macOS only. After install, open System Settings directly to
+               Privacy & Security → Full Disk Access so you can toggle Ghostty
+               ON. Default OFF — the script only prints the click-by-click
+               instructions, it never opens panes for you.
+  --help, -h   Print this help and exit.
+
+Notes:
+  Ghostty needs Full Disk Access to read files outside its own sandbox (which
+  is most of what a terminal does). After this script finishes, you MUST grant
+  it manually in System Settings — the post-install summary walks you through
+  every click.
+HELP_EOF
+}
+
+for arg in "$@"; do
+    case "$arg" in
+        --open-fda) OPEN_FDA=1 ;;
+        -h|--help)  print_help; exit 0 ;;
+        *) ;;
+    esac
+done
+
+# -----------------------------------------------------------------------------
 # Source runtime PATH (brew, nvm, ~/.local/bin) so a freshly-installed brew
 # from Step 1 is visible without requiring a new shell.
 # Idempotent: multiple brew shellenv evals are safe, nvm re-source is safe,
@@ -453,7 +491,57 @@ print_summary() {
         echo "    ~/.config/ghostty/config"
     fi
     echo ""
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+    # -------------------------------------------------------------------------
+    # ONE MORE STEP — Full Disk Access (macOS only)
+    # Ghostty silently fails to read most user files until macOS grants it
+    # Full Disk Access. Every WAGMI teammate hit this on their first install.
+    # Print exact click-by-click instructions; menu names verified against
+    # macOS Sonoma / Sequoia (post-Ventura it's "System Settings", not
+    # "System Preferences").
+    # -------------------------------------------------------------------------
+    if [ "$OS" = "mac" ]; then
+        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${YELLOW}  ONE MORE STEP — GRANT FULL DISK ACCESS${NC}"
+        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo ""
+        echo "  Ghostty needs Full Disk Access to read files outside its sandbox."
+        echo "  Without this, you'll hit silent permission errors on basic commands."
+        echo ""
+        echo "  Click-by-click:"
+        echo "    1. Open System Settings (Cmd+Space → \"System Settings\")"
+        echo "    2. Go to: Privacy & Security → Full Disk Access"
+        echo "    3. Toggle Ghostty ON."
+        echo "       If Ghostty isn't in the list:"
+        echo "         a. Click the + button"
+        echo "         b. Navigate to /Applications"
+        echo "         c. Select Ghostty.app"
+        echo "         d. Enable the toggle"
+        echo "    4. Quit Ghostty fully (Cmd+Q) and reopen it."
+        echo ""
+        echo "  Shortcut: re-run this script with --open-fda to jump directly to"
+        echo "  the Full Disk Access pane."
+        echo ""
+        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# Optional: open the Full Disk Access pane directly (macOS only).
+# Uses the canonical Apple URL scheme — same anchor (Privacy_AllFiles) Apple
+# documents in their accessibility / privacy developer notes.
+# Off by default; opt in with --open-fda.
+# -----------------------------------------------------------------------------
+maybe_open_fda_pane() {
+    if [ "$OS" != "mac" ]; then
+        return
+    fi
+    if [ "$OPEN_FDA" -ne 1 ]; then
+        return
+    fi
+    info "Opening System Settings → Privacy & Security → Full Disk Access..."
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles" 2>/dev/null \
+        || warn "Could not auto-open the Full Disk Access pane — open System Settings manually."
 }
 
 # -----------------------------------------------------------------------------
@@ -475,6 +563,7 @@ main() {
     configure_link_opener
     install_window_tiling
     print_summary
+    maybe_open_fda_pane
 
     mkdir -p "$HOME/.cli-maxxing"
     touch "$HOME/.cli-maxxing/ghostty.done"
