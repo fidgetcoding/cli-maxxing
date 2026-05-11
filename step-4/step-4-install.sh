@@ -902,6 +902,46 @@ This mode stays active for the remainder of the current task or conversation unl
 W4W_EOF
     success "Attention skill (/w4w) installed"
 
+    # --- /concise skill ---
+    # Downloads SKILL.md + 3 references from the cli-maxxing repo. Falls back
+    # to a local copy if the network is unavailable. Concise is the default
+    # chat shape: no fluff, no scaffolding, no headers on simple questions.
+    CONCISE_DIR="$HOME/.claude/skills/concise"
+    CONCISE_REF_DIR="$CONCISE_DIR/references"
+    CONCISE_BASE_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/concise-skill"
+    mkdir -p "$CONCISE_REF_DIR"
+
+    SCRIPT_DIR_CONCISE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LOCAL_CONCISE_DIR="$(dirname "$SCRIPT_DIR_CONCISE")/concise-skill"
+
+    download_concise_file() {
+        local rel_path="$1"
+        local dest="$2"
+        local tmp="$dest.tmp"
+        if curl -fsSL "$CONCISE_BASE_URL/$rel_path" -o "$tmp" 2>/dev/null && [ -s "$tmp" ]; then
+            mv "$tmp" "$dest"
+            return 0
+        fi
+        rm -f "$tmp"
+        if [ -f "$LOCAL_CONCISE_DIR/$rel_path" ]; then
+            cp "$LOCAL_CONCISE_DIR/$rel_path" "$dest"
+            return 0
+        fi
+        return 1
+    }
+
+    CONCISE_OK=1
+    download_concise_file "SKILL.md" "$CONCISE_DIR/SKILL.md" || CONCISE_OK=0
+    download_concise_file "references/copywriting.md" "$CONCISE_REF_DIR/copywriting.md" || CONCISE_OK=0
+    download_concise_file "references/inputs.md" "$CONCISE_REF_DIR/inputs.md" || CONCISE_OK=0
+    download_concise_file "references/code-and-commits.md" "$CONCISE_REF_DIR/code-and-commits.md" || CONCISE_OK=0
+
+    if [ "$CONCISE_OK" -eq 1 ]; then
+        success "Concise skill (/concise) installed at $CONCISE_DIR"
+    else
+        soft_fail "Could not install /concise skill — download and local fallback both failed"
+    fi
+
     # --- Statusline script ---
     # Writes a statusline.sh that uses /tmp lock files to detect swarm/hive activity.
     # Lock files are used because fswarm/fhive agents run as Claude Code subprocesses
@@ -1211,6 +1251,15 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    # Concise skill (/concise)
+    if [ -f "$HOME/.claude/skills/concise/SKILL.md" ] && [ -f "$HOME/.claude/skills/concise/references/copywriting.md" ]; then
+        success "TEST: Concise skill (/concise) installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: Concise skill (/concise) not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     # Statusline
     if [ -f "$HOME/.claude/statusline.sh" ] && [ -x "$HOME/.claude/statusline.sh" ]; then
         success "TEST: Statusline script installed"
@@ -1304,6 +1353,7 @@ print_summary() {
     echo "    /fmini3    — mini swarm with harder extended thinking"
     echo "    /fminimax  — mini swarm at ultrathink (MAX budget)"
     echo "    /w4w       — word for word, line for line attention mode"
+    echo "    /concise   — chat default: no fluff, no scaffolding, voice-on for copy"
     echo ""
     echo "  What you can do now:"
     echo "    - Claude can spawn multiple agents to work in parallel"
