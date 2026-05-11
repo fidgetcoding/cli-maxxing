@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- **`/concise` skill** (step 4) — default chat-shape filter. No fluff, no scaffolding, no headers on simple questions, no sycophancy. Auto-suspends for copywriting deliverables (tweets, scripts, decks, client docs) so it doesn't sand down voice on output going to a human audience. Vendored at `concise-skill/` (SKILL.md + 3 references — `copywriting.md`, `inputs.md`, `code-and-commits.md`). Step 4 installer downloads from `lorecraft-io/cli-maxxing/main` via curl with a local fallback for offline / pre-publish runs. Self-test asserts SKILL.md + copywriting.md reference landed. Listed across `README.md`, `CHEATSHEET.md`, `install.sh` summary, `update.sh` summary, and `uninstall.sh` skill removal loop.
+- `pdf-skill` — markdown→PDF renderer enforcing Nate's house style (single H1 from frontmatter `title:`, strips body H1 / Purpose / Internal notes / Sources sections by default). Pandoc + WeasyPrint. Opt back in to dropped sections via `--keep-notes` / `--keep-sources`. Mirror of the global `~/.claude/skills/pdf/` skill.
 - README: social-links badge strip (X · LinkedIn · YouTube · Instagram, ruvnet-style for-the-badge) inserted into the centered header block beneath the banner.
 - **`cbrain` + `cbraintg` shell shortcuts** (step 10.9) — quick-launch aliases for the Brain² + Telegram-bridged sessions.
 - Step 5 — full upstream URL verification across all five external MCPs (morgen / motion / playwright / granola / n8n).
