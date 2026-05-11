@@ -344,7 +344,7 @@ uninstall_fidgetflo_stack() {
     for skill in \
         fswarm fswarm1 fswarm2 fswarm3 fswarmmax \
         fmini fmini1 fmini2 fmini3 fminimax \
-        fhive w4w; do
+        fhive w4w concise; do
         if [ -d "$HOME/.claude/skills/$skill" ]; then
             rm -rf "$HOME/.claude/skills/$skill"
             success "Skill: /$skill"

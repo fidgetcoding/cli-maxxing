@@ -12,6 +12,7 @@ The commands I reach for most. Full reference below.
 | `/fswarm <task>` | Launch a 15-agent FidgetFlo swarm — describe the task in plain English |
 | `/fmini <task>` | Compact 5-agent FidgetFlo swarm for focused work |
 | `/w4w` | Word-for-word, line-for-line. Max attention, zero skipping, no summarizing |
+| `/concise` | Chat default — no fluff, no scaffolding, no headers on simple Qs. Suspends for copy/scripts/decks. |
 | `/safetycheck` | Security audit — scans for exposed keys, injection vectors, supply-chain risks |
 | `/gitfix` | Full repo sync — reads every file, fixes doc drift, makes reality match the README |
 | `/save` | Capture a conversation into your 2ndBrain vault *(requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
@@ -122,6 +123,7 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 | `/fminimax <task>` | Step 4 | 5-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
 | `/fhive <goal>` | Step 4 | Launch a queen-led autonomous FidgetFlo hive-mind with raft consensus |
 | `/w4w` | Step 4 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
+| `/concise` | Step 4 | Default chat shape — no fluff, no scaffolding, no sycophancy, no headers on simple questions. Suspends automatically for copywriting deliverables (tweets, scripts, decks, client docs). For always-on enforcement see the playbook in `concise-skill/SKILL.md` description. |
 | `/gitfix` | Step 7 | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality. Also responds to "fix the github", "sync the repo", or "update the readme" in plain English |
 | `/safetycheck` | Step 8 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English. Auto-activates 12 MCP-specific checks on MCP projects |
 
@@ -171,7 +173,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
 
-> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/concise`, `/safetycheck`, `/gitfix`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
 > **Add-on tools** (Canva) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed. Figma, Excalidraw, and Gamma live in [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing).
 
