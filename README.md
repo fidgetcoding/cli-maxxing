@@ -635,7 +635,7 @@ The wrap-up. Installs a custom status line that shows what's active at a glance,
 | Icon | When it shows |
 |------|---------------|
 | ⚡️ fidgetflo | FidgetFlo MCP connected |
-| 🧠 2ndBrain | CWD is inside your Obsidian vault (requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) |
+| 🧠 Brain² | CWD is inside your Obsidian vault (requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) |
 | 🎨 UIPro | Design skill loaded (via [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)) |
 | 🐝 Swarm | A swarm is active (`/fswarm`, shows agent count) |
 | 🍯 Mini | A mini swarm is active (`/fmini`, shows agent count) |
@@ -664,7 +664,7 @@ Once the status line is up, run one last cross-check:
 Claude cross-references CHEATSHEET.md against your actual system, then fixes anything that didn't land — missing skill, unconnected MCP, unregistered alias. Final sanity check.
 
 <details>
-<summary><strong>Manual install + 🧠 2ndBrain details</strong></summary>
+<summary><strong>Manual install + 🧠 Brain² details</strong></summary>
 
 **Manual install** (if you'd rather skip the script):
 1. Copy `statusline.sh` to `~/.claude/statusline.sh`
@@ -674,7 +674,7 @@ Claude cross-references CHEATSHEET.md against your actual system, then fixes any
    ```
 3. Restart Claude Code.
 
-**🧠 2ndBrain indicator:** lights up when your CWD is inside the Obsidian vault that 2ndBrain-mogging registered. Mogging's installer writes the vault path to `~/.claude/.mogging-vault`; this statusline reads it. No mogging installed → marker doesn't exist → indicator stays hidden (everything else still works). To re-point at a different vault without re-running mogging: `echo "$NEW_VAULT" > ~/.claude/.mogging-vault`.
+**🧠 Brain² indicator:** lights up when your CWD is inside the Obsidian vault that 2ndBrain-mogging registered. Mogging's installer writes the vault path to `~/.claude/.mogging-vault`; this statusline reads it. No mogging installed → marker doesn't exist → indicator stays hidden (everything else still works). To re-point at a different vault without re-running mogging: `echo "$NEW_VAULT" > ~/.claude/.mogging-vault`.
 
 </details>
 

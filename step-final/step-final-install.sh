@@ -109,12 +109,12 @@ if [ -f "$MOGGING_VAULT_MARKER" ] && [ -n "$CWD" ]; then
   VAULT_PATH=$(head -n1 "$MOGGING_VAULT_MARKER" 2>/dev/null | tr -d '\n')
   if [ -n "$VAULT_PATH" ]; then
     case "$CWD" in
-      "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 2ndBrain" ;;
+      "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 Brain²" ;;
     esac
   fi
 fi
 if [ -z "$BRAIN" ] && [ -n "$CWD" ] && echo "$CWD" | grep -qiE "OBSIDIAN/(2ndBrain|MASTER)|/BRAIN2?(/|$)" 2>/dev/null; then
-  BRAIN="🧠 2ndBrain"
+  BRAIN="🧠 Brain²"
 fi
 
 # --- fidgetflo CHECK ---
@@ -492,7 +492,7 @@ echo "  Skills (installed by earlier steps):"
 echo "    /gitfix      — full-repo consistency audit: docs, scripts, and code all in sync (Step 7)"
 echo ""
 echo "  Status line indicators:"
-echo "    🧠 2ndBrain  — in Obsidian vault"
+echo "    🧠 Brain²  — in Obsidian vault"
 echo "    ⚡️ fidgetflo  — MCP server connected"
 echo "    🎨 UIPro     — design skill loaded"
 echo "    🐝 Swarm     — swarm active (during /fswarm)"

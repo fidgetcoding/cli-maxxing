@@ -977,7 +977,7 @@ fi
 # --- 2ndBRAIN CHECK ---
 BRAIN=""
 if echo "$CWD" | grep -qiE "(2ndBrain|MASTER|Second-Brain|Vault)" 2>/dev/null; then
-  BRAIN="🧠 2ndBrain"
+  BRAIN="🧠 Brain²"
 fi
 
 # --- fidgetflo CHECK ---

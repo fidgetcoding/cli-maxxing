@@ -35,12 +35,12 @@ if [ -f "$MOGGING_VAULT_MARKER" ] && [ -n "$CWD" ]; then
   VAULT_PATH=$(head -n1 "$MOGGING_VAULT_MARKER" 2>/dev/null | tr -d '\n')
   if [ -n "$VAULT_PATH" ]; then
     case "$CWD" in
-      "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 2ndBrain" ;;
+      "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 Brain²" ;;
     esac
   fi
 fi
 if [ -z "$BRAIN" ] && [ -n "$CWD" ] && echo "$CWD" | grep -qiE "OBSIDIAN/(2ndBrain|MASTER)|/BRAIN2?(/|$)" 2>/dev/null; then
-  BRAIN="🧠 2ndBrain"
+  BRAIN="🧠 Brain²"
 fi
 
 # --- fidgetflo CHECK ---
