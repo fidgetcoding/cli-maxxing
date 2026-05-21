@@ -151,7 +151,7 @@ When these tools are active, you may see indicators in your Claude session:
 
 | Indicator | Meaning |
 |-----------|---------|
-| 🧠 2ndBrain | Working inside your Obsidian vault |
+| 🧠 Brain² | Working inside your Obsidian vault |
 | ⚡ FidgetFlo | FidgetFlo MCP server is connected |
 | 🎨 UIPro | Design skill is loaded (always on after creativity-maxxing) |
 | 🐝 Swarm | Swarm is active — shows agent count (after `/fswarm`) |

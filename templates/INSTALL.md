@@ -40,7 +40,7 @@ Close and reopen Claude Code for the status line to take effect.
 
 | Indicator | Meaning |
 |-----------|---------|
-| 🧠 2ndBrain | Working directory is inside an Obsidian vault (2ndBrain or MASTER) |
+| 🧠 Brain² | Working directory is inside an Obsidian vault (2ndBrain or MASTER) |
 | ⚡️ fidgetflo | FidgetFlo MCP server is running |
 | 🎨 UIPro | Always shown (global skill, always available) |
 | 🐝 Swarm | Active swarm session (with agent count if available) |
