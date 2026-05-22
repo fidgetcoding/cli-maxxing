@@ -120,7 +120,7 @@ fi
 # --- fidgetflo CHECK ---
 fidgetflo=""
 if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
-  fidgetflo="⚡️fidgetflo"
+  fidgetflo="⚡️ fidgetflo"
 fi
 
 # --- SWARM CHECK (only shows when actively running) ---
@@ -198,7 +198,7 @@ usage_seg() {
   local dim=$'\033[38;5;240m' reset=$'\033[0m'
   while [ $i -lt $filled ]; do fill="${fill}█"; i=$((i+1)); done
   i=0; while [ $i -lt $empty ]; do emp="${emp}█"; i=$((i+1)); done
-  printf '%s %s%s%s%s%s' "$label" "$c" "$fill" "$dim" "$emp" "$reset"
+  printf '%s %s%s%s%s%s %s%%' "$label" "$c" "$fill" "$dim" "$emp" "$reset" "$p"
 }
 
 U5=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
