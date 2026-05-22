@@ -167,7 +167,7 @@ choose_tools() {
             echo -e "${YELLOW}  Step 5 requires interactive input for API credentials.${NC}"
             echo -e "${YELLOW}  Run it directly in your terminal:${NC}"
             echo ""
-            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)"
+            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-5/step-5-install.sh)"
             echo ""
             print_summary
             exit 0
@@ -464,8 +464,8 @@ install_morgen() {
     echo "    2. Sign in with your Morgen account"
     echo "    3. Generate an API key and copy it"
     echo ""
-    echo -e "${BLUE}  Package: fidgetcoding-morgen-mcp (published by lorecraft-io)${NC}"
-    echo -e "${BLUE}  Source:  https://github.com/lorecraft-io/morgen-mcp${NC}"
+    echo -e "${BLUE}  Package: fidgetcoding-morgen-mcp (published by fidgetcoding)${NC}"
+    echo -e "${BLUE}  Source:  https://github.com/fidgetcoding/morgen-mcp${NC}"
     echo ""
 
     read -rsp "  Morgen API key: " MORGEN_API_KEY
@@ -519,8 +519,8 @@ install_motion_calendar() {
     echo -e "${YELLOW}  Motion-specific features (teammate events, full-text${NC}"
     echo -e "${YELLOW}  search across events, custom calendar management).${NC}"
     echo ""
-    echo -e "${BLUE}  Package: fidgetcoding-motion-mcp (published by lorecraft-io)${NC}"
-    echo -e "${BLUE}  Source:  https://github.com/lorecraft-io/motion-mcp${NC}"
+    echo -e "${BLUE}  Package: fidgetcoding-motion-mcp (published by fidgetcoding)${NC}"
+    echo -e "${BLUE}  Source:  https://github.com/fidgetcoding/motion-mcp${NC}"
     echo ""
     echo -e "${BLUE}  Motion Calendar requires a few API credentials from your${NC}"
     echo -e "${BLUE}  Motion account settings.${NC}"

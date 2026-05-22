@@ -330,9 +330,9 @@ if [ -x "$HOME/.local/bin/cbrain" ]; then
     success "HEALTH: cbrain command — installed"
     HC_PASS=$((HC_PASS + 1))
 else
-    info "HEALTH: cbrain not installed — optional add-on (install 2ndBrain-mogging for vault-aware Claude aliases: https://github.com/lorecraft-io/2ndBrain-mogging)"
+    info "HEALTH: cbrain not installed — optional add-on (install 2ndBrain-mogging for vault-aware Claude aliases: https://github.com/fidgetcoding/2ndBrain-mogging)"
     OPTIONAL_FAIL=$((OPTIONAL_FAIL + 1))
-    OPTIONAL_MSGS+=("cbrain — install 2ndBrain-mogging (https://github.com/lorecraft-io/2ndBrain-mogging) for vault-aware Claude aliases")
+    OPTIONAL_MSGS+=("cbrain — install 2ndBrain-mogging (https://github.com/fidgetcoding/2ndBrain-mogging) for vault-aware Claude aliases")
 fi
 
 # --- cbraintg script (optional — installed by 2ndBrain-mogging) ---
@@ -340,9 +340,9 @@ if [ -x "$HOME/.local/bin/cbraintg" ]; then
     success "HEALTH: cbraintg command — installed"
     HC_PASS=$((HC_PASS + 1))
 else
-    info "HEALTH: cbraintg not installed — optional add-on (install 2ndBrain-mogging for vault-aware Claude aliases: https://github.com/lorecraft-io/2ndBrain-mogging)"
+    info "HEALTH: cbraintg not installed — optional add-on (install 2ndBrain-mogging for vault-aware Claude aliases: https://github.com/fidgetcoding/2ndBrain-mogging)"
     OPTIONAL_FAIL=$((OPTIONAL_FAIL + 1))
-    OPTIONAL_MSGS+=("cbraintg — install 2ndBrain-mogging (https://github.com/lorecraft-io/2ndBrain-mogging) for vault-aware Claude aliases")
+    OPTIONAL_MSGS+=("cbraintg — install 2ndBrain-mogging (https://github.com/fidgetcoding/2ndBrain-mogging) for vault-aware Claude aliases")
 fi
 
 # --- ctg script (token-guarded — not an alias) ---

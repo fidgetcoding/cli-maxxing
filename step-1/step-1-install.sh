@@ -414,7 +414,7 @@ if [ ! -f "$TOKEN_FILE" ] || ! grep -qE 'TELEGRAM_BOT_TOKEN=.+' "$TOKEN_FILE" 2>
   echo "Telegram bot token not configured."
   echo "Run Step 6 to set it up:"
   echo ""
-  echo "  bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
+  echo "  bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)"
   echo ""
   echo "Or use 'cskip' to launch Claude without Telegram."
   echo ""

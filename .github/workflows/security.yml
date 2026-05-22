@@ -57,7 +57,7 @@ jobs:
       - name: Check SKILL_URL in step-8
         run: |
           COMMIT=$(grep 'SKILL_COMMIT=' step-8/step-8-install.sh | head -1 | cut -d'"' -f2)
-          URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/${COMMIT}/step-8/safetycheck-skill/SKILL.md"
+          URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/${COMMIT}/step-8/safetycheck-skill/SKILL.md"
           HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
           if [ "$HTTP_STATUS" != "200" ]; then
             echo "::error::Pinned SKILL_URL returned HTTP $HTTP_STATUS — commit SHA may be invalid"

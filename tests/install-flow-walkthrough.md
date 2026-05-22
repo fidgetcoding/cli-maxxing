@@ -77,7 +77,7 @@ The `OBSIDIAN/` prefix requirement has been removed. The script first reads the 
 
 **File:** `step-5/step-5-install.sh`
 
-Installs 11 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging), NOT here.
+Installs 11 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging), NOT here.
 
 | Section | Expected Behavior | Result |
 |---------|-------------------|--------|

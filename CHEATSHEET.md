@@ -7,7 +7,7 @@ The commands I reach for most. Full reference below.
 | Command | What it does |
 |---------|-------------|
 | `cskip` | Launch Claude with permissions skipped — the daily driver |
-| `cbrain` | Launch Claude inside your 2ndBrain vault *(requires vault setup — see [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
+| `cbrain` | Launch Claude inside your 2ndBrain vault *(requires vault setup — see [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging))* |
 | `g2` | Tile 2 Ghostty windows side by side (macOS) |
 | `/fswarm <task>` | Launch a 15-agent FidgetFlo swarm — describe the task in plain English |
 | `/fmini <task>` | Compact 5-agent FidgetFlo swarm for focused work |
@@ -15,7 +15,7 @@ The commands I reach for most. Full reference below.
 | `/concise` | Chat default — no fluff, no scaffolding, no headers on simple Qs. Suspends for copy/scripts/decks. |
 | `/safetycheck` | Security audit — scans for exposed keys, injection vectors, supply-chain risks |
 | `/gitfix` | Full repo sync — reads every file, fixes doc drift, makes reality match the README |
-| `/save` | Capture a conversation into your 2ndBrain vault *(requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
+| `/save` | Capture a conversation into your 2ndBrain vault *(requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging))* |
 
 ---
 
@@ -59,14 +59,14 @@ These aliases are added to your `~/.zshrc` (or `~/.bashrc`) and available in any
 | `ccr` | Resume last Claude conversation (`claude --resume`) |
 | `ccc` | Continue last Claude conversation (`claude --continue`) |
 | `ctg` | Skip-permissions + Telegram channel connected (any directory) |
-| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(installed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) — not Step 1)* |
+| `cbrain` | Launch Claude Code in your 2ndBrain vault with skip-permissions *(installed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) — not Step 1)* |
 | `cbraintg` | Same as `cbrain` but with Telegram channel connected *(installed by 2ndBrain-mogging)* |
 | `g2` | Tile 2 Ghostty windows side by side, filling your screen *(requires Ghostty — Step 2, macOS only)* |
 | `g4` | Tile 4 Ghostty windows in a 2x2 grid *(requires Ghostty — Step 2, macOS only)* |
 
 > **Tip:** After running any setup script, run `source ~/.zshrc` to activate new commands. The scripts do this automatically, but just in case.
 >
-> **Note:** Until you set up Second Brain ([2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
+> **Note:** Until you set up Second Brain ([2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)), use `cskip` instead of `cbrain`. The `cbrain` command requires an Obsidian vault to exist — if you haven't created one yet, it will error. Everything else works right away with `cskip`.
 
 ## What is auto-approve mode?
 
@@ -127,7 +127,7 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 | `/gitfix` | Step 7 | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality. Also responds to "fix the github", "sync the repo", or "update the readme" in plain English |
 | `/safetycheck` | Step 8 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English. Auto-activates 12 MCP-specific checks on MCP projects |
 
-### 2ndBrain-mogging skills *(requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) installed)*
+### 2ndBrain-mogging skills *(requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) installed)*
 
 | Command | What it does |
 |---------|-------------|
@@ -170,12 +170,12 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Vercel | Step 5 | Natural language — deployments, build logs, runtime logs, domains, env vars via Vercel's official remote MCP | "List my recent deployments" · "Show build logs for the last failed deploy" |
 | Telegram | Step 6 | Automatic when launched with `ctg` or `cbraintg` — reads and replies to Telegram messages | (messages arrive automatically from connected chats) |
 | GitHub | Step 7 | Natural language — repos, issues, PRs, code search, branches, commits | "List open PRs on cli-maxxing" · "Search my repos for any file that uses MORGEN_API_KEY" |
-| Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [lorecraft-io/2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |
+| Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [fidgetcoding/2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
 
 > **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/concise`, `/safetycheck`, `/gitfix`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
-> **Add-on tools** (Canva) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed. Figma, Excalidraw, and Gamma live in [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing).
+> **Add-on tools** (Canva) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed. Figma, Excalidraw, and Gamma live in [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing).
 
 ---
 
@@ -249,7 +249,7 @@ These are available in your terminal after Step 4 installs the FidgetFlo CLI.
 
 | Command | What it does |
 |---------|-------------|
-| `bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)` | Re-run all steps, skip what is installed, pick up anything new |
+| `bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/update.sh)` | Re-run all steps, skip what is installed, pick up anything new |
 | `source ~/.zshrc` | Reload shell config to activate new aliases |
 | `claude update` | Update Claude Code itself to the latest version |
 | `brew update && brew upgrade` | Update Homebrew and all installed packages (macOS) |
@@ -266,7 +266,7 @@ These are available in your terminal after Step 4 installs the FidgetFlo CLI.
 | Swarm not responding | Run `npx fidgetflo@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
 | `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
-| Obsidian vault not found | Vault setup lives in [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging). Once set up, tell Claude the full path to your vault (e.g., `~/Desktop/2ndBrain`) |
+| Obsidian vault not found | Vault setup lives in [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging). Once set up, tell Claude the full path to your vault (e.g., `~/BRAIN2`). Avoid `~/Desktop/...` — macOS TCC protection breaks CLI access to the Desktop. |
 | Shift+Return acts like Enter | Try Option+Enter as an alternative for multi-line input |
 
 ---
