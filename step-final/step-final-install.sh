@@ -120,7 +120,7 @@ fi
 # --- fidgetflo CHECK ---
 fidgetflo=""
 if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
-  fidgetflo="⚡️ fidgetflo"
+  fidgetflo="⚡️fidgetflo"
 fi
 
 # --- SWARM CHECK (only shows when actively running) ---
@@ -209,7 +209,7 @@ seg=$(usage_seg "7d" "$U7"); [ -n "$seg" ] && { [ -n "$USAGE" ] && USAGE="$USAGE
 # --- BUILD THE LINE ---
 PARTS=""
 if [ -n "$BRAIN" ] && [ -n "$fidgetflo" ]; then
-  PARTS="${BRAIN} + ${fidgetflo}"
+  PARTS="${BRAIN} • ${fidgetflo}"
 elif [ -n "$BRAIN" ]; then
   PARTS="${BRAIN}"
 elif [ -n "$fidgetflo" ]; then
