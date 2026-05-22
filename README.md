@@ -666,7 +666,7 @@ Claude cross-references CHEATSHEET.md against your actual system, then fixes any
 <summary><strong>Manual install + 🧠 Brain² details</strong></summary>
 
 **Manual install** (if you'd rather skip the script):
-1. Copy `statusline.sh` to `~/.claude/statusline.sh`
+1. Copy `templates/statusline.sh` to `~/.claude/statusline.sh`
 2. Add to `~/.claude/settings.json`:
    ```json
    "statusLine": { "type": "command", "command": "~/.claude/statusline.sh" }
