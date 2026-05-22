@@ -47,7 +47,7 @@ Close and reopen Claude Code for the status line to take effect.
 | 👑 Hive | Active hive-mind session |
 | 🍯 Mini | Active mini swarm session |
 
-It also appends your current model, session duration, context-window usage, and Claude rate-limit bars for the **5h** and **7-day** windows — `5h █░░░░ 13% · 7d █░░░░ 24%` — color-graded green → yellow → red as you approach each limit. The percentages come from Claude Code's own `rate_limits` data passed to the script on stdin, so there's no API token or network call.
+It also appends your current model, session duration, context-window usage, and Claude rate-limit bars for the **5h** and **7-day** windows — `5h █░░░░ · 7d █░░░░` — color-graded green → yellow → red as you approach each limit. The fill comes from Claude Code's own `rate_limits` data passed to the script on stdin, so there's no API token or network call. (Bars are number-free by design; to show the percent, see the script's `usage_seg` `printf`.)
 
 ## Swarm/Hive Lock Files
 
