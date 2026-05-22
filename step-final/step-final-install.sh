@@ -74,7 +74,7 @@ info "Installing status line script..."
 cat > "$HOME/.claude/statusline.sh" << 'STATUSLINE_EOF'
 #!/bin/bash
 # Status Line — real state only
-# 2ndBrain (Obsidian) + fidgetflo (MCP) + UIPro + Swarm/Hive activity
+# 2ndBrain (Obsidian) + fidgetflo (MCP) + Swarm/Hive activity
 
 input=$(cat)
 
@@ -122,9 +122,6 @@ fidgetflo=""
 if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
   fidgetflo="⚡️ fidgetflo"
 fi
-
-# --- UIPRO CHECK (always on — global skill) ---
-UIPRO="🎨 UIPro"
 
 # --- SWARM CHECK (only shows when actively running) ---
 # Lock file is written by /fswarm skill, removed on completion.
@@ -178,6 +175,37 @@ if [ -f "$MINI_LOCK" ] 2>/dev/null; then
   fi
 fi
 
+# --- CLAUDE SUBSCRIPTION USAGE (5h / 7d) ---
+# Claude Code passes rate-limit utilization directly in the stdin JSON
+# (rate_limits.*.used_percentage), so no network call is needed.
+USAGE=""
+
+# 5-cell colored bar + percent for a single utilization value.
+usage_seg() {
+  local label="$1" val="$2"
+  [ -z "$val" ] || [ "$val" = "null" ] && return
+  local p=${val%.*}; [ -z "$p" ] && p=0
+  local cells=5
+  local filled=$(( (p * cells + 50) / 100 ))
+  [ "$filled" -gt "$cells" ] && filled=$cells
+  [ "$filled" -lt 0 ] && filled=0
+  local empty=$(( cells - filled )) c fill="" emp="" i=0
+  if   [ "$p" -ge 90 ]; then c=$'\033[38;5;196m'   # red
+  elif [ "$p" -ge 75 ]; then c=$'\033[38;5;208m'   # orange
+  elif [ "$p" -ge 60 ]; then c=$'\033[38;5;226m'   # yellow
+  elif [ "$p" -ge 40 ]; then c=$'\033[38;5;154m'   # lime
+  else                       c=$'\033[38;5;46m'; fi # green
+  local dim=$'\033[38;5;240m' reset=$'\033[0m'
+  while [ $i -lt $filled ]; do fill="${fill}█"; i=$((i+1)); done
+  i=0; while [ $i -lt $empty ]; do emp="${emp}█"; i=$((i+1)); done
+  printf '%s %s%s%s%s%s %s%%' "$label" "$c" "$fill" "$dim" "$emp" "$reset" "$p"
+}
+
+U5=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
+U7=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' 2>/dev/null)
+seg=$(usage_seg "5h" "$U5"); [ -n "$seg" ] && USAGE="$seg"
+seg=$(usage_seg "7d" "$U7"); [ -n "$seg" ] && { [ -n "$USAGE" ] && USAGE="$USAGE · "; USAGE="$USAGE$seg"; }
+
 # --- BUILD THE LINE ---
 PARTS=""
 if [ -n "$BRAIN" ] && [ -n "$fidgetflo" ]; then
@@ -186,12 +214,6 @@ elif [ -n "$BRAIN" ]; then
   PARTS="${BRAIN}"
 elif [ -n "$fidgetflo" ]; then
   PARTS="${fidgetflo}"
-fi
-
-if [ -n "$PARTS" ]; then
-  PARTS="${PARTS} + ${UIPRO}"
-else
-  PARTS="${UIPRO}"
 fi
 
 # Swarm, Hive, or Mini activity
@@ -208,10 +230,17 @@ if [ -n "$MINI" ]; then
   ACTIVITY="${ACTIVITY}${MINI}"
 fi
 if [ -n "$ACTIVITY" ]; then
-  PARTS="${PARTS} [${ACTIVITY}]"
+  if [ -n "$PARTS" ]; then
+    PARTS="${PARTS} [${ACTIVITY}]"
+  else
+    PARTS="[${ACTIVITY}]"
+  fi
 fi
 
-echo "${PARTS} • ${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
+LINE="${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
+[ -n "$PARTS" ] && LINE="${PARTS} • ${LINE}"
+[ -n "$USAGE" ] && LINE="${LINE} • ${USAGE}"
+echo "$LINE"
 STATUSLINE_EOF
 
 chmod +x "$HOME/.claude/statusline.sh"
@@ -494,7 +523,6 @@ echo ""
 echo "  Status line indicators:"
 echo "    🧠 Brain²  — in Obsidian vault"
 echo "    ⚡️ fidgetflo  — MCP server connected"
-echo "    🎨 UIPro     — design skill loaded"
 echo "    🐝 Swarm     — swarm active (during /fswarm)"
 echo "    👑 Hive      — hive-mind active (during /fhive)"
 echo "    🍯 Mini      — mini swarm active (during /fmini)"

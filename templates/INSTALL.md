@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `statusline.sh` script provides a dynamic status line for Claude Code that displays real-time state for 2ndBrain (Obsidian), FidgetFlo (MCP), UIPro, and any active Swarm/Hive sessions.
+The `statusline.sh` script provides a dynamic status line for Claude Code that displays real-time state for 2ndBrain (Obsidian), FidgetFlo (MCP), any active Swarm/Hive sessions, and your Claude rate-limit usage bars (5h + 7-day windows).
 
 ## Prerequisites
 
@@ -24,13 +24,14 @@ Edit `~/.claude/settings.json` and add (or update) the `statusline` field:
 
 ```json
 {
-  "statusline": {
-    "command": "bash ~/.claude/statusline.sh"
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
   }
 }
 ```
 
-If the file already has other settings, merge the `statusline` key into the existing JSON object.
+If the file already has other settings, merge the `statusLine` key into the existing JSON object.
 
 ### 3. Restart Claude Code
 
@@ -42,10 +43,11 @@ Close and reopen Claude Code for the status line to take effect.
 |-----------|---------|
 | 🧠 Brain² | Working directory is inside an Obsidian vault (2ndBrain or MASTER) |
 | ⚡️ fidgetflo | FidgetFlo MCP server is running |
-| 🎨 UIPro | Always shown (global skill, always available) |
 | 🐝 Swarm | Active swarm session (with agent count if available) |
 | 👑 Hive | Active hive-mind session |
 | 🍯 Mini | Active mini swarm session |
+
+It also appends your current model, session duration, context-window usage, and Claude rate-limit bars for the **5h** and **7-day** windows — `5h █░░░░ 13% · 7d █░░░░ 24%` — color-graded green → yellow → red as you approach each limit. The percentages come from Claude Code's own `rate_limits` data passed to the script on stdin, so there's no API token or network call.
 
 ## Swarm/Hive Lock Files
 

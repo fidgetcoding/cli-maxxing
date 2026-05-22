@@ -153,10 +153,11 @@ When these tools are active, you may see indicators in your Claude session:
 |-----------|---------|
 | 🧠 Brain² | Working inside your Obsidian vault |
 | ⚡ FidgetFlo | FidgetFlo MCP server is connected |
-| 🎨 UIPro | Design skill is loaded (always on after creativity-maxxing) |
 | 🐝 Swarm | Swarm is active — shows agent count (after `/fswarm`) |
 | 🍯 Mini | Mini swarm is active — shows agent count (after `/fmini`) |
 | 👑 Hive | Hive-mind is active (after `/fhive`) |
+
+The status line also shows your current model, session duration, context-window usage, and Claude rate-limit bars for the **5h** and **7-day** windows (color-graded green → yellow → red as you approach each limit).
 
 ---
 

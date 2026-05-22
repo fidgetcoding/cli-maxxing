@@ -414,7 +414,7 @@ Natural-language aliases work too: "hard"/"deep" → tier 2, "harder"/"deeper" �
 | Opus Lock | All tasks and spawned agents run on Opus — no silent downgrade to Haiku/Sonnet. |
 | Swarm + Hive + `/w4w` + `/concise` skills | The commands above. |
 | TypeScript + agentic-flow | Required deps (embeddings, advanced routing). |
-| Statusline | Live indicators for swarms, hives, model, session time, and context usage. |
+| Statusline | Live indicators for swarms, hives, model, session time, context usage, and Claude rate-limit bars (5h + 7-day). |
 
 **Want the deep dive?** Architecture, agent catalog (60+ types), memory system, hook pipeline, topology options — all in the [FidgetFlo repo →](https://github.com/fidgetcoding/fidgetflo)
 
@@ -636,12 +636,11 @@ The wrap-up. Installs a custom status line that shows what's active at a glance,
 |------|---------------|
 | ⚡️ fidgetflo | FidgetFlo MCP connected |
 | 🧠 Brain² | CWD is inside your Obsidian vault (requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)) |
-| 🎨 UIPro | Design skill loaded (via [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing)) |
 | 🐝 Swarm | A swarm is active (`/fswarm`, shows agent count) |
 | 🍯 Mini | A mini swarm is active (`/fmini`, shows agent count) |
 | 👑 Hive | A hive-mind is active (`/fhive`) |
 
-The status line also shows your current model, session duration, and context window usage.
+The status line also shows your current model, session duration, context-window usage, and Claude rate-limit bars for the **5h** and **7-day** windows — color-graded green → yellow → red as you approach each limit. Usage is read straight from Claude Code's own `rate_limits` data (no API token or network call).
 
 ### Run Final Step
 
