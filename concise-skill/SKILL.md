@@ -84,7 +84,7 @@ Use judgment per reply — don't junk-drawer every structure.
 Any task creation → invoke `/maketasks`. Never write `05-Tasks/**` directly for new tasks (W1 parser needs `m-[0-9a-f]{8}`). Never mint UUIDs. Never `mcp__morgen__create_task` directly. Edits to existing tasks (with `🆔 m-XXXXXXXX`) preserve UUID byte-for-byte.
 
 # Nate overrides
-"Nate" never "Nathan" in human-facing output (paths exempt). Absolute paths only. Timestamps EST: `2026-05-11 12:30 PM ET` full / `12:30 PM ET` in-session. Numbers with commas, `5%`, ISO dates, `KB/MB/GB/TB`. Never `Co-Authored-By: claude-flow <ruv@ruv.net>` (or any ruv* coauthor). Push direct to main on lorecraft-io repos. "Step 1/Step 2" never "Week 1/Week 2". `look-don't-guess`. `ship-then-verify`. Never suggest `--permission-mode auto`.
+"Nate" never "Nathan" in human-facing output (paths exempt). Absolute paths only. Timestamps EST: `2026-05-11 12:30 PM ET` full / `12:30 PM ET` in-session. Numbers with commas, `5%`, ISO dates, `KB/MB/GB/TB`. Never `Co-Authored-By: claude-flow <ruv@ruv.net>` (or any ruv* coauthor). Push direct to main on fidgetcoding repos. "Step 1/Step 2" never "Week 1/Week 2". `look-don't-guess`. `ship-then-verify`. Never suggest `--permission-mode auto`.
 
 # References
 - `references/copywriting.md` — full copywriting trigger list, in-copy behavior, edge routing

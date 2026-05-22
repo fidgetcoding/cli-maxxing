@@ -908,7 +908,7 @@ W4W_EOF
     # chat shape: no fluff, no scaffolding, no headers on simple questions.
     CONCISE_DIR="$HOME/.claude/skills/concise"
     CONCISE_REF_DIR="$CONCISE_DIR/references"
-    CONCISE_BASE_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/concise-skill"
+    CONCISE_BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/concise-skill"
     mkdir -p "$CONCISE_REF_DIR"
 
     SCRIPT_DIR_CONCISE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

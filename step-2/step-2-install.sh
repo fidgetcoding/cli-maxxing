@@ -14,7 +14,7 @@ YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-BASE_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2"
+BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-2"
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -43,5 +43,5 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 echo ""
 echo "  Run Step 3 to install developer tools (Python, jq, ripgrep, tree, fzf, etc.):"
 echo ""
-echo -e "     ${GREEN}bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)${NC}"
+echo -e "     ${GREEN}bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-3/step-3-install.sh)${NC}"
 echo ""

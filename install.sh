@@ -6,7 +6,7 @@ set -uo pipefail
 # Runs all non-interactive steps in order. Steps that are already installed
 # are skipped automatically. Steps that require interactive input (Step 5,
 # Step 6, and Step 7) are noted at the end — run them separately in your terminal.
-# Usage: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
+# Usage: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/install.sh)
 # =============================================================================
 
 RED='\033[0;31m'
@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-BASE_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main"
+BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main"
 
 # -----------------------------------------------------------------------------
 # reload_path — re-source brew + nvm into the current shell so chained child
@@ -109,7 +109,7 @@ if ! command -v claude &>/dev/null || ! claude --version &>/dev/null; then
     echo "    3. Old Node.js — 'node -v' should report v18 or higher."
     echo ""
     echo "  Fix one of the above, then re-run:"
-    echo -e "    ${GREEN}bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)${NC}"
+    echo -e "    ${GREEN}bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/install.sh)${NC}"
     echo ""
     exit 1
 fi
@@ -164,7 +164,7 @@ if [ "${#MISSING_CRUMBS[@]}" -gt 0 ]; then
   echo -e "${YELLOW}⚠️  Some steps did not complete. This usually happens on the first install${NC}"
   echo -e "${YELLOW}   when a new terminal hasn't loaded brew + node yet.${NC}"
   echo -e "${YELLOW}   → Close this terminal, open a new one, and re-run:${NC}"
-  echo -e "${YELLOW}     bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)${NC}"
+  echo -e "${YELLOW}     bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/install.sh)${NC}"
   echo -e "${YELLOW}   The script is idempotent and will resume.${NC}"
   echo ""
   echo -e "${YELLOW}   Missing: ${MISSING_CRUMBS[*]}${NC}"
@@ -178,17 +178,17 @@ echo ""
 echo "  Three steps require interactive input — run them separately:"
 echo ""
 echo "    Step 5 (Productivity Tools — Notion, Morgen, n8n, Playwright, etc.):"
-echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)"
+echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-5/step-5-install.sh)"
 echo ""
 echo "    Step 6 (Telegram — optional, skip if you don't have a bot token):"
-echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
+echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)"
 echo ""
 echo "    Step 7 (GitHub — MCP + /gitfix skill, optional, for devs):"
-echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
+echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
 echo ""
 echo "  Companion repos (install after this):"
-echo "    Design + media:  bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/creativity-maxxing/main/install.sh)"
-echo "    Second Brain:    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/2ndBrain-mogging/main/install.sh)"
+echo "    Design + media:  bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/creativity-maxxing/main/install.sh)"
+echo "    Second Brain:    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/2ndBrain-mogging/main/install.sh)"
 echo ""
 echo "  Open a new terminal window for aliases to take effect."
 echo ""

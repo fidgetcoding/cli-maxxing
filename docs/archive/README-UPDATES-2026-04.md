@@ -2,7 +2,7 @@
 
 > **Status: COMPLETED — historical planning doc.** All recommendations below have been merged into README.md. Kept for reference.
 >
-> **Step numbers in this file are historical (pre-mogging layout).** The body still reads "Step 6 = Productivity Tools, Step 7 = vault / Obsidian, Step 8 = Telegram". The current canon is: **Step 1** CLI Tools · **Step 2** Bonus Software (Ghostty + Arc) · **Step 3** Developer & Utility Tools · **Step 4** FidgetFlo · **Step 5** Productivity Tools (10 MCPs) · **Step 6** Telegram · **Step 7** GitHub + `/gitfix` · **Step 8** Safety Check · **Final** Status Line. Obsidian MCP has moved out of this repo entirely into [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging).
+> **Step numbers in this file are historical (pre-mogging layout).** The body still reads "Step 6 = Productivity Tools, Step 7 = vault / Obsidian, Step 8 = Telegram". The current canon is: **Step 1** CLI Tools · **Step 2** Bonus Software (Ghostty + Arc) · **Step 3** Developer & Utility Tools · **Step 4** FidgetFlo · **Step 5** Productivity Tools (10 MCPs) · **Step 6** Telegram · **Step 7** GitHub + `/gitfix` · **Step 8** Safety Check · **Final** Status Line. Obsidian MCP has moved out of this repo entirely into [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging).
 >
 > The observations about Step 6 and Granola below are also superseded by the 2026-04-14 Step 6 overhaul and subsequent renumbering: Granola is now installed by **Step 5** (option 2 in the Productivity menu), alongside Notion, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, and Google Drive.
 
@@ -105,7 +105,7 @@ Step 6 requires interactive input for API credentials. When run via `curl | bash
 
 **Fix:** Run Step 6 directly in your terminal:
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)
 ```
 
 ### Obsidian MCP returns internal errors
@@ -142,7 +142,7 @@ The brain indicator appears when your working directory contains "2ndBrain", "Se
 
 Run the update command to re-run everything. It skips what's already installed and fills in any gaps:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/update.sh | bash
 ```
 
 Or open a `cskip` session and describe the problem to Claude. It can diagnose and fix most issues on the spot.

@@ -165,7 +165,7 @@ choose_tools() {
             echo -e "${YELLOW}  Step 7 requires interactive input to set up the GitHub MCP.${NC}"
             echo -e "${YELLOW}  Run it directly in your terminal to finish:${NC}"
             echo ""
-            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
+            echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
             echo ""
             info "Continuing with non-interactive /gitfix install..."
             install_gitfix
@@ -264,7 +264,7 @@ install_github() {
 install_gitfix() {
     GITFIX_DIR="$HOME/.claude/skills/gitfix"
     GITFIX_FILE="$GITFIX_DIR/SKILL.md"
-    GITFIX_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/gitfix-skill/SKILL.md"
+    GITFIX_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/gitfix-skill/SKILL.md"
 
     mkdir -p "$GITFIX_DIR"
 

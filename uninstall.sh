@@ -663,7 +663,7 @@ print_summary() {
     echo "  Your Obsidian vault and notes were NOT touched."
     echo "  The cbraintg command was NOT removed — it is managed by the"
     echo "  2ndBrain-mogging companion installer. To remove it, run:"
-    echo "    bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/2ndBrain-mogging/main/uninstall.sh)"
+    echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/2ndBrain-mogging/main/uninstall.sh)"
     echo ""
     echo "  To finish cleanup, restart your terminal or re-source your shell:"
     echo ""

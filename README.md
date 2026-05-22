@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![cli-maxxing](https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/cli-maxxing.png)
+![cli-maxxing](https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/cli-maxxing.png)
 
 [![Follow on X](https://img.shields.io/badge/FOLLOW%20%40fidgetcoding-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/fidgetcoding) [![LinkedIn](https://img.shields.io/badge/LINKEDIN-CONNECT-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=555555)](https://www.linkedin.com/in/nate-davidovich/) [![YouTube](https://img.shields.io/badge/YOUTUBE-SUBSCRIBE-FF0000?style=for-the-badge&logo=youtube&logoColor=white&labelColor=555555)](https://youtube.com/@fidgetcoding) [![Instagram](https://img.shields.io/badge/INSTAGRAM-FOLLOW-E4405F?style=for-the-badge&logo=instagram&logoColor=white&labelColor=555555)](https://instagram.com/fidgetcoding)
 
@@ -35,8 +35,8 @@ This is one of three repos in the cli-maxxing stack:
 | Repo | What it does |
 |------|-------------|
 | **`cli-maxxing`** | **This repo** — Foundation — Claude Code, shell aliases, FidgetFlo, dev tools, productivity MCPs |
-| [`creativity-maxxing`](https://github.com/lorecraft-io/creativity-maxxing) | Design skills + video/audio pipeline |
-| [`task-maxxing`](https://github.com/lorecraft-io/task-maxxing) | Two-way task sync — Obsidian ↔ Morgen (Notion dropped 2026-05-04) (requires [`2ndBrain-mogging`](https://github.com/lorecraft-io/2ndBrain-mogging)) |
+| [`creativity-maxxing`](https://github.com/fidgetcoding/creativity-maxxing) | Design skills + video/audio pipeline |
+| [`task-maxxing`](https://github.com/fidgetcoding/task-maxxing) | Two-way task sync — Obsidian ↔ Morgen (Notion dropped 2026-05-04) (requires [`2ndBrain-mogging`](https://github.com/fidgetcoding/2ndBrain-mogging)) |
 
 Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be installed in either order after that.
 
@@ -95,7 +95,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 3 — Developer & Utility Tools](#step-3---developer--utility-tools)** is where you install the rest of your development tools. Things like file converters, search tools, and utilities. You run this from your terminal after Step 1 is done. Much more straightforward.
 
-**[Step 4 — FidgetFlo](#step-4---fidgetflo)** is where you set up [FidgetFlo](https://github.com/lorecraft-io/fidgetflo), the multi-agent orchestration layer that turns Claude into a full team of AI agents — `/fswarm`, `/fmini`, `/fhive`, persistent memory, Opus-locked.
+**[Step 4 — FidgetFlo](#step-4---fidgetflo)** is where you set up [FidgetFlo](https://github.com/fidgetcoding/fidgetflo), the multi-agent orchestration layer that turns Claude into a full team of AI agents — `/fswarm`, `/fmini`, `/fhive`, persistent memory, Opus-locked.
 
 **[Step 5 — Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools — notes, calendars, email, meetings, workflows, browser automation, deployments, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, or Vercel. All optional, install only what you need.
 
@@ -122,7 +122,7 @@ If you already have Claude Code working on your machine, you can skip Step 1 ent
 ### Bonus
 
 > [!TIP]
-> Want to get better at using the terminal in general? Check out [Terminal Academy](https://github.com/lorecraft-io/terminal-academy), a gamified way to learn terminal commands and workflows. It makes the learning curve way less painful.
+> Want to get better at using the terminal in general? Check out [Terminal Academy](https://github.com/fidgetcoding/terminal-academy), a gamified way to learn terminal commands and workflows. It makes the learning curve way less painful.
 
 ---
 
@@ -135,7 +135,7 @@ If you already know your way around a terminal and just want everything installe
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/install.sh)
 > ```
 
 This runs Steps 1, 2, 3, 4, 8, and the Final Step automatically, plus both bonuses (Ghostty and Arc Browser). Arc is macOS-only and will be skipped on Linux. Everything is idempotent — already-installed tools are skipped.
@@ -155,7 +155,7 @@ Here are the commands you'll use most:
 | Command | What it does |
 |---------|-------------|
 | `cskip` | Start with all permissions skipped (fastest, no prompts) |
-| `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging))* |
+| `cbrain` | Jump straight into your 2ndBrain vault with permissions skipped *(requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging))* |
 | `Shift+Tab` | Toggle permissions on/off mid-session without restarting |
 | `/fswarm *write task here*` | Launch a 15-agent FidgetFlo swarm — just describe what you want in plain English after `/fswarm` |
 | `/fmini *write task here*` | Launch a compact 5-agent FidgetFlo swarm — same power, tighter team. Describe your task after `/fmini` |
@@ -181,7 +181,7 @@ Open Terminal: **Cmd+Space → "Terminal"** on Mac, or **Ctrl+Alt+T** on Linux.
 > [!IMPORTANT]
 > **Paste this in and hit Enter:**
 > ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-1/step-1-install.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-1/step-1-install.sh)
 > ```
 
 > The script will ask for your Mac password to install system tools. When you see `Password:`, type it and hit Enter — you won't see the characters, that's normal.
@@ -199,7 +199,7 @@ Open Terminal: **Cmd+Space → "Terminal"** on Mac, or **Ctrl+Alt+T** on Linux.
 | Claude Code | Your AI coding assistant. The main tool. |
 | Shell aliases | `cskip`, `cc`, `ccr`, `ccc` — faster ways to launch Claude. |
 | ctg | Launches Claude with Telegram connected from any directory. |
-| cbrain | Launches Claude pointed at your Obsidian vault. Installed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) — available after you set up the vault. |
+| cbrain | Launches Claude pointed at your Obsidian vault. Installed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) — available after you set up the vault. |
 | cbraintg | `cbrain` + Telegram. Also installed by 2ndBrain-mogging. |
 
 ### After the script finishes
@@ -240,14 +240,14 @@ Optional but highly recommended. Installs **Ghostty** (GPU-accelerated terminal 
 
 > [!IMPORTANT]
 > ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/step-2-install.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-2/step-2-install.sh)
 > ```
 
 Prefer to do one at a time? Run either script individually:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/ghostty-install.sh)
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-2/arc-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-2/ghostty-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-2/arc-install.sh)
 ```
 
 ---
@@ -318,7 +318,7 @@ First time? Claude opens a browser to log in with your Anthropic account. Once y
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to install my dev tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
+> run this command to install my dev tools: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-3/step-3-install.sh)
 > ```
 
 Claude runs the install. If it asks you to restart your terminal, close the window, reopen, `cskip` again, and tell Claude to pick up where it left off.
@@ -366,7 +366,7 @@ A "stop hook" fires every time you end a Claude session (Ctrl+C or `/exit`). Cla
 
 [Back to top](#quick-navigation)
 
-[**FidgetFlo**](https://github.com/lorecraft-io/fidgetflo) 💚 is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It turns Claude Code from a single assistant into a coordinated team of AI agents: multi-agent swarms on demand, persistent memory, self-healing workflows, and all agents Opus-locked by default (no silent downgrade to Haiku/Sonnet). *(💚 = built by fidgetcoding.)*
+[**FidgetFlo**](https://github.com/fidgetcoding/fidgetflo) 💚 is a fork of [ruvnet's Ruflo](https://github.com/ruvnet/ruflo), tuned for Claude Opus 4.7. It turns Claude Code from a single assistant into a coordinated team of AI agents: multi-agent swarms on demand, persistent memory, self-healing workflows, and all agents Opus-locked by default (no silent downgrade to Haiku/Sonnet). *(💚 = built by fidgetcoding.)*
 
 ### Run Step 4
 
@@ -375,7 +375,7 @@ Still in a `cskip` session? Good. Paste this:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up FidgetFlo: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-4/step-4-install.sh)
+> run this command to set up FidgetFlo: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-4/step-4-install.sh)
 > ```
 
 If Claude tells you to restart your terminal, close the window, reopen, `cskip` again, and tell Claude to pick up where it left off.
@@ -416,7 +416,7 @@ Natural-language aliases work too: "hard"/"deep" → tier 2, "harder"/"deeper" �
 | TypeScript + agentic-flow | Required deps (embeddings, advanced routing). |
 | Statusline | Live indicators for swarms, hives, model, session time, and context usage. |
 
-**Want the deep dive?** Architecture, agent catalog (60+ types), memory system, hook pipeline, topology options — all in the [FidgetFlo repo →](https://github.com/lorecraft-io/fidgetflo)
+**Want the deep dive?** Architecture, agent catalog (60+ types), memory system, hook pipeline, topology options — all in the [FidgetFlo repo →](https://github.com/fidgetcoding/fidgetflo)
 
 ### After Step 4
 
@@ -460,7 +460,7 @@ Claude picks the right tool automatically based on what you ask. Pick whichever 
 
 > **Morgen (5) is the recommended default** — it unifies Google, Outlook, iCloud, and native calendars + tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary — install only if you need those accounts directly.
 >
-> **Obsidian MCP** lives in [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging), not here. Install mogging after this repo completes — it handles vault setup AND registers the Obsidian MCP with Claude Code.
+> **Obsidian MCP** lives in [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging), not here. Install mogging after this repo completes — it handles vault setup AND registers the Obsidian MCP with Claude Code.
 
 ### Run Step 5
 
@@ -468,7 +468,7 @@ In a `cskip` session, paste this:
 
 > [!IMPORTANT]
 > ```
-> run this command to install productivity tools: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)
+> run this command to install productivity tools: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-5/step-5-install.sh)
 > ```
 
 The script asks which tools you want, then walks you through each one's credentials. Skip anything you don't use — re-run the script later to add more.
@@ -481,8 +481,8 @@ The script asks which tools you want, then walks you through each one's credenti
 | 2 | **Granola** | Search your Granola meeting transcripts + notes through conversation. | [Granola](https://granola.ai) installed + signed in on Mac. No key. |
 | 3 | **n8n** | HTTP bridge to **your own** n8n instance — trigger and inspect workflows you built. Not a hosted service. | An n8n workflow with an **MCP Server Trigger** node; copy its Production URL. Optional Bearer token. |
 | 4 | **Google Calendar** | Direct Google Calendar access via OAuth. *Secondary — only install if you need a specific Google account bypassing Morgen.* | Google account + ~5min to create OAuth creds (script walks you through). |
-| 5 | **[Morgen](https://github.com/lorecraft-io/morgen-mcp)** ⭐ 💚 | Unified calendar + tasks across Google/Outlook/iCloud/native. Natural-language dates/recurrence, auto-schedule, day reflow. One key for everything. | API key from [platform.morgen.so/developers-api](https://platform.morgen.so/developers-api). |
-| 6 | **[Motion Calendar](https://github.com/lorecraft-io/motion-mcp)** 💚 | Teammate visibility + full event search that Morgen's API doesn't expose. *Motion-specific features only.* | Motion API key + Firebase key + refresh token + user ID (script walks you through). |
+| 5 | **[Morgen](https://github.com/fidgetcoding/morgen-mcp)** ⭐ 💚 | Unified calendar + tasks across Google/Outlook/iCloud/native. Natural-language dates/recurrence, auto-schedule, day reflow. One key for everything. | API key from [platform.morgen.so/developers-api](https://platform.morgen.so/developers-api). |
+| 6 | **[Motion Calendar](https://github.com/fidgetcoding/motion-mcp)** 💚 | Teammate visibility + full event search that Morgen's API doesn't expose. *Motion-specific features only.* | Motion API key + Firebase key + refresh token + user ID (script walks you through). |
 | 7 | **Playwright** ([Microsoft](https://github.com/microsoft/playwright-mcp)) | Lets Claude log into and operate web apps with no API. Runs its own Chromium (not your real browser), reads via accessibility-tree snapshots — fast + reliable. | Node 18+ (from Step 1) + ~hundreds of MB disk for Chromium. No credentials. |
 | 8 | **SwiftKit** ([swiftkit.sh](https://swiftkit.sh)) | Hosted MCP toolkit for **iOS / macOS / Swift development** — 100+ tools for writing, building, and shipping Apple-platform code behind one HTTP endpoint. Default for anything iPhone/iOS/Swift-related. Nothing to install locally. | Account + API key (`sk_live_` or `sk_test_`). |
 | 9 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
@@ -495,7 +495,7 @@ The script asks which tools you want, then walks you through each one's credenti
 
 ### After Step 5
 
-Your productivity stack is wired up. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. Skipped something? Re-run Step 5 later. For Obsidian vault access, install [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging).
+Your productivity stack is wired up. Ask about your schedule, add a task, query Notion, trigger a workflow — all from your terminal. Skipped something? Re-run Step 5 later. For Obsidian vault access, install [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging).
 
 ---
 
@@ -508,7 +508,7 @@ This step connects Claude to Telegram so you can message it from your phone. You
 Two launcher commands pair with this step:
 
 - **`ctg`** — launches Claude with Telegram connected from any directory. Installed in Step 1. Use this when you want to drive a regular Claude session from your phone.
-- **`cbraintg`** — same as `ctg`, but also opens your 2ndBrain vault on launch. Installed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging). Use this when you want Claude to have vault context while answering Telegram messages.
+- **`cbraintg`** — same as `ctg`, but also opens your 2ndBrain vault on launch. Installed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging). Use this when you want Claude to have vault context while answering Telegram messages.
 
 ### What It Sets Up
 
@@ -518,7 +518,7 @@ Two launcher commands pair with this step:
 | Bot Token | Stored locally at `~/.claude/channels/telegram/.env` |
 | Access Policy | Controls who can message your bot (default: ask before accepting) |
 | `ctg` command | Launch Claude with Telegram from any directory (installed in Step 1) |
-| `cbraintg` command | Launch Claude with Telegram inside your 2ndBrain vault (installed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) |
+| `cbraintg` command | Launch Claude with Telegram inside your 2ndBrain vault (installed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)) |
 
 ### Run Step 6
 
@@ -528,7 +528,7 @@ Two launcher commands pair with this step:
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up Telegram: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+> run this command to set up Telegram: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)
 > ```
 
 ### After Step 6
@@ -561,7 +561,7 @@ Copy the `ghp_...` value. `/gitfix` needs no token — it runs locally.
 ### Run Step 7
 
 ```
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)
 ```
 
 Script prompts for your PAT, registers the GitHub MCP (token stored in `~/.claude.json` alongside every other MCP credential), and drops `/gitfix` into `~/.claude/skills/gitfix/`.
@@ -594,7 +594,7 @@ In a `cskip` session, paste:
 
 > [!IMPORTANT]
 > ```
-> run this command to install the safety check skill: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-8/step-8-install.sh)
+> run this command to install the safety check skill: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-8/step-8-install.sh)
 > ```
 
 <details>
@@ -635,8 +635,8 @@ The wrap-up. Installs a custom status line that shows what's active at a glance,
 | Icon | When it shows |
 |------|---------------|
 | ⚡️ fidgetflo | FidgetFlo MCP connected |
-| 🧠 Brain² | CWD is inside your Obsidian vault (requires [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)) |
-| 🎨 UIPro | Design skill loaded (via [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing)) |
+| 🧠 Brain² | CWD is inside your Obsidian vault (requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)) |
+| 🎨 UIPro | Design skill loaded (via [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing)) |
 | 🐝 Swarm | A swarm is active (`/fswarm`, shows agent count) |
 | 🍯 Mini | A mini swarm is active (`/fmini`, shows agent count) |
 | 👑 Hive | A hive-mind is active (`/fhive`) |
@@ -648,7 +648,7 @@ The status line also shows your current model, session duration, and context win
 > [!IMPORTANT]
 > **Paste this into your Claude session:**
 > ```
-> run this command to set up your status line: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-final/step-final-install.sh)
+> run this command to set up your status line: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-final/step-final-install.sh)
 > ```
 
 ### Verify Everything Works
@@ -713,7 +713,7 @@ Step 1 installs Homebrew mid-pipeline, but downstream steps in the same shell do
 **Fix:** close the terminal, open a fresh one, re-run the installer:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/install.sh)
 ```
 
 It's idempotent — anything already installed gets skipped.
@@ -743,7 +743,7 @@ macOS default Python (3.9) ships with PEP 668 restrictions that block `pip insta
 **Fix:** re-run Step 3:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-3/step-3-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-3/step-3-install.sh)
 ```
 
 **Still failing?** Install manually:
@@ -771,7 +771,7 @@ Launching `ctg` or `cbraintg` gives a never-ending stream of `telegram channel: 
 2. Use `cskip` instead of `ctg` to keep working — no Telegram needed.
 3. Re-run Step 6 to re-enter the token:
    ```bash
-   bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)
+   bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)
    ```
 
 **If that doesn't fix it**, open `cskip` and ask Claude:
@@ -787,23 +787,23 @@ Step 5 needs interactive input for API credentials. When piped through `curl | b
 **Fix:** run Step 5 directly in your terminal:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-5/step-5-install.sh)
 ```
 
 ### Obsidian MCP returns internal errors
 
-See the [2ndBrain-mogging troubleshooting guide](https://github.com/lorecraft-io/2ndBrain-mogging#troubleshooting). The Obsidian MCP is installed and configured by 2ndBrain-mogging.
+See the [2ndBrain-mogging troubleshooting guide](https://github.com/fidgetcoding/2ndBrain-mogging#troubleshooting). The Obsidian MCP is installed and configured by 2ndBrain-mogging.
 
 ### `cbrain` says it can't find my vault
 
-See [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) — vault setup is handled there. If your vault exists but isn't found, set `VAULT_PATH=/path/to/your/vault cbrain`.
+See [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) — vault setup is handled there. If your vault exists but isn't found, set `VAULT_PATH=/path/to/your/vault cbrain`.
 
 ### A step failed or something is missing
 
 Run the update command — it re-runs every step, skips what's already installed, fills in any gaps:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/update.sh)
 ```
 
 **Or:** open a `cskip` session and describe the problem to Claude. It can diagnose and fix most issues on the spot.
@@ -846,7 +846,7 @@ Everything is installed, configured, and wired together. From now on, this is th
 
 That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with all permissions skipped. Your vault is your home base — every tool, skill, and MCP server you just installed is available the moment you type it.
 
-> **Haven't run 2ndBrain-mogging yet?** Use `cskip` instead of `cbrain` until your Second Brain vault is set up. `cbrain` requires the Obsidian vault to exist — it will error if you haven't created one. Once [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) is complete, switch to `cbrain` as your daily driver.
+> **Haven't run 2ndBrain-mogging yet?** Use `cskip` instead of `cbrain` until your Second Brain vault is set up. `cbrain` requires the Obsidian vault to exist — it will error if you haven't created one. Once [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) is complete, switch to `cbrain` as your daily driver.
 
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically — no `cd`-ing around
@@ -896,7 +896,7 @@ Open your terminal and run `cskip` to start a Claude session, then paste the upd
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/update.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/update.sh)
 > ```
 
 ---
@@ -910,10 +910,10 @@ One script reverses the whole stack. Your Obsidian vault, notes, and Claude acco
 > [!IMPORTANT]
 > **Paste this into your terminal:**
 > ```bash
-> bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/uninstall.sh)
+> bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/uninstall.sh)
 > ```
 
-Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script, all MCPs this setup installed, all FidgetFlo skills + `/w4w` + `/concise` + `/safetycheck` + `/gitfix`, dev tools, Arc Browser, and the Ghostty config. `cbrain` and `cbraintg` are managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging) and are not touched here. The YouTube / Instagram transcription stack (yt-dlp, whisper-mcp, ffmpeg, Whisper models) lives in [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing) — run its uninstaller separately if you installed it.
+Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script, all MCPs this setup installed, all FidgetFlo skills + `/w4w` + `/concise` + `/safetycheck` + `/gitfix`, dev tools, Arc Browser, and the Ghostty config. `cbrain` and `cbraintg` are managed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) and are not touched here. The YouTube / Instagram transcription stack (yt-dlp, whisper-mcp, ffmpeg, Whisper models) lives in [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing) — run its uninstaller separately if you installed it.
 
 **Keeps:** Homebrew, Git, Node.js, Claude Code itself, your Obsidian vault + notes, your Claude account — general-purpose tools + your data. The script prints manual-removal commands at the end if you want a fully clean machine.
 
@@ -921,7 +921,7 @@ Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script,
 <summary><strong>Full list of what gets removed</strong></summary>
 
 - Claude Code shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and the `ctg` script (`~/.local/bin/ctg`). `cbrain` and `cbraintg` are managed by 2ndBrain-mogging — not removed here.
-- All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub — design + media MCPs are managed by [creativity-maxxing](https://github.com/lorecraft-io/creativity-maxxing); Obsidian is managed by [2ndBrain-mogging](https://github.com/lorecraft-io/2ndBrain-mogging)
+- All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub — design + media MCPs are managed by [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing); Obsidian is managed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)
 - All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `concise`, `gitfix`, `safetycheck` — UI/UX Pro Max + Taste Skill pack + Remotion are managed by creativity-maxxing
 - Dev tools: pandoc, jq, ripgrep, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler
 - GitHub CLI (`gh` — installed by Step 7 alongside the GitHub MCP + /gitfix skill)
@@ -949,7 +949,7 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-Built by [Nate Davidovich / Lorecraft](https://github.com/lorecraft-io)
+Built by [Nate Davidovich / Lorecraft](https://github.com/fidgetcoding)
 
 [⤴ back to top](#top)
 

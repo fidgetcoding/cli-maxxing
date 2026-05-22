@@ -14,7 +14,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-BASE_URL="https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main"
+BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main"
 
 # -----------------------------------------------------------------------------
 # source_runtime_path — defense-in-depth PATH hydration before re-running every
@@ -131,16 +131,16 @@ main() {
     echo "  Available commands: cskip, ctg, cc, ccr, ccc"
     echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /safetycheck, /gitfix"
     echo "  Swarm tiers:        /fswarm{1,2,3,max}, /fmini{1,2,3,max} — 1=think, 2=think hard, 3=think harder, max=ultrathink"
-    echo "  Design + media:     github.com/lorecraft-io/creativity-maxxing"
-    echo "  Second Brain:       github.com/lorecraft-io/2ndBrain-mogging"
+    echo "  Design + media:     github.com/fidgetcoding/creativity-maxxing"
+    echo "  Second Brain:       github.com/fidgetcoding/2ndBrain-mogging"
     echo ""
     echo "  Note: Steps 5, 6, and 7 require interactive input (API credentials,"
     echo "  Telegram bot token, and GitHub PAT). They may skip themselves if run"
     echo "  non-interactively. Run them directly in your terminal if needed:"
     echo ""
-    echo "    Step 5: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-5/step-5-install.sh)"
-    echo "    Step 6: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-6/step-6-install.sh)"
-    echo "    Step 7: bash <(curl -fsSL https://raw.githubusercontent.com/lorecraft-io/cli-maxxing/main/step-7/step-7-install.sh)"
+    echo "    Step 5: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-5/step-5-install.sh)"
+    echo "    Step 6: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)"
+    echo "    Step 7: bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
     echo ""
     echo "  Open a new terminal window for aliases to take effect."
     echo ""
