@@ -299,7 +299,7 @@ echo ""
 echo -e "  ${YELLOW}Tip: Use ctg from any directory, or cbraintg to also${NC}"
 echo -e "  ${YELLOW}open your 2ndBrain vault with Telegram connected.${NC}"
 echo ""
-echo "  Continue to Step 7 (GitHub MCP + /gitfix) when you're ready."
+echo "  Continue to Step 7 (GitHub MCP + /gitfix + /recon) when you're ready."
 echo ""
 
 # Breadcrumb for /doctor and re-run detection.

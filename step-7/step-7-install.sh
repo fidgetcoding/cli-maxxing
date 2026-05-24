@@ -2,9 +2,10 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 7 — GitHub CLI + MCP + /gitfix
+# Step 7 — GitHub CLI + MCP + /gitfix + /recon
 # Installs the `gh` CLI (terminal binary), the GitHub MCP server, and the
-# /gitfix skill. `gh` installs unconditionally (no credentials needed); the
+# /gitfix + /recon skills. `gh` installs unconditionally (no credentials
+# needed) and is what /recon uses to sweep GitHub for prior art; the
 # MCP install is gated on a Personal Access Token.
 # Run after completing Steps 1-6. Run this in your terminal.
 # =============================================================================
@@ -27,6 +28,7 @@ soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRO
 INSTALLED_GH=false
 INSTALLED_GITHUB=false
 INSTALLED_GITFIX=false
+INSTALLED_RECON=false
 
 # -----------------------------------------------------------------------------
 # Ensure runtime PATH (brew, nvm, ~/.local/bin) is visible.
@@ -167,8 +169,9 @@ choose_tools() {
             echo ""
             echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
             echo ""
-            info "Continuing with non-interactive /gitfix install..."
+            info "Continuing with non-interactive /gitfix + /recon install..."
             install_gitfix
+            install_recon
             run_self_test
             print_summary
             exit 0
@@ -296,6 +299,43 @@ install_gitfix() {
 }
 
 # -----------------------------------------------------------------------------
+# Install /recon skill — pre-build prior-art recon (depends on the gh CLI)
+# -----------------------------------------------------------------------------
+install_recon() {
+    RECON_DIR="$HOME/.claude/skills/recon"
+    RECON_FILE="$RECON_DIR/SKILL.md"
+    RECON_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/recon-skill/SKILL.md"
+
+    mkdir -p "$RECON_DIR"
+
+    if [ -f "$RECON_FILE" ]; then
+        info "Updating existing /recon skill..."
+        INSTALLED_RECON=true
+    else
+        info "Installing /recon skill..."
+    fi
+
+    RECON_TMP="$RECON_FILE.tmp"
+    if curl -fsSL "$RECON_URL" -o "$RECON_TMP" 2>/dev/null && [ -s "$RECON_TMP" ]; then
+        mv "$RECON_TMP" "$RECON_FILE"
+        success "/recon skill installed at $RECON_FILE"
+        INSTALLED_RECON=true
+    else
+        rm -f "$RECON_TMP"
+        warn "Download failed — attempting local fallback..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        LOCAL_RECON="$(dirname "$SCRIPT_DIR")/recon-skill/SKILL.md"
+        if [ -f "$LOCAL_RECON" ]; then
+            cp "$LOCAL_RECON" "$RECON_FILE"
+            success "/recon skill installed from local copy"
+            INSTALLED_RECON=true
+        else
+            soft_fail "Could not install /recon skill — download and local fallback both failed"
+        fi
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -344,6 +384,14 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    if $INSTALLED_RECON; then
+        success "TEST: /recon skill installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: /recon skill not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     echo ""
     if [ "$TEST_FAIL" -eq 0 ]; then
         echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC} ($TEST_SKIP skipped)"
@@ -361,7 +409,7 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 7 Complete — GitHub CLI + MCP + /gitfix${NC}"
+    echo -e "${GREEN}  Step 7 Complete — GitHub CLI + MCP + /gitfix + /recon${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -371,6 +419,10 @@ print_summary() {
     if $INSTALLED_GITHUB; then echo "  GitHub MCP — repos, issues, PRs, code search"; INSTALLED_COUNT=$((INSTALLED_COUNT + 1)); fi
     if $INSTALLED_GITFIX; then
         echo "  /gitfix — full-repo consistency audit: docs, scripts, and README all in sync"
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+    fi
+    if $INSTALLED_RECON; then
+        echo "  /recon — pre-build prior-art sweep: ranks competitors, finds the edge before you build"
         INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
     fi
 
@@ -388,6 +440,7 @@ print_summary() {
             echo "    - Ask Claude to create issues, review diffs, or push commits"
         fi
         echo "    - Run /gitfix inside any Claude session to sync all docs with reality"
+        echo "    - Run /recon <thing> before building anything to sweep what already exists"
     fi
 
     echo ""
@@ -410,8 +463,8 @@ main() {
 
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  Step 7 — GitHub CLI + MCP + /gitfix${NC}"
-    echo -e "${BLUE}  gh CLI + GitHub MCP + /gitfix skill • macOS + Linux${NC}"
+    echo -e "${BLUE}  Step 7 — GitHub CLI + MCP + /gitfix + /recon${NC}"
+    echo -e "${BLUE}  gh CLI + GitHub MCP + /gitfix + /recon skills • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -428,8 +481,9 @@ main() {
         esac
     done
 
-    # /gitfix always installs (no interactive input required)
+    # /gitfix and /recon always install (no interactive input required)
     install_gitfix
+    install_recon
 
     run_self_test
     print_summary

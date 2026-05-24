@@ -218,11 +218,11 @@ uninstall_safetycheck() {
 }
 
 # -----------------------------------------------------------------------------
-# Step 7 — GitHub MCP + /gitfix
+# Step 7 — GitHub MCP + /gitfix + /recon
 # -----------------------------------------------------------------------------
 uninstall_github() {
     echo ""
-    echo -e "${BLUE}--- Step 7: GitHub CLI + MCP + /gitfix ---${NC}"
+    echo -e "${BLUE}--- Step 7: GitHub CLI + MCP + /gitfix + /recon ---${NC}"
 
     # gh CLI — installed by Step 7 (pre-2026-04 installs had it in Step 3, so
     # removal here catches both layouts).
@@ -247,6 +247,13 @@ uninstall_github() {
         success "Skill: /gitfix"
     else
         skip "Skill: /gitfix (not found)"
+    fi
+
+    if [ -d "$HOME/.claude/skills/recon" ]; then
+        rm -rf "$HOME/.claude/skills/recon"
+        success "Skill: /recon"
+    else
+        skip "Skill: /recon (not found)"
     fi
 }
 
@@ -344,7 +351,7 @@ uninstall_fidgetflo_stack() {
     for skill in \
         fswarm fswarm1 fswarm2 fswarm3 fswarmmax \
         fmini fmini1 fmini2 fmini3 fminimax \
-        fhive w4w concise; do
+        fhive w4w concise bullets; do
         if [ -d "$HOME/.claude/skills/$skill" ]; then
             rm -rf "$HOME/.claude/skills/$skill"
             success "Skill: /$skill"
