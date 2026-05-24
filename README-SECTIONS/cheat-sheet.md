@@ -104,11 +104,13 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 | `/fminimax <task>` | Step 4 | 5-agent swarm at MAX thinking (~32k budget per agent) — `Ultrathink.` appended |
 | `/fhive <goal>` | Step 4 | Launch a queen-led autonomous FidgetFlo hive-mind with raft consensus |
 | `/w4w` | Step 4 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
+| `/bullets` | Step 4 | Crush a prose blob into the shortest possible bullets — one fact per bullet, ≤~12 words, zero fluff, signal preserved (names, numbers, dates, paths, decisions). Always outputs bullets, unlike `/concise` which decides shape per reply and sometimes leaves prose. Built for document handoffs. Also triggers in plain English — "bullet this", "bulletize", "turn this into bullets" |
 | `/gitfix` | Step 7 | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality |
+| `/recon` | Step 7 | Pre-build prior-art recon — before you build a tool/app/CLI/MCP/library, sweeps GitHub (`gh`) + the web for what already exists, ranks the top ~10 free and paid competitors, finds the edge (or calls it a red ocean), and ends with a GREEN/YELLOW/RED verdict. Output is a discussion, not code. Auto-offers itself on "build / make / start a new X" and "does X exist?"; run directly with `/recon <thing>` |
 | `/safetycheck` | Step 8 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English |
 
 
-> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme"). Slash commands: `/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix` — all require you to type the command (or its natural-language equivalent where noted).
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exception: `/w4w` also works without the slash — just type `w4w` anywhere in your message. `/safetycheck` also works in natural language ("run a safety check"). `/gitfix` also works in natural language ("fix the github", "sync the repo", "update the readme"). `/recon` auto-offers itself on build-intent ("build / make / start a new X", "does X exist?"). Slash commands: `/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, `/recon` — all require you to type the command (or its natural-language equivalent where noted).
 
 ---
 
@@ -139,7 +141,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Memory Hook | Step 3 | Automatic on session end — saves context from the conversation | (no prompt needed — runs automatically) |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
 
-> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/safetycheck`, `/gitfix`, `/recon`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
 > **Add-on tools** (Canva) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed. Figma, Excalidraw, and Gamma live in [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing).
 

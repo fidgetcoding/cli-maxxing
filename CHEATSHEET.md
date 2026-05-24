@@ -13,8 +13,10 @@ The commands I reach for most. Full reference below.
 | `/fmini <task>` | Compact 5-agent FidgetFlo swarm for focused work |
 | `/w4w` | Word-for-word, line-for-line. Max attention, zero skipping, no summarizing |
 | `/concise` | Chat default — no fluff, no scaffolding, no headers on simple Qs. Suspends for copy/scripts/decks. |
+| `/bullets` | Crush a paragraph into the shortest scannable bullets — core facts only. Always bulletizes (where `/concise` sometimes leaves prose). For handoffs |
 | `/safetycheck` | Security audit — scans for exposed keys, injection vectors, supply-chain risks |
 | `/gitfix` | Full repo sync — reads every file, fixes doc drift, makes reality match the README |
+| `/recon <thing>` | Pre-build prior-art sweep — ranks competitors, finds the edge, GREEN/YELLOW/RED verdict before you build |
 | `/save` | Capture a conversation into your 2ndBrain vault *(requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging))* |
 
 ---
@@ -124,7 +126,9 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 | `/fhive <goal>` | Step 4 | Launch a queen-led autonomous FidgetFlo hive-mind with raft consensus |
 | `/w4w` | Step 4 | Maximum attention to detail — word for word, line for line. No skipping, no summarizing. Also works without the slash — just type `w4w` |
 | `/concise` | Step 4 | Default chat shape — no fluff, no scaffolding, no sycophancy, no headers on simple questions. Suspends automatically for copywriting deliverables (tweets, scripts, decks, client docs). For always-on enforcement see the playbook in `concise-skill/SKILL.md` description. |
+| `/bullets` | Step 4 | Crush a prose blob into the shortest possible bullets — one fact per bullet, ≤~12 words, zero fluff, signal preserved (names, numbers, dates, paths, decisions). Always outputs bullets, unlike `/concise` which decides shape per reply and sometimes leaves prose. Built for document handoffs where nobody should have to read paragraph blobs. Also triggers in plain English — "bullet this", "bulletize", "turn this into bullets" |
 | `/gitfix` | Step 7 | Full repo sync — reads every install script, skill file, and doc in the repo, finds every inconsistency between the code and the documentation, and fixes all of it. Run this any time you've made changes to a repo and need the README, cheatsheet, and all other docs to reflect reality. Also responds to "fix the github", "sync the repo", or "update the readme" in plain English |
+| `/recon` | Step 7 | Pre-build prior-art recon. Before you build a tool/app/CLI/MCP/library, sweeps GitHub (via `gh`) + the web for what already exists, ranks the top ~10 free and paid competitors in a comparison table, finds where an edge exists (or honestly calls it a red ocean), and ends with a GREEN/YELLOW/RED verdict. Output is a discussion — building starts only after. Auto-offers itself when you say "build / make / start a new X" or "does X exist?"; run it directly with `/recon <thing>` to skip the offer |
 | `/safetycheck` | Step 8 | Security audit — scans any project for exposed keys, missing rate limiting, input sanitization gaps, dependency vulnerabilities, and insecure configurations. Also responds to "run a safety check" in plain English. Auto-activates 12 MCP-specific checks on MCP projects |
 
 ### 2ndBrain-mogging skills *(requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging) installed)*
@@ -142,7 +146,7 @@ These are custom skills installed by the setup scripts. Type them inside a Claud
 | `/tether` | Repair orphaned notes, bidirectionally link projects and hubs |
 | `/connect` | Bridge two notes — surfaces structural analogies, transfer opportunities, collision ideas |
 
-> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exceptions: `/w4w` also works without the slash (just type `w4w` anywhere in your message), `/safetycheck` responds to "run a safety check", and `/gitfix` responds to "fix the github" / "sync the repo" / "update the readme". All other slash commands require you to type the command.
+> These are **explicit triggers** — you type the command to activate the skill. This is different from the auto-triggered tools below, which respond to natural language. Exceptions: `/w4w` also works without the slash (just type `w4w` anywhere in your message), `/safetycheck` responds to "run a safety check", `/gitfix` responds to "fix the github" / "sync the repo" / "update the readme", `/recon` auto-offers itself whenever you say "build / make / start a new X" or "does X exist?", and `/bullets` responds to "bullet this" / "bulletize" / "turn this into bullets". All other slash commands require you to type the command.
 
 ---
 
@@ -173,7 +177,7 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Obsidian | 2ndBrain-mogging | Natural language — read/write/search a local Obsidian vault (set up via [fidgetcoding/2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)) | "Search my vault for notes about machine learning" |
 | Canva | Add-on | Natural language — create or edit designs, social posts, presentations | "Design a social media post for our launch" |
 
-> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/concise`, `/safetycheck`, `/gitfix`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
+> **Key distinction:** Slash commands (`/fswarm`, `/fswarm1`–`/fswarmmax`, `/fmini`, `/fmini1`–`/fminimax`, `/fhive`, `/w4w`, `/concise`, `/bullets`, `/safetycheck`, `/gitfix`, `/recon`, plus the 2ndBrain-mogging `/save`, `/wiki`, `/challenge`, `/emerge`, `/backfill`, `/aliases`, `/autoresearch`, `/canvas`, `/tether`, `/connect`) require you to type the command. Everything in this table works by just talking to Claude naturally.
 >
 > **Add-on tools** (Canva) are not part of the step-by-step setup — they're optional MCP servers you can connect separately. Claude auto-detects them when they're installed. Figma, Excalidraw, and Gamma live in [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing).
 

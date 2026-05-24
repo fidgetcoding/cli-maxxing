@@ -509,6 +509,15 @@ else
     TEST_FAIL=$((TEST_FAIL + 1))
 fi
 
+# Test 4b: /recon skill present (installed by Step 7)
+if [ -s "$HOME/.claude/skills/recon/SKILL.md" ]; then
+    success "TEST: /recon skill present (installed by Step 7)"
+    TEST_PASS=$((TEST_PASS + 1))
+else
+    warn "TEST: /recon skill not found — run Step 7 to install it"
+    TEST_FAIL=$((TEST_FAIL + 1))
+fi
+
 echo ""
 echo "  $TEST_PASS tests passed, $TEST_FAIL failed."
 

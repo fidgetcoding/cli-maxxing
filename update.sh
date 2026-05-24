@@ -104,7 +104,7 @@ main() {
     curl -fsSL "$BASE_URL/step-6/step-6-install.sh" | bash
     echo ""
 
-    # Step 7 (GitHub MCP + /gitfix)
+    # Step 7 (GitHub MCP + /gitfix + /recon)
     echo -e "${YELLOW}>>> Running Step 7 — GitHub${NC}"
     echo ""
     curl -fsSL "$BASE_URL/step-7/step-7-install.sh" | bash
@@ -129,7 +129,7 @@ main() {
     echo ""
 
     echo "  Available commands: cskip, ctg, cc, ccr, ccc"
-    echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /safetycheck, /gitfix"
+    echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /bullets, /safetycheck, /gitfix, /recon"
     echo "  Swarm tiers:        /fswarm{1,2,3,max}, /fmini{1,2,3,max} — 1=think, 2=think hard, 3=think harder, max=ultrathink"
     echo "  Design + media:     github.com/fidgetcoding/creativity-maxxing"
     echo "  Second Brain:       github.com/fidgetcoding/2ndBrain-mogging"

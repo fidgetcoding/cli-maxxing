@@ -172,7 +172,7 @@ if [ "${#MISSING_CRUMBS[@]}" -gt 0 ]; then
 fi
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc"
-echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /safetycheck, /gitfix"
+echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /bullets, /safetycheck, /gitfix, /recon"
 echo "  Swarm tiers:        /fswarm{1,2,3,max}, /fmini{1,2,3,max} — 1=think, 2=think hard, 3=think harder, max=ultrathink"
 echo ""
 echo "  Three steps require interactive input — run them separately:"
@@ -183,7 +183,7 @@ echo ""
 echo "    Step 6 (Telegram — optional, skip if you don't have a bot token):"
 echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-6/step-6-install.sh)"
 echo ""
-echo "    Step 7 (GitHub — MCP + /gitfix skill, optional, for devs):"
+echo "    Step 7 (GitHub — MCP + /gitfix + /recon skills, optional, for devs):"
 echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
 echo ""
 echo "  Companion repos (install after this):"
