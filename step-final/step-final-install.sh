@@ -78,11 +78,25 @@ cat > "$HOME/.claude/statusline.sh" << 'STATUSLINE_EOF'
 
 input=$(cat)
 
+# jq is required to parse Claude Code's stdin JSON (installed in Step 3).
+# Without it, emit a minimal static line instead of spraying errors.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Claude (jq missing — run Step 3)"
+  exit 0
+fi
+
 # Parse Claude Code's JSON input
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Opus 4.6"' 2>/dev/null)
 CTX=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null | cut -d. -f1)
 DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0' 2>/dev/null)
 CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
+
+# Harden against malformed stdin: jq exits non-zero and leaves these empty,
+# which would otherwise blow up the arithmetic below with stderr noise.
+[ -z "$MODEL" ] && MODEL="Claude"
+[ -z "$CTX" ] && CTX=0
+DURATION_MS="${DURATION_MS%%.*}"; DURATION_MS="${DURATION_MS//[^0-9]/}"
+[ -z "$DURATION_MS" ] && DURATION_MS=0
 
 # Format duration
 if [ "$DURATION_MS" != "0" ] && [ "$DURATION_MS" != "null" ]; then
@@ -257,8 +271,16 @@ if [ -f "$SETTINGS_FILE" ]; then
     else
         # Use jq to merge if available, otherwise warn
         if command -v jq &>/dev/null; then
-            jq '. + {"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-            success "Status line added to settings.json"
+            if jq '. + {"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" 2>/dev/null \
+                && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"; then
+                success "Status line added to settings.json"
+            else
+                # jq failed (settings.json is probably invalid JSON) — don't
+                # claim success, and don't leave the temp file behind.
+                rm -f "$SETTINGS_FILE.tmp"
+                warn "Could not merge into settings.json (invalid JSON?) — add this manually:"
+                echo '  "statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}'
+            fi
         else
             warn "jq not available — add this to your ~/.claude/settings.json manually:"
             echo '  "statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}'
@@ -286,10 +308,13 @@ info "Checking for project-level statusLine overrides..."
 FOUND_OVERRIDES=0
 while IFS= read -r PROJECT_SETTINGS; do
     if command -v jq &>/dev/null && jq -e '.statusLine' "$PROJECT_SETTINGS" &>/dev/null 2>&1; then
-        jq 'del(.statusLine)' "$PROJECT_SETTINGS" > "${PROJECT_SETTINGS}.tmp" \
-            && mv "${PROJECT_SETTINGS}.tmp" "$PROJECT_SETTINGS"
-        warn "Removed statusLine override from: $PROJECT_SETTINGS"
-        FOUND_OVERRIDES=$((FOUND_OVERRIDES + 1))
+        if jq 'del(.statusLine)' "$PROJECT_SETTINGS" > "${PROJECT_SETTINGS}.tmp" 2>/dev/null \
+            && mv "${PROJECT_SETTINGS}.tmp" "$PROJECT_SETTINGS"; then
+            warn "Removed statusLine override from: $PROJECT_SETTINGS"
+            FOUND_OVERRIDES=$((FOUND_OVERRIDES + 1))
+        else
+            rm -f "${PROJECT_SETTINGS}.tmp"
+        fi
     fi
 done < <(find "$HOME/Desktop" "$HOME/Documents" -maxdepth 5 -path "*/.claude/settings.json" -not -path "$HOME/.claude/settings.json" 2>/dev/null)
 if [ "$FOUND_OVERRIDES" -eq 0 ]; then

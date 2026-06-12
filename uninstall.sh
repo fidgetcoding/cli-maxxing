@@ -112,7 +112,12 @@ strip_line() {
     local file="$2"
     [ -f "$file" ] || return 0
     if grep -q "$pattern" "$file" 2>/dev/null; then
-        sed -i.bak "/$pattern/d" "$file" 2>/dev/null || true
+        # Escape '/' before interpolating into the /.../d address — patterns
+        # containing paths (brew shellenv, $HOME/.local/bin) would otherwise
+        # break the sed address, fail silently under `|| true`, and leave the
+        # line behind while we report success.
+        local sed_pat=${pattern//\//\\/}
+        sed -i.bak "/$sed_pat/d" "$file" 2>/dev/null || true
         rm -f "${file}.bak"
         return 0
     fi
@@ -129,7 +134,11 @@ strip_block() {
     local file="$3"
     [ -f "$file" ] || return 0
     if grep -q "$start" "$file" 2>/dev/null; then
-        sed -i.bak "/$start/,/$end/d" "$file" 2>/dev/null || true
+        # Same '/' escaping as strip_line — keeps path-bearing patterns from
+        # breaking the sed range address.
+        local sed_start=${start//\//\\/}
+        local sed_end=${end//\//\\/}
+        sed -i.bak "/$sed_start/,/$sed_end/d" "$file" 2>/dev/null || true
         rm -f "${file}.bak"
         return 0
     fi

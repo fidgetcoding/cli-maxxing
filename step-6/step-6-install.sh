@@ -170,7 +170,9 @@ if [ "$SKIP_TOKEN" = false ]; then
         info "Saving bot token..."
         mkdir -p "$CONFIG_DIR"
         chmod 700 "$CONFIG_DIR"
-        echo "TELEGRAM_BOT_TOKEN=$BOT_TOKEN" > "$TOKEN_FILE"
+        # umask-guarded write: the file is born 0600 — no window where a
+        # permissive default umask leaves the token world-readable.
+        (umask 077; echo "TELEGRAM_BOT_TOKEN=$BOT_TOKEN" > "$TOKEN_FILE")
         chmod 600 "$TOKEN_FILE"
         success "Token saved to $TOKEN_FILE (permissions: 600)"
     fi
