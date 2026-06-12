@@ -101,7 +101,8 @@ install_fidgetflo() {
     elif npx fidgetflo --version &>/dev/null 2>&1; then
         success "fidgetflo CLI available via npx"
     else
-        success "fidgetflo CLI installed"
+        # Neither the global binary nor npx could run it — don't claim success.
+        warn "fidgetflo CLI could not be verified — check with 'npm ls -g fidgetflo' in a new terminal"
     fi
 }
 
@@ -128,7 +129,9 @@ configure_mcp() {
         warn "MCP add command may not have worked. Trying direct config..."
         local CLAUDE_MCP_CONFIG="$HOME/.claude/claude_mcp_config.json"
         if [ -f "$CLAUDE_MCP_CONFIG" ]; then
-            if ! grep -q "fidgetflo" "$CLAUDE_MCP_CONFIG" 2>/dev/null; then
+            # Structural check (not substring grep) — "fidgetflo" appearing in
+            # another server's args must not skip the registration.
+            if ! jq -e '.mcpServers.fidgetflo' "$CLAUDE_MCP_CONFIG" >/dev/null 2>&1; then
                 jq '.mcpServers["fidgetflo"] = {"command": "npx", "args": ["-y", "fidgetflo"]}' "$CLAUDE_MCP_CONFIG" > "${CLAUDE_MCP_CONFIG}.tmp" \
                     && mv "${CLAUDE_MCP_CONFIG}.tmp" "$CLAUDE_MCP_CONFIG"
             fi

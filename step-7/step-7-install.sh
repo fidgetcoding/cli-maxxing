@@ -247,7 +247,9 @@ install_github() {
     # that one's been retired in favor of github/github-mcp-server, which runs
     # as a remote HTTP server behind GitHub's API domain. The PAT is passed as
     # a Bearer token via -H so it lives in Claude's MCP config, never on disk
-    # in this repo and never in `ps` output.
+    # in this repo. (It is briefly visible in the local process list while
+    # `claude mcp add` runs — unavoidable with argv-passed headers; fine on a
+    # single-user machine.)
     claude mcp add --scope user --transport http github \
         https://api.githubcopilot.com/mcp \
         -H "Authorization: Bearer $GITHUB_TOKEN" 2>/dev/null

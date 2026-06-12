@@ -4,11 +4,25 @@
 
 input=$(cat)
 
+# jq is required to parse Claude Code's stdin JSON (installed in Step 3).
+# Without it, emit a minimal static line instead of spraying errors.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Claude (jq missing — run Step 3)"
+  exit 0
+fi
+
 # Parse Claude Code's JSON input
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Opus 4.6"' 2>/dev/null)
 CTX=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null | cut -d. -f1)
 DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0' 2>/dev/null)
 CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
+
+# Harden against malformed stdin: jq exits non-zero and leaves these empty,
+# which would otherwise blow up the arithmetic below with stderr noise.
+[ -z "$MODEL" ] && MODEL="Claude"
+[ -z "$CTX" ] && CTX=0
+DURATION_MS="${DURATION_MS%%.*}"; DURATION_MS="${DURATION_MS//[^0-9]/}"
+[ -z "$DURATION_MS" ] && DURATION_MS=0
 
 # Format duration
 if [ "$DURATION_MS" != "0" ] && [ "$DURATION_MS" != "null" ]; then
