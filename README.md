@@ -926,7 +926,7 @@ Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script,
 - Claude Code shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and the `ctg` script (`~/.local/bin/ctg`). `cbrain` and `cbraintg` are managed by 2ndBrain-mogging — not removed here.
 - All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub — design + media MCPs are managed by [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing); Obsidian is managed by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)
 - All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `concise`, `bullets`, `gitfix`, `recon`, `safetycheck` — UI/UX Pro Max + Taste Skill pack + Remotion are managed by creativity-maxxing
-- Dev tools: pandoc, jq, ripgrep, tree, fzf, wget, weasyprint, ffmpeg, xlsx2csv, poppler
+- Dev tools: pandoc, jq, ripgrep, tree, fzf, wget, weasyprint, xlsx2csv, poppler (ffmpeg is creativity-maxxing's — not touched here)
 - GitHub CLI (`gh` — installed by Step 7 alongside the GitHub MCP + /gitfix + /recon skills)
 - Motion Calendar config (`~/.motion-mcp/`)
 - Google Calendar config (`~/.google-calendar-mcp/`)

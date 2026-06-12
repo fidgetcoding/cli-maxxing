@@ -172,7 +172,9 @@ install_font() {
         FONT_DIR="$HOME/.local/share/fonts"
         mkdir -p "$FONT_DIR"
         TMPDIR_FONT=$(mktemp -d)
-        curl -fsSL "https://github.com/JetBrains/JetBrainsMono/releases/latest/download/JetBrainsMono-2.304.zip" -o "$TMPDIR_FONT/jbmono.zip" 2>/dev/null
+        # Pinned release tag, not /latest/ — a version-numbered asset under
+        # /latest/ 404s the moment JetBrains ships a newer release.
+        curl -fsSL "https://github.com/JetBrains/JetBrainsMono/releases/download/v2.304/JetBrainsMono-2.304.zip" -o "$TMPDIR_FONT/jbmono.zip" 2>/dev/null
         if [ -f "$TMPDIR_FONT/jbmono.zip" ]; then
             unzip -q "$TMPDIR_FONT/jbmono.zip" -d "$TMPDIR_FONT/jbmono" 2>/dev/null
             find "$TMPDIR_FONT/jbmono" -name "*.ttf" -exec cp {} "$FONT_DIR/" \;
