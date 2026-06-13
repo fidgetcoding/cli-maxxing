@@ -7,9 +7,11 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 HOOK="$REPO_ROOT/.git/hooks/pre-commit"
 
 if ! command -v gitleaks &>/dev/null; then
-  echo "❌ gitleaks not found on PATH."
-  echo "   macOS:  brew install gitleaks"
-  echo "   Linux:  https://github.com/gitleaks/gitleaks/releases"
+  echo "❌ gitleaks not found on PATH — pre-commit hook NOT installed." >&2
+  echo "   Install gitleaks, then re-run this script:" >&2
+  echo "   macOS:  brew install gitleaks" >&2
+  echo "   Linux:  sudo apt install gitleaks   (Ubuntu 24.04+)" >&2
+  echo "           or grab a release: https://github.com/gitleaks/gitleaks/releases" >&2
   exit 1
 fi
 
