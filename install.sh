@@ -172,7 +172,7 @@ if [ "${#MISSING_CRUMBS[@]}" -gt 0 ]; then
 fi
 
 echo "  Available commands: cskip, ctg, cc, ccr, ccc"
-echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /bullets, /safetycheck, /gitfix, /recon, /osmani-build"
+echo "  Available skills:   /fswarm, /fmini, /fhive, /w4w, /concise, /bullets, /safetycheck, /gitfix, /recon, /osmani-build, /landing-ab, /agent-business"
 echo "  Swarm tiers:        /fswarm{1,2,3,max}, /fmini{1,2,3,max} — 1=think, 2=think hard, 3=think harder, max=ultrathink"
 echo ""
 echo "  Three steps require interactive input — run them separately:"
