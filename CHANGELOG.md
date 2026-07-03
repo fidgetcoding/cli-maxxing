@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Step 5 — Google Calendar MCP swapped to `@cocal/google-calendar-mcp` (actively maintained); the bare `google-calendar-mcp` package was a year-stale fork.
 
 ### Changed
+- `/concise` skill — new Tool & mid-task rule adapted from Karpathy's guidelines (multica-ai/andrej-karpathy-skills, principle 4 "Goal-Driven Execution"): before starting any multi-step task, state pass/fail criteria in one line (command, test, or observable output); "done" = criteria verified, not vibes. Closes the gap where verification only ran *after* changes with no up-front definition of success.
 - Git history rewrite: `git filter-repo` collapsed all author/committer identities (dependabot[bot], lorecraft-io, nate variants) into a single `Nate Davidovich <nate@lorecraft.io>` identity across `main` and both release tags (v1.9.1, v2.0.0). All `Co-authored-by:` trailers stripped (162 of them — mostly `claude-flow <ruv@ruv.net>` carryover from pre-rebrand). Tag commit hashes changed; this repo has no published npm artifact, so no downstream impact.
 - Step 6 ordering — `gh` CLI moved from Step 3 to Step 7 so the full GitHub stack (CLI + MCP + workflows) ships together.
 - Step 5 — design-stack MCPs (Figma / Excalidraw / Gamma / Magic / YouTube / IG) removed from cli-maxxing cheatsheets — these now live exclusively in the `creativity-maxxing` install. cli-maxxing remains the lean core terminal install.
