@@ -133,9 +133,9 @@ install_skill() {
     SKILL_FILE="$SKILL_DIR/SKILL.md"
     # Pinned to a specific commit SHA — prevents rug-pull via mutable branch ref
     # To update: change the SHA to the new commit and update SKILL_SHA256 to match
-    SKILL_COMMIT="0344fa1b8228c3e008ff40e5c367815258c48d1e"
+    SKILL_COMMIT="ec371619f2302b6ec91a6711ad3e78a9691fd1c8"
     SKILL_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/${SKILL_COMMIT}/step-8/safetycheck-skill/SKILL.md"
-    SKILL_SHA256="d156d902476dc6d2384a0f140e18d9a75b84bce98bea2032163c304c2b117d5f"
+    SKILL_SHA256="9fc7668c6f842cf55582be5b0b10c0b6e9c7cf2d815e19ec388dbed70dfd5c09"
 
     info "Creating skill directory..."
     mkdir -p "$SKILL_DIR"
