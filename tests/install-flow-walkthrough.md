@@ -89,7 +89,7 @@ Installs 11 optional productivity MCPs. Obsidian MCP has moved to [2ndBrain-mogg
 | (4) Google Calendar | Prompts for OAuth Client ID + Secret, writes `~/.google-calendar-mcp/.env` (chmod 700 dir / 600 file), registers with `-e GOOGLE_CLIENT_ID=... -e GOOGLE_CLIENT_SECRET=...` | PASS |
 | (5) Morgen *(recommended)* | Prompts for API key + optional IANA timezone, registers via `-e MORGEN_API_KEY=... -e MORGEN_TIMEZONE=...`. No local `.env` — credentials live in Claude Code's MCP config | PASS |
 | (6) Motion Calendar | Prompts for Motion API key, Firebase API key, Firebase refresh token, Motion user ID. Writes `~/.motion-mcp/.env` (chmod 700/600). Registers via `claude mcp add motion` | PASS |
-| (7) Playwright | No credentials required. Registers Microsoft's official `@playwright/mcp` via `claude mcp add playwright -- npx -y @playwright/mcp@latest`. Chromium binaries auto-download on first use. | PASS |
+| (7) Playwright | No credentials required. Registers Microsoft's official `@playwright/mcp` via `claude mcp add playwright -- npx -y "$(pin_npm @playwright/mcp)"` (version-pinned at install time). Chromium binaries auto-download on first use. | PASS |
 | (8) SwiftKit | Prompts for API key, registers hosted SwiftKit MCP. | PASS |
 | (9) Superhuman | No local credentials — one-time browser OAuth on first use. | PASS |
 | (10) Google Drive | No local credentials — one-time browser OAuth on first use via Google's hosted MCP. | PASS |
