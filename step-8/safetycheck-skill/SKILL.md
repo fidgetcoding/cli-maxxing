@@ -272,8 +272,11 @@ Being logged in is not authorization — every sensitive handler must verify the
 
 Scan for record access keyed by request-supplied IDs:
 ```bash
-# Record lookups driven by request params/query/body
+# Record lookups driven by request params/query/body (direct-arg form)
 grep -rniE '(findById|findByPk|findOne|findUnique)\s*\(\s*(req\.(params|query|body)|params\.|request\.)' --include="*.ts" --include="*.js" .
+
+# ORM object-form lookups: findOne({ where: { id: req.params.id } })
+grep -rniE '(findById|findByPk|findOne|findUnique)\s*\(\s*\{\s*where\s*:\s*\{[^}]*(req\.(params|query|body)|params\.|request\.)' --include="*.ts" --include="*.js" .
 
 # Raw SQL keyed on request input
 grep -rniE '(WHERE\s+id\s*=|DELETE\s+FROM|UPDATE\s+\w+\s+SET).*(req\.(params|query|body)|\$\{)' --include="*.ts" --include="*.js" --include="*.py" .
