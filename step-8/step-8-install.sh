@@ -135,7 +135,7 @@ install_skill() {
     # To update: change the SHA to the new commit and update SKILL_SHA256 to match
     SKILL_COMMIT="0344fa1b8228c3e008ff40e5c367815258c48d1e"
     SKILL_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/${SKILL_COMMIT}/step-8/safetycheck-skill/SKILL.md"
-    SKILL_SHA256="ea1a1b34a12618a38f1c187661aba48fff403765b81afaf1ec55834522f600e8"
+    SKILL_SHA256="d156d902476dc6d2384a0f140e18d9a75b84bce98bea2032163c304c2b117d5f"
 
     info "Creating skill directory..."
     mkdir -p "$SKILL_DIR"
