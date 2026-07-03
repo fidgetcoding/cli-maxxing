@@ -604,12 +604,16 @@ In a `cskip` session, paste:
 <details>
 <summary><strong>What it checks</strong></summary>
 
-**API Security (all projects):**
-- **Exposed secrets** — API keys, tokens, passwords in source, git history, MCP config.
+**Core Security (all projects):**
+- **Exposed secrets** — API keys, tokens, passwords in source, git history, client bundle, MCP config.
 - **Missing rate limiting** — unlimited-request endpoints.
 - **Input sanitization gaps** — user input flowing into queries, commands, file paths, MCP tool handlers.
 - **Dependency vulnerabilities** — CVEs in npm/pip packages, MCP SDK version checks.
-- **Insecure configurations** — CORS misconfig, missing `.gitignore` entries, untracked secrets.
+- **Broken authorization (IDOR)** — records fetched by request-supplied ID with no ownership check; client-sent identity trusted.
+- **Client-side auth trust** — `jwt.decode` used instead of `jwt.verify`; role flags read from browser storage.
+- **Web security defaults** — wildcard CORS, missing CSRF, insecure cookie flags, missing security headers.
+- **Sensitive data in logs** — passwords, tokens, or whole request bodies written to logs.
+- **Insecure configurations** — missing `.gitignore` entries, untracked secrets.
 
 **MCP Security (auto-activated on MCP projects):**
 - **Tool description integrity** — hidden instructions, injection markers in tool descriptions.

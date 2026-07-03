@@ -163,13 +163,14 @@ install_skill() {
     # file lands at the skill path. Without this, a bad file could be written
     # to disk and then only flagged on the next line — the tampered skill
     # would still be visible to Claude until the user re-runs Step 8.
-    SKILL_TMP="$(mktemp "${TMPDIR:-/tmp}/safetycheck-skill.XXXXXX")" || {
+    # Stage in the destination dir so the final mv is same-filesystem (atomic).
+    SKILL_TMP="$(mktemp "${SKILL_DIR:-${TMPDIR:-/tmp}}/.safetycheck-skill.XXXXXX")" || {
         soft_fail "Could not create temp file for skill download"
         return
     }
 
     SOURCE=""
-    if curl -fsSL "$SKILL_URL" -o "$SKILL_TMP" 2>/dev/null && [ -s "$SKILL_TMP" ]; then
+    if curl -fsSL --proto '=https' --proto-redir '=https' --max-redirs 3 "$SKILL_URL" -o "$SKILL_TMP" 2>/dev/null && [ -s "$SKILL_TMP" ]; then
         SOURCE="download"
     else
         warn "Download failed — attempting fallback install..."
@@ -212,8 +213,12 @@ install_skill() {
             soft_fail "Skill file sha256 mismatch — refusing to install. Expected: ${SKILL_SHA256:0:16}..., got: ${ACTUAL_SHA:0:16}..."
             return
         fi
+    elif [ "$SOURCE" = "download" ]; then
+        rm -f "$SKILL_TMP"
+        soft_fail "Neither shasum nor sha256sum found — refusing to install an unverified download. Install coreutils, or run from a local clone."
+        return
     else
-        warn "Neither shasum nor sha256sum found — installing without integrity check"
+        warn "No hasher available — installing from local clone without integrity check"
     fi
 
     # Verify expected content keyword
@@ -286,13 +291,24 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
-    # Test 5: Skill file contains all 24 checks
-    CHECK_COUNT=$(grep -c "^#\{2,4\} Check [0-9][0-9]*" "$SKILL_FILE" 2>/dev/null || echo "0")
-    if [ "$CHECK_COUNT" -ge 24 ]; then
-        success "TEST: SKILL.md defines all 24 security checks"
+    # Test 5: Skill defines EXACTLY checks 1..24, each exactly once — not merely ">=24 headers".
+    # A dropped / renumbered / duplicated check can no longer pass by keeping the header count high.
+    CHECK_NUMS=$(grep -oE "^#{2,4} Check [0-9]+" "$SKILL_FILE" 2>/dev/null | grep -oE "[0-9]+$" | sort -n | uniq)
+    if [ "$CHECK_NUMS" = "$(seq 1 24)" ]; then
+        success "TEST: SKILL.md defines exactly checks 1-24 (each once)"
         TEST_PASS=$((TEST_PASS + 1))
     else
-        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md only has $CHECK_COUNT/24 checks"
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md check set != 1-24 (missing, extra, or duplicate check headers)"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Test 5b: crown-jewel checks present BY NAME (count alone can't prove a specific check survived)
+    if grep -q "Unicode / Invisible Character Smuggling" "$SKILL_FILE" 2>/dev/null \
+       && grep -q "Authorization / IDOR" "$SKILL_FILE" 2>/dev/null; then
+        success "TEST: key checks (Unicode smuggling, Authorization/IDOR) present"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        echo -e "${RED}[FAIL]${NC} TEST: a key check section is missing by name"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -327,6 +343,15 @@ run_self_test() {
 # -----------------------------------------------------------------------------
 print_summary() {
     echo ""
+    # Only claim success if the skill actually landed on disk AND every self-test passed.
+    if [ ! -f "$HOME/.claude/skills/safetycheck/SKILL.md" ] || [ "${TEST_FAIL:-0}" -gt 0 ]; then
+        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${RED}  Step 8 FAILED — /safetycheck was NOT installed cleanly${NC}"
+        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "  ${YELLOW}Scroll up for the failing check, fix it, and re-run Step 8.${NC}"
+        echo ""
+        return
+    fi
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${GREEN}  Step 8 Complete — /safetycheck Installed (24 checks)${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -401,6 +426,12 @@ main() {
     install_skill
     run_self_test
     print_summary
+
+    # Fail the run (nonzero exit) if any self-test failed or the skill didn't land,
+    # so a chained installer / CI gate sees the failure instead of a false success.
+    if [ "${TEST_FAIL:-0}" -gt 0 ] || [ ! -f "$HOME/.claude/skills/safetycheck/SKILL.md" ]; then
+        exit 1
+    fi
 
     # Mark step complete (best-effort — don't fail the run if mkdir/touch can't write)
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
