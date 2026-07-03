@@ -23,6 +23,16 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
+# Pin an npm package to the version published right now, so the MCP
+# registration written into Claude's config doesn't re-resolve to whatever
+# is newest on npm at every future session start (rug-pull defense).
+# Falls back to @latest only if npm/network is unavailable at install time.
+pin_npm() {
+    local v
+    v=$(npm view "$1" version 2>/dev/null)
+    if [ -n "$v" ]; then echo "$1@$v"; else echo "$1@latest"; fi
+}
+
 # Track what was installed this run
 INSTALLED_NOTION=false
 INSTALLED_GRANOLA=false
@@ -424,7 +434,7 @@ install_google_calendar() {
     claude mcp add --scope user \
         -e GOOGLE_CLIENT_ID="$GCAL_CLIENT_ID" \
         -e GOOGLE_CLIENT_SECRET="$GCAL_CLIENT_SECRET" \
-        google-calendar -- npx -y @cocal/google-calendar-mcp 2>/dev/null
+        google-calendar -- npx -y "$(pin_npm @cocal/google-calendar-mcp)" 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^google-calendar:'; then
         success "Google Calendar MCP installed"
@@ -489,7 +499,7 @@ install_morgen() {
     claude mcp add --scope user \
         -e MORGEN_API_KEY="$MORGEN_API_KEY" \
         -e MORGEN_TIMEZONE="$MORGEN_TIMEZONE" \
-        morgen -- npx -y fidgetcoding-morgen-mcp 2>/dev/null
+        morgen -- npx -y "$(pin_npm fidgetcoding-morgen-mcp)" 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^morgen:'; then
         success "Morgen MCP installed (timezone: $MORGEN_TIMEZONE)"
@@ -552,7 +562,7 @@ install_motion_calendar() {
     chmod 600 "$HOME/.motion-mcp/.env"
 
     # Register the MCP server (it reads credentials from ~/.motion-mcp/.env)
-    claude mcp add --scope user motion -- npx -y fidgetcoding-motion-mcp 2>/dev/null
+    claude mcp add --scope user motion -- npx -y "$(pin_npm fidgetcoding-motion-mcp)" 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^motion:'; then
         success "Motion Calendar MCP installed"
@@ -593,7 +603,7 @@ install_playwright() {
     echo ""
 
     # No credentials needed — register directly.
-    claude mcp add playwright -- npx -y @playwright/mcp@latest 2>/dev/null
+    claude mcp add playwright -- npx -y "$(pin_npm @playwright/mcp)" 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^playwright:'; then
         success "Playwright MCP installed"
