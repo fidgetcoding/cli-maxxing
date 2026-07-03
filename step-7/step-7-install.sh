@@ -2,11 +2,12 @@
 set -uo pipefail
 
 # =============================================================================
-# Step 7 — GitHub CLI + MCP + /gitfix + /recon
+# Step 7 — GitHub CLI + MCP + /gitfix + /recon + /osmani-build
 # Installs the `gh` CLI (terminal binary), the GitHub MCP server, and the
-# /gitfix + /recon skills. `gh` installs unconditionally (no credentials
-# needed) and is what /recon uses to sweep GitHub for prior art; the
-# MCP install is gated on a Personal Access Token.
+# /gitfix + /recon + /osmani-build skills. `gh` installs unconditionally (no
+# credentials needed) and is what /recon uses to sweep GitHub for prior art;
+# the MCP install is gated on a Personal Access Token. /osmani-build also
+# pulls in the addyosmani/agent-skills plugin (best-effort).
 # Run after completing Steps 1-6. Run this in your terminal.
 # =============================================================================
 
@@ -169,9 +170,10 @@ choose_tools() {
             echo ""
             echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
             echo ""
-            info "Continuing with non-interactive /gitfix + /recon install..."
+            info "Continuing with non-interactive /gitfix + /recon + /osmani-build install..."
             install_gitfix
             install_recon
+            install_osmani_build
             run_self_test
             print_summary
             exit 0
@@ -338,6 +340,64 @@ install_recon() {
 }
 
 # -----------------------------------------------------------------------------
+# Install /osmani-build skill — phase-gated product-build lifecycle.
+# Orchestrates the addyosmani/agent-skills plugin (installed best-effort below).
+# -----------------------------------------------------------------------------
+install_osmani_build() {
+    OSMANI_DIR="$HOME/.claude/skills/osmani-build"
+    OSMANI_FILE="$OSMANI_DIR/SKILL.md"
+    OSMANI_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/osmani-build-skill/SKILL.md"
+
+    mkdir -p "$OSMANI_DIR"
+
+    if [ -f "$OSMANI_FILE" ]; then
+        info "Updating existing /osmani-build skill..."
+    else
+        info "Installing /osmani-build skill..."
+    fi
+
+    OSMANI_TMP="$OSMANI_FILE.tmp"
+    if curl -fsSL "$OSMANI_URL" -o "$OSMANI_TMP" 2>/dev/null && [ -s "$OSMANI_TMP" ]; then
+        mv "$OSMANI_TMP" "$OSMANI_FILE"
+        success "/osmani-build skill installed at $OSMANI_FILE"
+    else
+        rm -f "$OSMANI_TMP"
+        warn "Download failed — attempting local fallback..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        LOCAL_OSMANI="$(dirname "$SCRIPT_DIR")/osmani-build-skill/SKILL.md"
+        if [ -f "$LOCAL_OSMANI" ]; then
+            cp "$LOCAL_OSMANI" "$OSMANI_FILE"
+            success "/osmani-build skill installed from local copy"
+        else
+            soft_fail "Could not install /osmani-build skill — download and local fallback both failed"
+            return
+        fi
+    fi
+
+    # Best-effort dependency: the addyosmani/agent-skills plugin (24 lifecycle skills).
+    # HTTPS marketplace URL + per-invocation SSH→HTTPS rewrite so machines without
+    # a GitHub SSH key still succeed.
+    if command -v claude >/dev/null 2>&1; then
+        if claude plugin list 2>/dev/null | grep -q "agent-skills@addy-agent-skills"; then
+            success "addy-agent-skills plugin already installed"
+        else
+            info "Installing addyosmani/agent-skills plugin (dependency of /osmani-build)..."
+            claude plugin marketplace add https://github.com/addyosmani/agent-skills.git >/dev/null 2>&1 || true
+            if GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0="url.https://github.com/.insteadOf" GIT_CONFIG_VALUE_0="git@github.com:" \
+                claude plugin install agent-skills@addy-agent-skills >/dev/null 2>&1; then
+                success "addy-agent-skills plugin installed (24 lifecycle skills)"
+            else
+                warn "/osmani-build installed, but the agent-skills plugin didn't — run manually:"
+                warn "  claude plugin marketplace add https://github.com/addyosmani/agent-skills.git"
+                warn "  claude plugin install agent-skills@addy-agent-skills"
+            fi
+        fi
+    else
+        warn "claude CLI not on PATH — install the agent-skills plugin later so /osmani-build has its 24 phase skills"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Self-test — check each installed tool is registered
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -483,9 +543,10 @@ main() {
         esac
     done
 
-    # /gitfix and /recon always install (no interactive input required)
+    # /gitfix, /recon, and /osmani-build always install (no interactive input required)
     install_gitfix
     install_recon
+    install_osmani_build
 
     run_self_test
     print_summary
