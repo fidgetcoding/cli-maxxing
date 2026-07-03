@@ -286,13 +286,13 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
-    # Test 5: Skill file contains all 20 checks
+    # Test 5: Skill file contains all 24 checks
     CHECK_COUNT=$(grep -c "^#\{2,4\} Check [0-9][0-9]*" "$SKILL_FILE" 2>/dev/null || echo "0")
-    if [ "$CHECK_COUNT" -ge 20 ]; then
-        success "TEST: SKILL.md defines all 20 security checks"
+    if [ "$CHECK_COUNT" -ge 24 ]; then
+        success "TEST: SKILL.md defines all 24 security checks"
         TEST_PASS=$((TEST_PASS + 1))
     else
-        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md only has $CHECK_COUNT/20 checks"
+        echo -e "${RED}[FAIL]${NC} TEST: SKILL.md only has $CHECK_COUNT/24 checks"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -328,7 +328,7 @@ run_self_test() {
 print_summary() {
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  Step 8 Complete — /safetycheck Installed (20 checks)${NC}"
+    echo -e "${GREEN}  Step 8 Complete — /safetycheck Installed (24 checks)${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Installed:"
@@ -340,29 +340,33 @@ print_summary() {
     echo ""
     echo "  What it checks:"
     echo ""
-    echo "    API Security (checks 1-8):"
-    echo "    1. Exposed API Keys        — hardcoded secrets, git history, MCP config"
-    echo "    2. Rate Limiting            — endpoint protection middleware"
-    echo "    3. Input Sanitization       — eval, innerHTML, SQL injection, tool handlers"
-    echo "    4. RLS / Database Security  — parameterized queries, RLS policies"
-    echo "    5. Dependency Vulns         — npm audit, MCP SDK CVEs, lockfile hygiene"
-    echo "    6. Gitignore Hygiene        — .env, *.pem, MCP config files"
-    echo "    7. CI/CD & GitHub Security  — workflows, dependabot, SECURITY.md"
-    echo "    8. Error Handling           — raw error exposure, tool response leakage"
+    echo "    Core Security (checks 1-12):"
+    echo "    1.  Exposed API Keys           — hardcoded secrets, git history, client bundle, MCP config"
+    echo "    2.  Rate Limiting              — endpoint protection middleware"
+    echo "    3.  Input Sanitization         — eval, innerHTML, SQL injection, tool handlers"
+    echo "    4.  RLS / Database Security    — parameterized queries, RLS policies"
+    echo "    5.  Dependency Vulns           — npm audit, MCP SDK CVEs, lockfile hygiene"
+    echo "    6.  Gitignore Hygiene          — .env, *.pem, MCP config files"
+    echo "    7.  CI/CD & GitHub Security    — workflows, dependabot, SECURITY.md"
+    echo "    8.  Error Handling             — raw error exposure, tool response leakage"
+    echo "    9.  Authorization / IDOR       — ownership checks, client-sent identity"
+    echo "    10. Client-Side Auth Trust     — jwt.decode misuse, localStorage role flags"
+    echo "    11. Web Security Defaults      — CORS, CSRF, cookie flags, security headers"
+    echo "    12. Sensitive Data in Logs     — secrets in logs, req.body on auth routes"
     echo ""
-    echo "    MCP Security (checks 9-20, activated when MCP project detected):"
-    echo "    9.  Tool Description Integrity — injection markers, file paths, cross-tool refs"
-    echo "    10. Unicode Smuggling          — invisible chars, zero-width, tag characters"
-    echo "    11. Encoded Payloads           — Base64/hex in tool metadata"
-    echo "    12. MCP Transport Security     — HTTP vs HTTPS, DNS rebinding CVEs"
-    echo "    13. MCP Authentication         — bearer auth on HTTP MCP endpoints"
-    echo "    14. Token Scope & Lifecycle    — over-broad scopes, plaintext tokens"
-    echo "    15. Input Schema Validation    — tool schemas, additionalProperties"
-    echo "    16. Tool Response Sanitization — stack traces in tool results"
-    echo "    17. CORS / Origin Validation   — wildcard CORS on MCP endpoints"
-    echo "    18. Supply Chain & Config      — @latest pins, lockfile, .mcp.json hygiene"
-    echo "    19. Audit Logging              — structured logging, MCP notifications"
-    echo "    20. Rug-Pull Defense           — tool mutation, version pinning"
+    echo "    MCP Security (checks 13-24, activated when MCP project detected):"
+    echo "    13. Tool Description Integrity — injection markers, file paths, cross-tool refs"
+    echo "    14. Unicode Smuggling          — invisible chars, zero-width, tag characters"
+    echo "    15. Encoded Payloads           — Base64/hex in tool metadata"
+    echo "    16. MCP Transport Security     — HTTP vs HTTPS, DNS rebinding CVEs"
+    echo "    17. MCP Authentication         — bearer auth on HTTP MCP endpoints"
+    echo "    18. Token Scope & Lifecycle    — over-broad scopes, plaintext tokens"
+    echo "    19. Input Schema Validation    — tool schemas, additionalProperties"
+    echo "    20. Tool Response Sanitization — stack traces in tool results"
+    echo "    21. CORS / Origin Validation   — wildcard CORS on MCP endpoints"
+    echo "    22. Supply Chain & Config      — @latest pins, lockfile, .mcp.json hygiene"
+    echo "    23. Audit Logging              — structured logging, MCP notifications"
+    echo "    24. Rug-Pull Defense           — tool mutation, version pinning"
     echo ""
     if [ "$ERRORS" -gt 0 ]; then
         echo -e "  ${YELLOW}Warnings: $ERRORS non-critical issue(s) during install.${NC}"

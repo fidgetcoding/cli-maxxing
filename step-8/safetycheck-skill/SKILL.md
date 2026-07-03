@@ -50,7 +50,7 @@ Determine what kind of project this is by checking for:
 - `.mcp.json`, `claude_desktop_config.json`, `.cursor/mcp.json` file presence
 - `@mcp.tool` decorator in Python
 
-If MCP detected: activate Phase 0 + Checks 9-20, AND add MCP subsections to Checks 1, 3, 5, 6, 8.
+If MCP detected: activate Phase 0 + Checks 13-24, AND add MCP subsections to Checks 1, 3, 5, 6, 8.
 
 Two scan modes:
 - **MCP Server Mode** — codebase IS an MCP server (SDK imports, tool registrations found)
@@ -82,7 +82,7 @@ Exclude: test fixtures, example files, regex patterns in security scanners, `.en
 
 **Git history scan** — Run:
 ```bash
-git log -p --all -S "API_KEY" -S "SECRET" -S "TOKEN" -S "sk-" --max-count=30 2>/dev/null | grep -E "^\+" | grep -ivE "(process\.env|os\.environ|\.env\.example|placeholder|your_|example|test)" | head -20
+git log -p --all -G "API_KEY|SECRET|TOKEN|sk-" --max-count=30 2>/dev/null | grep -E "^\+" | grep -ivE "(process\.env|os\.environ|\.env\.example|placeholder|your_|example|test)" | head -20
 ```
 
 **Tracked .env check** — Run:
@@ -92,7 +92,7 @@ git ls-files 2>/dev/null | grep -iE "\.env$"
 
 **MCP Config scan** (if MCP detected) — Scan `.mcp.json`, `claude_desktop_config.json`, `.cursor/mcp.json` for hardcoded secrets in `env` blocks:
 ```bash
-grep -rn '"env"' . --include=".mcp.json" --include="claude_desktop_config.json" 2>/dev/null | grep -iE '(sk-[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{36}|AIzaSy[a-zA-Z0-9_-]{30,}|xox[bpsa]-[a-zA-Z0-9-]+)'
+grep -rniE '(sk-[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{36}|AIzaSy[a-zA-Z0-9_-]{30,}|xox[bpsa]-[a-zA-Z0-9-]+)' . --include=".mcp.json" --include="claude_desktop_config.json" 2>/dev/null
 ```
 
 Check if MCP configs are tracked in git:
@@ -100,7 +100,18 @@ Check if MCP configs are tracked in git:
 git ls-files 2>/dev/null | grep -iE "(\.mcp\.json|claude_desktop_config\.json)"
 ```
 
-**Severity**: CRITICAL if real keys found in source, git history, or MCP config env blocks. HIGH if .env or MCP config is tracked. PASS if clean.
+**Client bundle scan** — secrets shipped to the browser/mobile bundle. Public-prefix env vars are embedded in the client bundle at build time:
+```bash
+# Public-prefix env vars carrying secret-looking names (placeholder values excluded)
+grep -rniE '(NEXT_PUBLIC_|VITE_|REACT_APP_|EXPO_PUBLIC_|NUXT_PUBLIC_|GATSBY_)[A-Z0-9_]*(SECRET|SERVICE_ROLE|PRIVATE|PASSWORD|TOKEN)' . --include="*.ts" --include="*.js" --include="*.tsx" --include="*.jsx" --include=".env*" 2>/dev/null | grep -v node_modules | grep -viE '\.env\.(example|sample|template):|=\s*(your_|placeholder|changeme|<|xxx|example|dummy)'
+
+# Server-only keys referenced from client code paths
+grep -rniE '(service_role|sk_live_|sk_test_)' src/ app/ components/ pages/ 2>/dev/null | grep -v node_modules
+```
+
+Publishable keys (Supabase anon key, Stripe `pk_*`) are fine client-side. `service_role`, `sk_*`, and anything named SECRET/PRIVATE never are.
+
+**Severity**: CRITICAL if real keys found in source, git history, or MCP config env blocks, or if server-only secrets are reachable from the client bundle (SECRET/SERVICE_ROLE/PRIVATE/PASSWORD matches). HIGH if .env or MCP config is tracked, or for TOKEN-named public-prefix matches (review first — public tokens like Mapbox are legitimately client-side). PASS if clean.
 
 ---
 
@@ -142,7 +153,7 @@ Check for validation:
 grep -rniE '(args\.\w+|arguments\.\w+)' --include="*.ts" --include="*.js" --include="*.py" . | grep -E "(exec|execSync|spawn|readFile|writeFile|query|SQL|eval)"
 
 # Tool handlers without inputSchema (missing 2nd arg in server.tool)
-grep -rniE 'server\.tool\([^,]+,\s*(?:async\s*)?\(' --include="*.ts" --include="*.js" .
+grep -rniE 'server\.tool\([^,]+,\s*(async\s*)?\(' --include="*.ts" --include="*.js" .
 
 # No validation library when server.tool() calls exist
 ```
@@ -253,18 +264,130 @@ grep -rniE 'traceback\.format_exc\(\)|str\(e\)' --include="*.py" .
 
 ---
 
+#### Check 9: Authorization / IDOR
+
+**Runs when endpoints exist** (same detection as Check 2).
+
+Being logged in is not authorization — every sensitive handler must verify the user can touch the specific record.
+
+Scan for record access keyed by request-supplied IDs:
+```bash
+# Record lookups driven by request params/query/body
+grep -rniE '(findById|findByPk|findOne|findUnique)\s*\(\s*(req\.(params|query|body)|params\.|request\.)' --include="*.ts" --include="*.js" .
+
+# Raw SQL keyed on request input
+grep -rniE '(WHERE\s+id\s*=|DELETE\s+FROM|UPDATE\s+\w+\s+SET).*(req\.(params|query|body)|\$\{)' --include="*.ts" --include="*.js" --include="*.py" .
+```
+
+For each hit, check the same handler/file for an ownership predicate: `userId`, `user_id`, `owner`, `req.user`, `session.user`, `auth.uid()`, `ctx.user`. A lookup by request-supplied ID with no ownership scoping is an IDOR candidate. Confirm the predicate is real code, not a comment or string — token presence in a comment ("no ownership check") does not count.
+
+Check auth middleware coverage on mutating routes (`app.post/put/patch/delete`, `router.*`): `requireAuth`, `isAuthenticated`, `passport.authenticate`, `getServerSession`, `verifyToken`, `auth()`.
+
+Flag server code that trusts client-supplied identity for access decisions:
+```bash
+grep -rniE "req\.(body|query)\.(userId|user_id|role|isAdmin|is_admin)|req\.headers\[['\"]x-user-id" --include="*.ts" --include="*.js" .
+```
+
+**Severity**: CRITICAL if mutating endpoints access records by request-supplied ID with no auth middleware, or trust client-sent userId/role. HIGH if authenticated but no ownership scoping visible (IDOR candidate — escalate to CRITICAL once confirmed exploitable). N/A if no endpoints.
+
+---
+
+#### Check 10: Client-Side Auth Trust
+
+Authentication must be decided server-side. Scan for patterns where the client's word is taken for identity:
+
+```bash
+# jwt.decode used instead of jwt.verify (decode does NOT check the signature)
+grep -rnE 'jwt\.decode\(|jwt_decode|jwtDecode' --include="*.ts" --include="*.js" .
+
+# ...then confirm signature verification exists somewhere server-side
+grep -rnE 'jwt\.verify\(|jwtVerify|verifyToken' --include="*.ts" --include="*.js" .
+
+# Roles/authorization flags read from client storage (keys anchored to avoid benign 'authToken'/'adminSidebar' hits)
+grep -rniE "(localStorage|sessionStorage)\.(get|set)Item\(['\"](role|roles|isAdmin|is_admin|permissions?)['\"]" --include="*.ts" --include="*.js" --include="*.tsx" --include="*.jsx" .
+```
+
+`jwtDecode` in frontend code (rendering UI from claims) is normal — the CRITICAL rating applies only when decode is the server's token check.
+
+Frontend-only route guards (`PrivateRoute`, `ProtectedRoute`, router `beforeEach` auth checks) are fine for UX, but flag them if the API routes they front have no server-side check (cross-reference Check 9).
+
+**Severity**: CRITICAL if `jwt.decode` is the only token check on the server, or role flags from client storage gate server-relevant actions. MEDIUM if frontend-only guards exist with unclear API coverage. PASS if verification is server-side.
+
+---
+
+#### Check 11: Web Security Defaults (CORS / CSRF / Cookies / Headers)
+
+**Runs when HTTP endpoints exist** — any web app. In MCP Server Mode, defer the CORS portion to Check 21 (the MCP-specific variant) to avoid double-reporting.
+
+**CORS**:
+```bash
+grep -rniE 'cors\(\s*\)|origin\s*:\s*["'"'"']\*["'"'"']|origin\s*:\s*true|Access-Control-Allow-Origin.*\*' --include="*.ts" --include="*.js" .
+grep -rniE 'allow_origins\s*=\s*\["?\*"?\]' --include="*.py" .
+
+# credentials paired with wildcard escalates to CRITICAL
+grep -rniE 'credentials\s*:\s*true|Access-Control-Allow-Credentials' --include="*.ts" --include="*.js" .
+```
+
+**CSRF** — first detect cookie-based sessions, then confirm protection. Pure Bearer-token APIs are exempt.
+```bash
+# Cookie-session detection (gate)
+grep -rnE "express-session|cookie-session|req\.session" --include="*.ts" --include="*.js" .
+
+# Protection present? (sameSite 'none' does NOT count; comments don't count)
+grep -rnE "require\(['\"]csurf['\"]\)|csrf\(|sameSite\s*:\s*['\"](strict|lax)" --include="*.ts" --include="*.js" .
+```
+
+**Cookie flags** — session/auth cookie config should set `httpOnly: true`, `secure: true`, and `sameSite`:
+```bash
+grep -rniE 'httpOnly\s*:\s*false|secure\s*:\s*false' --include="*.ts" --include="*.js" .
+```
+
+**Security headers** — confirm actual usage of `helmet` (Node), secure-headers middleware, or explicit CSP/HSTS config — a comment mentioning it doesn't count:
+```bash
+grep -rnE "require\(['\"]helmet['\"]\)|from ['\"]helmet['\"]|app\.use\(\s*helmet" --include="*.ts" --include="*.js" .
+```
+
+**Plain HTTP** — non-localhost `http://` URLs in production config:
+```bash
+grep -rniE '["'"'"']http://' --include="*.ts" --include="*.js" --include="*.json" --include=".env*" . | grep -vE 'localhost|127\.0\.0\.1|::1|\.test|example\.'
+```
+
+**Severity**: CRITICAL for wildcard CORS + `credentials: true`. HIGH for wildcard CORS without credentials, cookie sessions without CSRF protection, or `httpOnly`/`secure` explicitly false. MEDIUM for missing security headers. N/A if no endpoints.
+
+---
+
+#### Check 12: Sensitive Data in Logs
+
+Log security events — never log the secrets themselves.
+
+```bash
+# Log calls referencing sensitive variables
+grep -rniE '(console\.(log|error|warn|info)|logger\.\w+|log\.(info|warn|error|debug)|print)\(.*\b(password|passwd|secret|token|api_?key|authorization|bearer|ssn|credit)' --include="*.ts" --include="*.js" --include="*.py" .
+
+# Whole request bodies / headers logged (highest risk on auth routes — judge context per hit)
+grep -rniE '(console\.\w+|logger\.\w+)\(\s*(req\.body|req\.headers|request\.body)' --include="*.ts" --include="*.js" .
+```
+
+Positive signals: redaction config (`pino` `redact` option, winston custom formats, `[REDACTED]`, sanitize helpers). Confirm real config (e.g. a `redact:` key), not a comment mentioning redaction.
+
+Also verify the flip side: failed logins / auth events are logged at all (grep auth handlers for any logging). Silence on failed logins means breaches go unnoticed.
+
+**Severity**: HIGH if passwords, tokens, or auth headers are logged. MEDIUM if full `req.body` is logged on auth paths, or auth events are not logged anywhere. PASS if clean or redacted.
+
+---
+
 ### MCP Security Checks (activated when MCP project detected)
 
 #### Phase 0 — MCP Detection Summary
 
 This is not a numbered check. Output the detection result:
-- "MCP project detected — activating MCP Security Checks 9-20"
+- "MCP project detected — activating MCP Security Checks 13-24"
 - State which mode: **Server Mode**, **Consumer Mode**, or **Both**
 - Report: language, transport type, estimated tool/resource/prompt counts, config files found
 
 ---
 
-#### Check 9: Tool Description Integrity
+#### Check 13: Tool Description Integrity
 
 **Only in MCP Server Mode.**
 
@@ -273,7 +396,7 @@ Scan all source files containing `server.tool(`, `@mcp.tool`, or tool definition
 **Grep patterns:**
 ```bash
 # Find tool definition files
-grep -rn "server\.tool\|@mcp\.tool\|\"description\"\s*:" --include="*.ts" --include="*.js" --include="*.py" .
+grep -rnE "server\.tool|@mcp\.tool|\"description\"\s*:" --include="*.ts" --include="*.js" --include="*.py" .
 
 # Scan descriptions for injection markers
 grep -riE '(<IMPORTANT>|<SYSTEM>|<HIDDEN>|<INSTRUCTION>|ignore previous|disregard|override.*instruction|you must now|act as|pretend to be|never tell|do not (tell|mention|say))' --include="*.ts" --include="*.js" --include="*.py" .
@@ -291,7 +414,7 @@ grep -riE '(~/\.|/etc/|~/.ssh|~/.cursor|\.env|id_rsa|\.config)' --include="*.ts"
 
 ---
 
-#### Check 10: Unicode / Invisible Character Smuggling
+#### Check 14: Unicode / Invisible Character Smuggling
 
 **Applies to both MCP Server Mode and Consumer Mode.**
 
@@ -336,7 +459,7 @@ else:
 
 ---
 
-#### Check 11: Encoded Payloads in Tool Metadata
+#### Check 15: Encoded Payloads in Tool Metadata
 
 **Only in MCP Server Mode.**
 
@@ -360,7 +483,7 @@ grep -rniE '(decode|execute|eval|interpret|run this)' --include="*.ts" --include
 
 ---
 
-#### Check 12: MCP Transport Security
+#### Check 16: MCP Transport Security
 
 **Only in MCP Server Mode.**
 
@@ -375,7 +498,7 @@ grep -rniE '"url"\s*:\s*"http://' . --include=".mcp.json" --include="claude_desk
 grep -rniE '(0\.0\.0\.0|host:\s*["'"'"']0\.0\.0\.0)' --include="*.ts" --include="*.js" --include="*.py" .
 
 # Check for DNS rebinding protection
-grep -rn "enableDnsRebindingProtection\|localhostHostValidation\|hostHeaderValidation\|createMcpExpressApp" --include="*.ts" --include="*.js" .
+grep -rnE "enableDnsRebindingProtection|localhostHostValidation|hostHeaderValidation|createMcpExpressApp" --include="*.ts" --include="*.js" .
 
 # Check MCP SDK version for DNS rebinding CVE
 node -e "const v=require('./package.json').dependencies?.['@modelcontextprotocol/sdk']; if(v) console.log(v);" 2>/dev/null
@@ -389,18 +512,18 @@ MCP TypeScript SDK < 1.4.0 = CRITICAL: CVE-2025-66414 (DNS rebinding protection 
 
 ---
 
-#### Check 13: MCP Authentication
+#### Check 17: MCP Authentication
 
 **Only in MCP Server Mode + HTTP transport detected.**
 
 First detect HTTP transport:
 ```bash
-grep -rn "StreamableHTTPServerTransport\|SSEServerTransport\|createMcpExpressApp\|app\.listen\|app\.post.*mcp\|app\.get.*sse" --include="*.ts" --include="*.js" .
+grep -rnE "StreamableHTTPServerTransport|SSEServerTransport|createMcpExpressApp|app\.listen|app\.post.*mcp|app\.get.*sse" --include="*.ts" --include="*.js" .
 ```
 
 If HTTP transport found, check for auth:
 ```bash
-grep -rn "mcpAuthRouter\|requireBearerAuth\|OAuthServerProvider\|verifyAccessToken\|bearerAuth\|express-jwt\|passport\|jsonwebtoken\|jwt\.verify" --include="*.ts" --include="*.js" .
+grep -rnE "mcpAuthRouter|requireBearerAuth|OAuthServerProvider|verifyAccessToken|bearerAuth|express-jwt|passport|jsonwebtoken|jwt\.verify" --include="*.ts" --include="*.js" .
 ```
 
 If HTTP transport exists but NO auth patterns found: **CRITICAL**.
@@ -412,7 +535,7 @@ If only stdio transport (StdioServerTransport): **N/A**.
 
 ---
 
-#### Check 14: Token Scope & Lifecycle
+#### Check 18: Token Scope & Lifecycle
 
 **Applies to MCP Consumer Mode.**
 
@@ -433,7 +556,7 @@ grep -rniE '(expires_in.*86400|expires_in.*[0-9]{6,}|no.*expir|never.*expir)' --
 
 ---
 
-#### Check 15: MCP Input Schema Validation
+#### Check 19: MCP Input Schema Validation
 
 **Only in MCP Server Mode.**
 
@@ -441,10 +564,10 @@ Verify all tools define and enforce input schemas.
 
 ```bash
 # Find all tool registrations
-grep -n "server\.tool\|@mcp\.tool\|setRequestHandler.*ListTools" --include="*.ts" --include="*.js" --include="*.py" -r .
+grep -nE "server\.tool|@mcp\.tool|setRequestHandler.*ListTools" --include="*.ts" --include="*.js" --include="*.py" -r .
 
 # Check for inputSchema / validation library usage
-grep -rn "inputSchema\|z\.object\|Joi\.object\|ajv\.compile\|BaseModel\|pydantic" --include="*.ts" --include="*.js" --include="*.py" .
+grep -rnE "inputSchema|z\.object|Joi\.object|ajv\.compile|BaseModel|pydantic" --include="*.ts" --include="*.js" --include="*.py" .
 
 # Check for additionalProperties: false (strict schemas)
 grep -rn "additionalProperties.*false" --include="*.ts" --include="*.js" --include="*.json" .
@@ -459,7 +582,7 @@ grep -rniE '(args\.\w+|arguments\.\w+)' --include="*.ts" --include="*.js" . | gr
 
 ---
 
-#### Check 16: Tool Response Sanitization
+#### Check 20: Tool Response Sanitization
 
 **Only in MCP Server Mode.**
 
@@ -483,7 +606,7 @@ grep -rniE 'traceback\.format_exc\(\)|str\(e\)' --include="*.py" .
 
 ---
 
-#### Check 17: CORS / Origin Validation
+#### Check 21: CORS / Origin Validation
 
 **Only in MCP Server Mode + HTTP transport detected.**
 
@@ -498,14 +621,14 @@ grep -rniE 'Access-Control-Allow-Origin.*\*' --include="*.ts" --include="*.js" .
 grep -rniE 'allow_origins\s*=\s*\["?\*"?\]' --include="*.py" .
 
 # PASS indicators: SDK built-in protections
-grep -rn "hostHeaderValidation\|localhostHostValidation\|createMcpExpressApp" --include="*.ts" --include="*.js" .
+grep -rnE "hostHeaderValidation|localhostHostValidation|createMcpExpressApp" --include="*.ts" --include="*.js" .
 ```
 
 **Severity**: CRITICAL if `origin: '*'` combined with `credentials: true`. HIGH for `origin: '*'` on HTTP MCP server. N/A for stdio-only.
 
 ---
 
-#### Check 18: MCP Supply Chain & Config Hygiene
+#### Check 22: MCP Supply Chain & Config Hygiene
 
 **Applies to both MCP Server Mode and Consumer Mode.**
 
@@ -517,13 +640,13 @@ grep -rniE '"@latest"|npx.*@latest' . --include=".mcp.json" --include="claude_de
 grep -rniE 'npx.*-y' . --include=".mcp.json" --include="claude_desktop_config.json" 2>/dev/null | grep -vE '@[0-9]'
 
 # Lockfile check
-ls package-lock.json yarn.lock pnpm-lock.yaml bun.lockb 2>/dev/null || echo "NO_LOCKFILE"
+ls package-lock.json yarn.lock pnpm-lock.yaml bun.lockb 2>/dev/null | grep -q . && echo "HAS_LOCKFILE" || echo "NO_LOCKFILE"
 
 # files whitelist in package.json (if published MCP server)
 node -e "const p=require('./package.json'); console.log(p.files ? 'HAS_FILES_WHITELIST' : 'NO_FILES_WHITELIST');" 2>/dev/null
 
-# Shell metacharacters in MCP config args (command injection via config)
-grep -rniE '"args"\s*:\s*\[' . --include=".mcp.json" --include="claude_desktop_config.json" 2>/dev/null | grep -E '[;|&\$\`]'
+# Shell metacharacters in MCP config args (command injection via config; -A8 covers multi-line arrays)
+grep -rniE -A8 '"args"\s*:\s*\[' . --include=".mcp.json" --include="claude_desktop_config.json" 2>/dev/null | grep -E '[;|&\$\`]'
 ```
 
 **Severity**: HIGH for `@latest` in MCP config. HIGH for no lockfile. HIGH for shell metacharacters in args arrays. MEDIUM for no files whitelist on published MCP server. PASS if pinned and locked.
@@ -532,7 +655,7 @@ grep -rniE '"args"\s*:\s*\[' . --include=".mcp.json" --include="claude_desktop_c
 
 ---
 
-#### Check 19: Audit Logging
+#### Check 23: Audit Logging
 
 **Only in MCP Server Mode.**
 
@@ -540,13 +663,13 @@ Verify tool invocations are logged with structured data.
 
 ```bash
 # Check for structured logging library
-grep -rn "winston\|pino\|bunyan\|log4js\|structlog\|logging\.getLogger" . --include="package.json" --include="requirements.txt" 2>/dev/null
+grep -rnE "winston|pino|bunyan|log4js|structlog|logging\.getLogger" . --include="package.json" --include="requirements.txt" 2>/dev/null
 
 # Check for MCP logging notifications
-grep -rn "sendLoggingMessage\|LoggingMessageNotification\|setLoggingLevel\|notifications/message" --include="*.ts" --include="*.js" .
+grep -rnE "sendLoggingMessage|LoggingMessageNotification|setLoggingLevel|notifications/message" --include="*.ts" --include="*.js" .
 
 # Check for observability integration
-grep -rn "opentelemetry\|datadog\|sentry\|splunk\|elastic-apm" . --include="package.json" 2>/dev/null
+grep -rnE "opentelemetry|datadog|sentry|splunk|elastic-apm" . --include="package.json" 2>/dev/null
 ```
 
 Compare: count tool registrations (`server.tool` / `@mcp.tool`) vs structured logging references. If tools > 0 and structured logging = 0, flag it.
@@ -555,7 +678,7 @@ Compare: count tool registrations (`server.tool` / `@mcp.tool`) vs structured lo
 
 ---
 
-#### Check 20: Rug-Pull & Tool Mutation Defense
+#### Check 24: Rug-Pull & Tool Mutation Defense
 
 **Applies to MCP Consumer Mode (config files present).**
 
@@ -572,7 +695,7 @@ grep -rniE '"command"\s*:\s*"npx"' . --include=".mcp.json" --include="claude_des
 grep -rniE '@[a-z0-9-]+/[a-z0-9-]+' . --include=".mcp.json" --include="claude_desktop_config.json" 2>/dev/null | grep -v '@[0-9]' | grep -v '@latest'
 
 # Check if any MCP server hashes tool definitions (integrity verification)
-grep -rn "createHash\|sha256\|sha-256\|integrity\|checksum" --include="*.ts" --include="*.js" . | grep -iE "(tool|description|schema)"
+grep -rnE "createHash|sha256|sha-256|integrity|checksum" --include="*.ts" --include="*.js" . | grep -iE "(tool|description|schema)"
 ```
 
 **Severity**: HIGH for `@latest` floating versions. MEDIUM for unpinned packages without `@latest`. LOW if no hash/integrity verification for tool definitions (informational). PASS if all pinned with lockfile.
@@ -588,12 +711,12 @@ Output a markdown table:
 ```
 | # | Check | Status | Findings |
 |---|-------|--------|----------|
-| 1 | Exposed API Keys | PASS/CRITICAL/HIGH/MEDIUM/LOW | Details... |
+| 1 | Exposed API Keys | PASS/CRITICAL/HIGH/MEDIUM/LOW/N/A | Details... |
 | 2 | Rate Limiting | ... | ... |
 | ... | ... | ... | ... |
 ```
 
-For MCP projects, split into two tables: **Core Checks** (1-8) and **MCP-Specific Checks** (9-20).
+For MCP projects, split into two tables: **Core Checks** (1-12) and **MCP-Specific Checks** (13-24).
 
 MCP checks show N/A if project is not an MCP project.
 
@@ -607,6 +730,11 @@ For each finding that has an auto-fixable solution, offer to fix it:
 - Missing dependabot.yml → offer to create one
 - execSync with string concat → offer to replace with execFileSync
 - Missing input validation → offer to add validation functions
+- `jwt.decode` used as verification → offer to replace with `jwt.verify`
+- Missing ownership scoping on record access → offer to add userId predicate to the query
+- Missing CSRF protection on cookie sessions → offer to add SameSite=Lax/Strict cookie config plus a maintained double-submit lib (csrf-csrf) or the framework built-in (csurf is deprecated — detect it, don't recommend it)
+- Missing security headers → offer to add helmet
+- Sensitive values in log calls → offer to add redaction (pino redact / sanitize helper)
 
 **MCP-specific fixes:**
 - Pinning @latest versions → offer to look up current versions and pin them

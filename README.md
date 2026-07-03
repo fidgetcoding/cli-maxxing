@@ -588,7 +588,7 @@ Ask *"list my open GitHub issues"* or *"create a PR on cli-maxxing"* and the MCP
 
 [Back to top](#quick-navigation)
 
-Installs `/safetycheck` — a Claude Code skill that scans any project for security issues. 8 standard API checks + 12 MCP-specific checks auto-activate when it detects an MCP project. Point Claude at a repo, run the command (or say *"run a safety check"* in plain English), get findings by severity.
+Installs `/safetycheck` — a Claude Code skill that scans any project for security issues. 12 standard checks + 12 MCP-specific checks that auto-activate when it detects an MCP project. Point Claude at a repo, run the command (or say *"run a safety check"* in plain English), get findings by severity.
 
 It's a first line of defense — the kind of check to run before every deploy, every PR, every handoff. Not a replacement for a full audit.
 
@@ -624,7 +624,7 @@ In a `cskip` session, paste:
 
 ### After Step 8
 
-Open any project in Claude and type `/safetycheck` (or just ask Claude to *"run a safety check"*). For standard projects, 8 checks run and get reported by severity. For MCP projects, the 12 MCP-specific checks auto-activate.
+Open any project in Claude and type `/safetycheck` (or just ask Claude to *"run a safety check"*). For standard projects, 12 checks run and get reported by severity. For MCP projects, the 12 MCP-specific checks auto-activate.
 
 ---
 
@@ -881,10 +881,10 @@ Run the steps in this order:
 | 5 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit + Superhuman + Google Drive + Vercel (all optional — pick what you use; Morgen recommended) |
 | 6 | Telegram | Telegram bot setup — message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 7 | GitHub | GitHub CLI (`gh`) + GitHub MCP (repos, issues, PRs, code search — MCP requires PAT) + `/gitfix` skill for full-repo doc sync + `/recon` skill for pre-build prior-art recon |
-| 8 | Safety Check | Security auditing — 8 API checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
+| 8 | Safety Check | Security auditing — 12 core checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
 | **Final** | **Status Line** | **Status indicators + system health check** |
 
-> **Note:** Step 5 (Productivity Tools) is all optional — install only the tools you use. Step 6 (Telegram) is optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 7 (GitHub) is optional — skip it if you don't use GitHub with Claude. Step 8 (Safety Check) installs a security auditing skill — 8 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators and runs a system health check.
+> **Note:** Step 5 (Productivity Tools) is all optional — install only the tools you use. Step 6 (Telegram) is optional — press Enter to skip if you don't have a bot token yet; you can always re-run it later. Step 7 (GitHub) is optional — skip it if you don't use GitHub with Claude. Step 8 (Safety Check) installs a security auditing skill — 12 standard checks for any project, plus 12 MCP-specific checks that auto-activate when an MCP project is detected. The Final Step (Status Line) is the wrap-up — it wires your status indicators and runs a system health check.
 
 ---
 
