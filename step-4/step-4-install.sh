@@ -21,6 +21,16 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
+# Pin an npm package to the version published right now, so the MCP
+# registration written into Claude's config doesn't re-resolve to whatever
+# is newest on npm at every future session start (rug-pull defense).
+# Falls back to @latest only if npm/network is unavailable at install time.
+pin_npm() {
+    local v
+    v=$(npm view "$1" version 2>/dev/null)
+    if [ -n "$v" ]; then echo "$1@$v"; else echo "$1@latest"; fi
+}
+
 # -----------------------------------------------------------------------------
 # BUG A defense-in-depth: source runtime PATH before any tool detection
 # -----------------------------------------------------------------------------
@@ -120,10 +130,12 @@ configure_mcp() {
         return
     fi
 
-    claude mcp add fidgetflo -- npx -y fidgetflo 2>/dev/null
+    local FIDGETFLO_PKG
+    FIDGETFLO_PKG="$(pin_npm fidgetflo)"
+    claude mcp add fidgetflo -- npx -y "$FIDGETFLO_PKG" 2>/dev/null
 
     if claude mcp list 2>/dev/null | grep -qE '^fidgetflo:' 2>/dev/null; then
-        success "fidgetflo MCP server added to Claude Code"
+        success "fidgetflo MCP server added to Claude Code ($FIDGETFLO_PKG)"
     else
         # Try alternative approach — write directly to config
         warn "MCP add command may not have worked. Trying direct config..."
@@ -132,16 +144,16 @@ configure_mcp() {
             # Structural check (not substring grep) — "fidgetflo" appearing in
             # another server's args must not skip the registration.
             if ! jq -e '.mcpServers.fidgetflo' "$CLAUDE_MCP_CONFIG" >/dev/null 2>&1; then
-                jq '.mcpServers["fidgetflo"] = {"command": "npx", "args": ["-y", "fidgetflo"]}' "$CLAUDE_MCP_CONFIG" > "${CLAUDE_MCP_CONFIG}.tmp" \
+                jq --arg pkg "$FIDGETFLO_PKG" '.mcpServers["fidgetflo"] = {"command": "npx", "args": ["-y", $pkg]}' "$CLAUDE_MCP_CONFIG" > "${CLAUDE_MCP_CONFIG}.tmp" \
                     && mv "${CLAUDE_MCP_CONFIG}.tmp" "$CLAUDE_MCP_CONFIG"
             fi
         else
-            cat > "$CLAUDE_MCP_CONFIG" << 'MCP_EOF'
+            cat > "$CLAUDE_MCP_CONFIG" << MCP_EOF
 {
   "mcpServers": {
     "fidgetflo": {
       "command": "npx",
-      "args": ["-y", "fidgetflo"]
+      "args": ["-y", "$FIDGETFLO_PKG"]
     }
   }
 }
