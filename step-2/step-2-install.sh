@@ -25,12 +25,12 @@ echo ""
 
 echo -e "${YELLOW}>>> Ghostty Terminal${NC}"
 echo ""
-curl -fsSL "$BASE_URL/ghostty-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/ghostty-install.sh" | bash
 echo ""
 
 echo -e "${YELLOW}>>> Arc Browser${NC}"
 echo ""
-curl -fsSL "$BASE_URL/arc-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/arc-install.sh" | bash
 echo ""
 
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

@@ -85,7 +85,7 @@ echo ""
 # Step 1 — CLI Tools
 echo -e "${YELLOW}>>> Step 1 — CLI Tools${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-1/step-1-install.sh" | bash
 # BUG A fix: Step 1 installs brew+nvm; re-source them into this shell so the
 # remaining curl|bash steps (2/3/4/7/8/final) can actually find them.
 reload_path
@@ -118,31 +118,31 @@ echo ""
 # Step 2 — Bonus Software (Ghostty + Arc)
 echo -e "${YELLOW}>>> Step 2 — Bonus Software${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-2/step-2-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-2/step-2-install.sh" | bash
 echo ""
 
 # Step 3 — Developer & Utility Tools
 echo -e "${YELLOW}>>> Step 3 — Developer & Utility Tools${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-3/step-3-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-3/step-3-install.sh" | bash
 echo ""
 
 # Step 4 — FidgetFlo
 echo -e "${YELLOW}>>> Step 4 — FidgetFlo${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-4/step-4-install.sh" | bash
 echo ""
 
 # Step 8 — Safety Check
 echo -e "${YELLOW}>>> Step 8 — Safety Check${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-8/step-8-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-8/step-8-install.sh" | bash
 echo ""
 
 # Final Step — Status Line (wrap-up)
 echo -e "${YELLOW}>>> Final Step — Status Line${NC}"
 echo ""
-curl -fsSL "$BASE_URL/step-final/step-final-install.sh" | bash
+curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-final/step-final-install.sh" | bash
 echo ""
 
 echo ""

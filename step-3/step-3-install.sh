@@ -142,7 +142,7 @@ install_python() {
             if command -v apt-get &>/dev/null; then
                 sudo apt-get install -y -qq python3-pip
             else
-                curl -fsSL https://bootstrap.pypa.io/get-pip.py | python3
+                curl -fsSL --proto '=https' --proto-redir '=https' https://bootstrap.pypa.io/get-pip.py | python3
             fi
         fi
     fi

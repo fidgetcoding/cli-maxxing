@@ -113,7 +113,7 @@ preflight_checks() {
         fail "Do not run this script as root or with sudo. Run as your normal user account."
     fi
 
-    if ! curl -fsSL --connect-timeout 5 https://raw.githubusercontent.com/ &>/dev/null; then
+    if ! curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 5 https://raw.githubusercontent.com/ &>/dev/null; then
         fail "No internet connection detected. This script requires internet access."
     fi
     success "Internet connectivity verified"
@@ -197,7 +197,7 @@ install_homebrew() {
         # NONINTERACTIVE=1 skips the "Press RETURN" prompt — the installer auto-sets
         # this when stdin isn't a TTY, but being explicit is safer. sudo -v above
         # ensures the cached credential is fresh so sudo -n succeeds.
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
         # Pick the right brew prefix and eval it into THIS shell so subsequent
         # install_git / install_node steps see `brew`.
@@ -277,7 +277,7 @@ install_node() {
 
     if [ ! -d "$HOME/.nvm" ]; then
         info "Installing nvm..."
-        curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+        curl -fsSL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     fi
 
     export NVM_DIR="$HOME/.nvm"
