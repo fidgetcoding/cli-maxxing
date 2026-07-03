@@ -921,7 +921,7 @@ W4W_EOF
         local rel_path="$1"
         local dest="$2"
         local tmp="$dest.tmp"
-        if curl -fsSL "$CONCISE_BASE_URL/$rel_path" -o "$tmp" 2>/dev/null && [ -s "$tmp" ]; then
+        if curl -fsSL --proto '=https' --proto-redir '=https' "$CONCISE_BASE_URL/$rel_path" -o "$tmp" 2>/dev/null && [ -s "$tmp" ]; then
             mv "$tmp" "$dest"
             return 0
         fi

@@ -109,7 +109,7 @@ install_gh() {
             # poison /usr/share/keyrings with an empty/truncated file.
             local keyring_tmp
             keyring_tmp="$(mktemp)" || { soft_fail "Could not create temp file"; return; }
-            if ! curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$keyring_tmp"; then
+            if ! curl -fsSL --proto '=https' --proto-redir '=https' https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$keyring_tmp"; then
                 rm -f "$keyring_tmp"
                 soft_fail "Failed to download GitHub CLI keyring"
                 return
@@ -283,7 +283,7 @@ install_gitfix() {
     fi
 
     GITFIX_TMP="$GITFIX_FILE.tmp"
-    if curl -fsSL "$GITFIX_URL" -o "$GITFIX_TMP" 2>/dev/null && [ -s "$GITFIX_TMP" ]; then
+    if curl -fsSL --proto '=https' --proto-redir '=https' "$GITFIX_URL" -o "$GITFIX_TMP" 2>/dev/null && [ -s "$GITFIX_TMP" ]; then
         mv "$GITFIX_TMP" "$GITFIX_FILE"
         success "/gitfix skill installed at $GITFIX_FILE"
         INSTALLED_GITFIX=true
@@ -320,7 +320,7 @@ install_recon() {
     fi
 
     RECON_TMP="$RECON_FILE.tmp"
-    if curl -fsSL "$RECON_URL" -o "$RECON_TMP" 2>/dev/null && [ -s "$RECON_TMP" ]; then
+    if curl -fsSL --proto '=https' --proto-redir '=https' "$RECON_URL" -o "$RECON_TMP" 2>/dev/null && [ -s "$RECON_TMP" ]; then
         mv "$RECON_TMP" "$RECON_FILE"
         success "/recon skill installed at $RECON_FILE"
         INSTALLED_RECON=true
@@ -357,7 +357,7 @@ install_osmani_build() {
     fi
 
     OSMANI_TMP="$OSMANI_FILE.tmp"
-    if curl -fsSL "$OSMANI_URL" -o "$OSMANI_TMP" 2>/dev/null && [ -s "$OSMANI_TMP" ]; then
+    if curl -fsSL --proto '=https' --proto-redir '=https' "$OSMANI_URL" -o "$OSMANI_TMP" 2>/dev/null && [ -s "$OSMANI_TMP" ]; then
         mv "$OSMANI_TMP" "$OSMANI_FILE"
         success "/osmani-build skill installed at $OSMANI_FILE"
     else

@@ -68,7 +68,7 @@ main() {
     # Step 1 — CLI Tools
     echo -e "${YELLOW}>>> Running Step 1 — CLI Tools${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-1/step-1-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-1/step-1-install.sh" | bash
     # Re-hydrate in case step-1 just installed brew/nvm for the first time and
     # the remaining curl|bash steps need them on PATH.
     source_runtime_path
@@ -77,49 +77,49 @@ main() {
     # Step 2 — Bonus Software (Ghostty + Arc, idempotent)
     echo -e "${YELLOW}>>> Running Step 2 — Bonus Software${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-2/step-2-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-2/step-2-install.sh" | bash
     echo ""
 
     # Step 3 — Developer & Utility Tools
     echo -e "${YELLOW}>>> Running Step 3 — Developer & Utility Tools${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-3/step-3-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-3/step-3-install.sh" | bash
     echo ""
 
     # Step 4 — refreshes fidgetflo/agentic-flow + skill files (/w4w, /concise, /fswarm*, /fmini*, /fhive)
     echo -e "${YELLOW}>>> Running Step 4 — FidgetFlo${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-4/step-4-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-4/step-4-install.sh" | bash
     echo ""
 
     # Step 5 (Productivity Tools)
     echo -e "${YELLOW}>>> Running Step 5 — Productivity Tools${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-5/step-5-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-5/step-5-install.sh" | bash
     echo ""
 
     # Step 6 (Telegram)
     echo -e "${YELLOW}>>> Running Step 6 — Telegram${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-6/step-6-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-6/step-6-install.sh" | bash
     echo ""
 
     # Step 7 (GitHub MCP + /gitfix + /recon)
     echo -e "${YELLOW}>>> Running Step 7 — GitHub${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-7/step-7-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-7/step-7-install.sh" | bash
     echo ""
 
     # Step 8 — refreshes /safetycheck skill
     echo -e "${YELLOW}>>> Running Step 8 — Safety Check${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-8/step-8-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-8/step-8-install.sh" | bash
     echo ""
 
     # Final Step (Status Line — wrap-up)
     echo -e "${YELLOW}>>> Running Final Step — Status Line${NC}"
     echo ""
-    curl -fsSL "$BASE_URL/step-final/step-final-install.sh" | bash
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-final/step-final-install.sh" | bash
     echo ""
 
     echo ""
