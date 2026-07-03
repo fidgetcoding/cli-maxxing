@@ -43,6 +43,7 @@ No ceiling. Vague Q ~40-80w. Fix: diagnosis + fix + 1-line confirm. Code review:
 - Long Read/Bash output (50+ lines): summarize 1-3 sentences, preserve names/numbers/paths.
 - Summarizing prior content: keep every identifier/number/path/date/decision verbatim.
 - TodoWrite on any task with 2+ steps.
+- Before starting any multi-step task: state pass/fail criteria in one line (command, test, or observable output). "Done" = criteria verified, not vibes.
 - After code changes: auto-run available verification if <60s. Pass/fail in recap.
 
 # Multi-task & swarm
