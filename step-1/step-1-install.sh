@@ -51,11 +51,13 @@ source_runtime_path() {
 
 # -----------------------------------------------------------------------------
 # 1. Detect OS + shell-config targets
-#    macOS Terminal.app launches zsh by default (since 10.15) even when the
-#    passwd shell is /bin/bash. Writing to BOTH zsh + bash config files is the
-#    same approach Homebrew's own installer recommends, and prevents the
-#    "command not found" trap when the passwd shell and the launched shell
-#    disagree. On Linux we keep single-shell behavior (login shell from getent).
+#    macOS Terminal.app launches the user's PASSWD shell as a LOGIN shell —
+#    zsh for accounts created since 10.15, but still bash for older accounts
+#    that never ran chsh. We write to BOTH shells' config files so either case
+#    works. Login-shell detail that bites bash users: login bash reads
+#    ~/.bash_profile and NOT ~/.bashrc, so install_claude_code() also bridges
+#    .bash_profile -> .bashrc. On Linux we keep single-shell behavior (login
+#    shell from getent).
 # -----------------------------------------------------------------------------
 detect_os() {
     case "$(uname -s)" in
@@ -199,38 +201,43 @@ install_homebrew() {
         # ensures the cached credential is fresh so sudo -n succeeds.
         NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-        # Pick the right brew prefix and eval it into THIS shell so subsequent
-        # install_git / install_node steps see `brew`.
-        local BREW_SHELLENV_LINE profile
+        # Eval brew into THIS shell so subsequent install_git / install_node
+        # steps see `brew`.
         if [ -f /opt/homebrew/bin/brew ]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
-            # shellcheck disable=SC2016
-            BREW_SHELLENV_LINE='eval "$(/opt/homebrew/bin/brew shellenv)"'
         elif [ -f /usr/local/bin/brew ]; then
             eval "$(/usr/local/bin/brew shellenv)"
-            # shellcheck disable=SC2016
-            BREW_SHELLENV_LINE='eval "$(/usr/local/bin/brew shellenv)"'
-        else
-            BREW_SHELLENV_LINE=""
-        fi
-
-        # Persist brew shellenv into ALL profile files (idempotent per file).
-        if [ -n "$BREW_SHELLENV_LINE" ]; then
-            for profile in "${SHELL_PROFILES[@]}"; do
-                [ -e "$profile" ] || touch "$profile"
-                if ! grep -q 'brew shellenv' "$profile" 2>/dev/null; then
-                    {
-                        echo ""
-                        echo '# Homebrew'
-                        echo "$BREW_SHELLENV_LINE"
-                    } >> "$profile"
-                    info "Added Homebrew shellenv to $profile"
-                fi
-            done
         fi
 
         command -v brew &>/dev/null || fail "Homebrew installation failed"
         success "Homebrew installed"
+    fi
+
+    # Persist brew shellenv into ALL profile files (idempotent per file).
+    # This must run on the already-installed path too: a pre-existing brew
+    # with no shellenv line in ~/.bash_profile is exactly how bash-login
+    # users end up with brew-prefixed tools (node, npm-global claude)
+    # missing from PATH in every new terminal window.
+    local BREW_SHELLENV_LINE="" profile
+    if [ -x /opt/homebrew/bin/brew ]; then
+        # shellcheck disable=SC2016
+        BREW_SHELLENV_LINE='eval "$(/opt/homebrew/bin/brew shellenv)"'
+    elif [ -x /usr/local/bin/brew ]; then
+        # shellcheck disable=SC2016
+        BREW_SHELLENV_LINE='eval "$(/usr/local/bin/brew shellenv)"'
+    fi
+    if [ -n "$BREW_SHELLENV_LINE" ]; then
+        for profile in "${SHELL_PROFILES[@]}"; do
+            [ -e "$profile" ] || touch "$profile"
+            if ! grep -q 'brew shellenv' "$profile" 2>/dev/null; then
+                {
+                    echo ""
+                    echo '# Homebrew'
+                    echo "$BREW_SHELLENV_LINE"
+                } >> "$profile"
+                info "Added Homebrew shellenv to $profile"
+            fi
+        done
     fi
 }
 
@@ -297,10 +304,14 @@ install_node() {
 
 # -----------------------------------------------------------------------------
 # 8. Claude Code + shell integrations
-#    Aliases and PATH live in RC files (interactive-shell config), NOT profile
-#    files. We loop across every RC in SHELL_RCS so both zsh + bash sessions
-#    on macOS see the shortcuts — fixes the Terminal.app-launches-zsh bug
-#    where the passwd shell is bash but Terminal actually runs zsh.
+#    Aliases and PATH live in RC files (interactive-shell config). We loop
+#    across every RC in SHELL_RCS so both zsh + bash sessions on macOS see the
+#    shortcuts. Because macOS Terminal runs the passwd shell as a LOGIN shell
+#    (which for bash skips ~/.bashrc entirely), we also bridge .bash_profile
+#    -> .bashrc, and we persist the directory claude ACTUALLY lives in — the
+#    script's own PATH is bootstrapped (brew shellenv + nvm sourced
+#    in-process), so `command -v claude` passing here proves nothing about the
+#    user's next terminal window.
 # -----------------------------------------------------------------------------
 install_claude_code() {
     if command -v claude &>/dev/null && claude --version &>/dev/null; then
@@ -341,6 +352,49 @@ install_claude_code() {
         fi
         success "Claude Code installed ($(claude --version 2>/dev/null))"
     fi
+
+    # Persist the directory claude ACTUALLY resolves to. When claude was
+    # npm-installed under nvm, its bin dir is ~/.nvm/versions/node/vX/bin —
+    # and nvm's own installer only writes init lines to ONE profile file
+    # (whichever it detected), so the other shell never finds claude. Mirror
+    # nvm init into every RC; for non-standard dirs, export PATH directly.
+    local claude_bin_dir rc
+    claude_bin_dir="$(dirname "$(command -v claude)")"
+    case "$claude_bin_dir" in
+        "$HOME/.nvm/"*)
+            for rc in "${SHELL_RCS[@]}"; do
+                [ -e "$rc" ] || touch "$rc"
+                if ! grep -q 'NVM_DIR' "$rc" 2>/dev/null; then
+                    {
+                        echo ""
+                        echo '# nvm — claude is installed under the nvm node bin'
+                        # shellcheck disable=SC2016
+                        echo 'export NVM_DIR="$HOME/.nvm"'
+                        # shellcheck disable=SC2016
+                        echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+                    } >> "$rc"
+                    success "Added nvm init to $rc (claude lives under nvm)"
+                fi
+            done
+            ;;
+        /opt/homebrew/bin|/usr/local/bin|/usr/bin|"$HOME/.local/bin")
+            # Covered by brew shellenv persistence, the system PATH, or the
+            # ~/.local/bin export below.
+            ;;
+        *)
+            for rc in "${SHELL_RCS[@]}"; do
+                [ -e "$rc" ] || touch "$rc"
+                if ! grep -qF "$claude_bin_dir" "$rc" 2>/dev/null; then
+                    {
+                        echo ""
+                        echo '# claude bin dir'
+                        echo "export PATH=\"$claude_bin_dir:\$PATH\""
+                    } >> "$rc"
+                    success "Added $claude_bin_dir to PATH in $rc"
+                fi
+            done
+            ;;
+    esac
 
     # Add Claude Code shortcuts to every RC file. Idempotent per-file — re-runs
     # fill gaps without duplicating. Also migrates the old `alias ctg=` line
@@ -399,6 +453,23 @@ install_claude_code() {
         fi
         total_aliases_added=$((total_aliases_added + aliases_added_here))
     done
+
+    # macOS: Terminal launches the passwd shell as a LOGIN shell. Login bash
+    # reads ~/.bash_profile and NOT ~/.bashrc — without this bridge, every
+    # alias and PATH line written above is invisible to a bash-default user
+    # in every new terminal window.
+    if [ "$OS" = "mac" ]; then
+        [ -e "$HOME/.bash_profile" ] || touch "$HOME/.bash_profile"
+        if ! grep -q 'bashrc' "$HOME/.bash_profile" 2>/dev/null; then
+            {
+                echo ""
+                echo '# Load .bashrc in login shells (macOS Terminal runs bash as a login shell)'
+                # shellcheck disable=SC2016
+                echo '[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"'
+            } >> "$HOME/.bash_profile"
+            success "Added .bashrc bridge to ~/.bash_profile (bash login shells load RC config)"
+        fi
+    fi
 
     # Install ctg command (Telegram + skip-permissions, any directory)
     info "Installing ctg command to ~/.local/bin..."
@@ -481,6 +552,25 @@ run_self_test() {
         TEST_PASS=$((TEST_PASS + 1))
     else
         soft_fail "TEST: claude — not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
+    # Fresh-login-shell check. Every test above runs inside this script's
+    # bootstrapped PATH (brew shellenv + nvm sourced in-process), which only
+    # proves claude exists on disk — not that a NEW terminal window will find
+    # it. env -i strips the inherited environment so the shell has to resolve
+    # claude purely from the startup files we just wrote. We simulate the
+    # user's ACTUAL passwd shell as an interactive login shell (-ilc), which
+    # is what a new Terminal/Ghostty window really launches.
+    local user_shell login_claude=""
+    user_shell="${SHELL:-/bin/bash}"
+    [ -x "$user_shell" ] || user_shell="/bin/bash"
+    login_claude="$(env -i HOME="$HOME" USER="$USER" TERM=dumb "$user_shell" -ilc 'command -v claude' 2>/dev/null </dev/null | tail -1)"
+    if [ -n "$login_claude" ]; then
+        success "TEST: claude resolves in a fresh $user_shell login shell ($login_claude)"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: claude NOT found in a fresh $user_shell login shell — a new terminal window will hit 'command not found'. Re-run this installer so it can repair PATH persistence, then open a new terminal and run 'claude --version'"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 

@@ -926,7 +926,9 @@ W4W_EOF
     CONCISE_BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/concise-skill"
     mkdir -p "$CONCISE_REF_DIR"
 
-    SCRIPT_DIR_CONCISE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    # ${BASH_SOURCE[0]:-$0}: BASH_SOURCE is unset under `curl | bash` and
+    # this script runs with set -u — the bare form aborts the subshell.
+    SCRIPT_DIR_CONCISE="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
     LOCAL_CONCISE_DIR="$(dirname "$SCRIPT_DIR_CONCISE")/concise-skill"
 
     download_concise_file() {

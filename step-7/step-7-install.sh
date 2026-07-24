@@ -290,7 +290,7 @@ install_gitfix() {
     else
         rm -f "$GITFIX_TMP"
         warn "Download failed — attempting local fallback..."
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
         LOCAL_GITFIX="$(dirname "$SCRIPT_DIR")/gitfix-skill/SKILL.md"
         if [ -f "$LOCAL_GITFIX" ]; then
             cp "$LOCAL_GITFIX" "$GITFIX_FILE"
@@ -327,7 +327,7 @@ install_recon() {
     else
         rm -f "$RECON_TMP"
         warn "Download failed — attempting local fallback..."
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
         LOCAL_RECON="$(dirname "$SCRIPT_DIR")/recon-skill/SKILL.md"
         if [ -f "$LOCAL_RECON" ]; then
             cp "$LOCAL_RECON" "$RECON_FILE"
@@ -363,7 +363,7 @@ install_osmani_build() {
     else
         rm -f "$OSMANI_TMP"
         warn "Download failed — attempting local fallback..."
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
         LOCAL_OSMANI="$(dirname "$SCRIPT_DIR")/osmani-build-skill/SKILL.md"
         if [ -f "$LOCAL_OSMANI" ]; then
             cp "$LOCAL_OSMANI" "$OSMANI_FILE"
