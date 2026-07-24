@@ -279,10 +279,12 @@ These are available in your terminal after Step 4 installs the FidgetFlo CLI.
 
 ## Reset PATH (stuck install)
 
-If you ran the installer, opened a fresh terminal, and `claude --version` still says "command not found" — your `~/.zshrc` is probably missing the lines that wire Homebrew, nvm, `~/.local/bin`, and the cli-maxxing aliases together. Paste the block below verbatim into your terminal — it creates `~/.zshrc` if it doesn't exist, appends the four things that need to be on PATH, then sources it and verifies `claude` works.
+If you ran the installer, opened a fresh terminal, and `claude --version` still says "command not found" — your `~/.zshrc` is probably missing the lines that wire Homebrew, nvm, `~/.local/bin`, and the cli-maxxing aliases together. Paste the block below verbatim into your terminal — it appends the four things that need to be on PATH (creating `~/.zshrc` if it doesn't exist), then sources it and verifies `claude` works. Your existing `~/.zshrc` content is untouched.
 
 ```bash
-cat > ~/.zshrc <<'EOF'
+cat >> ~/.zshrc <<'EOF'
+
+# --- cli-maxxing reset-path block ---
 # Homebrew (Apple Silicon default; also works on Intel via brew --prefix)
 if [ -x /opt/homebrew/bin/brew ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -311,7 +313,13 @@ claude --version
 
 **What to expect:** `claude --version` should print something like `2.1.112 (Claude Code)`. If it does, you're unstuck — close this terminal, open a fresh one, and continue from where you left off. If it still errors, the issue is upstream of PATH (Claude Code itself didn't install, or Node is broken) — paste the error into a `cskip` session and Claude can diagnose.
 
-> **Using bash instead of zsh?** Swap `~/.zshrc` for `~/.bashrc` in the block above. Everything else is identical.
+> **Using bash instead of zsh?** (Your terminal saying *"The default interactive shell is now zsh"* means yes.) Swap `~/.zshrc` for `~/.bashrc` in the block above, then run this once — macOS opens bash as a login shell, which skips `~/.bashrc` unless `~/.bash_profile` loads it:
+>
+> ```bash
+> printf '\n[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"\n' >> ~/.bash_profile
+> ```
+>
+> Or skip all of that and switch your account to zsh: `chsh -s /bin/zsh`, then fully quit and reopen the terminal.
 
 ---
 

@@ -206,7 +206,7 @@ Open Terminal: **Cmd+Space → "Terminal"** on Mac, or **Ctrl+Alt+T** on Linux.
 ### After the script finishes
 
 1. **Close this terminal and open a new one.** Homebrew, nvm, and the new aliases only load in a fresh shell. `claude` won't be on your PATH until you restart.
-2. **Run `claude --version`** — you should see something like `2.1.112 (Claude Code)`. If you get "command not found," try `source ~/.zshrc` (or `~/.bashrc`). Still stuck? See [Troubleshooting](#troubleshooting).
+2. **Run `claude --version`** — you should see something like `2.1.112 (Claude Code)`. If you get "command not found," see [Troubleshooting](#troubleshooting). One clue worth checking first: if the top of your terminal says *"The default interactive shell is now zsh,"* your account is still on bash — run `chsh -s /bin/zsh`, fully quit the terminal (Cmd+Q), and reopen. (`source ~/.zshrc` only patches the window you run it in. New windows won't inherit it.)
 3. **Press Ctrl+C to exit Claude, then run `cskip`** — this starts Claude in auto-approve mode (no permission prompts), the recommended way to run the rest of the setup.
 
 > **Shift+Tab** toggles between permission-asking mode and auto-approve mode inside any running Claude session — no need to restart.
@@ -711,6 +711,14 @@ The installer adds Homebrew, nvm, and the shell aliases to your config — but t
    ```
    You should see something like `2.1.112 (Claude Code)`.
 
+**Does the top of your terminal say "The default interactive shell is now zsh"?** That banner is the tell: your Mac account still runs **bash**, which reads different config files than zsh. Fix it once:
+
+```bash
+chsh -s /bin/zsh
+```
+
+Enter your password, then fully quit the terminal (Cmd+Q) and reopen. `chsh` only affects new windows — the window you ran it in stays bash and will keep saying "command not found." Then re-run the installer; it's idempotent and repairs PATH for whichever shell you're on. (Installs from before 2026-07-24 wrote config only where zsh could see it, so bash accounts hit "command not found" in every new window no matter how many times they reinstalled. Fixed — but you need one re-run to pick it up.)
+
 **Still missing?** Paste the **Reset PATH (stuck install)** block from [CHEATSHEET.md](CHEATSHEET.md#reset-path-stuck-install) — it rewires `~/.zshrc` with Homebrew, nvm, `~/.local/bin`, and the four aliases in one shot.
 
 ### Some steps say "Homebrew not found" during install
@@ -725,23 +733,25 @@ bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/mai
 
 It's idempotent — anything already installed gets skipped.
 
-### I see the zsh/bash shell prompt change after install
+### My terminal says "The default interactive shell is now zsh"
 
-Modern macOS defaults to zsh even if `/etc/passwd` still says bash (Terminal.app overrides passwd with its "default login shell" preference). You may notice your prompt looks different after a fresh terminal.
+That banner means your Mac account still uses **bash** as its login shell. Terminal and Ghostty launch whatever shell your account is set to (they don't override it), so every new window is bash — and login bash reads `~/.bash_profile`, not `~/.bashrc` or `~/.zshrc`.
 
-**Check which shell you're actually in:**
+**Check which shell you're in:**
 
 ```bash
 echo $SHELL
 ```
 
-**Want your passwd entry to match Terminal.app?** (Optional — everything works either way.)
+**Recommended: switch to zsh** (the macOS default since 2019):
 
 ```bash
 chsh -s /bin/zsh
 ```
 
-The installer writes to both `~/.zshrc` and `~/.bashrc` so the aliases work in either shell.
+Enter your password, then **fully quit the terminal (Cmd+Q) and reopen**. `chsh` only affects new windows — the one you ran it in stays bash.
+
+Staying on bash also works: the installer writes to `~/.zshrc` and `~/.bashrc`, and bridges `~/.bash_profile` to `~/.bashrc` so login shells load everything. If your install predates 2026-07-24, re-run the installer once to pick up that bridge.
 
 ### xlsx2csv failed to install
 
