@@ -176,7 +176,7 @@ install_skill() {
         warn "Download failed — attempting fallback install..."
         # Fallback: if the download fails (e.g., repo not yet public),
         # check if the script was run from the CLI-MAXXING repo itself
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
         LOCAL_SKILL="$SCRIPT_DIR/safetycheck-skill/SKILL.md"
 
         if [ -f "$LOCAL_SKILL" ] && [ -s "$LOCAL_SKILL" ]; then
