@@ -3,7 +3,8 @@ set -uo pipefail
 
 # =============================================================================
 # Step 3 — Developer & Utility Tools
-# Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, tree, fzf, wget, weasyprint
+# Installs: Python, Pandoc, xlsx2csv, pdftotext, jq, ripgrep, tree, fzf, wget, weasyprint,
+#           hyperresearch (pinned to Python 3.11-3.13 — see install_hyperresearch)
 # GitHub CLI (gh) is installed by Step 7 alongside the GitHub MCP + /gitfix skill.
 # Run this in your terminal after completing Step 2
 # Usage: curl -fsSL <hosted-url>/step-3/step-3-install.sh | bash
@@ -423,6 +424,89 @@ install_weasyprint() {
 }
 
 # -----------------------------------------------------------------------------
+# Install hyperresearch — deep-research pipeline for Claude Code
+# Upstream: jordan-gibbs/hyperresearch (MIT), on PyPI as `hyperresearch`.
+#
+# A 16-step tier-adaptive research pipeline: decompose the question, sweep for
+# sources, build a contradiction graph, investigate the places where evidence
+# actually forks, then run four adversarial critics over the draft before it
+# ships. Installs the CLI plus its skills and agents under ~/.claude/.
+#
+# THE PYTHON PIN IS THE WHOLE POINT OF THIS FUNCTION.
+#
+# hyperresearch declares requires-python >=3.11,<3.14. A plain
+# `pipx install hyperresearch` uses whatever interpreter pipx defaults to,
+# which on current Homebrew is 3.14 — and pipx installs it ANYWAY with only
+# a warning. Nothing fails at install time. It fails later, at fetch time,
+# because crawl4ai (the actual fetcher) is broken on 3.14. The symptom shows
+# up hours later and reads like a broken tool rather than a bad install.
+#
+# So: find a 3.13/3.12/3.11 interpreter and pin to it. If there isn't one,
+# do NOT install a broken copy — point at `brew install python@3.13` instead.
+# -----------------------------------------------------------------------------
+install_hyperresearch() {
+    if command -v hyperresearch &>/dev/null; then
+        success "hyperresearch already installed ($(hyperresearch --version 2>/dev/null | head -1))"
+        return
+    fi
+
+    if ! command -v pipx &>/dev/null; then
+        info "Installing pipx (needed for hyperresearch)..."
+        if [ "$OS" = "mac" ]; then
+            brew install pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
+        elif command -v apt-get &>/dev/null; then
+            sudo apt-get install -y -qq pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
+        else
+            python3 -m pip install --user pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
+        fi
+        pipx ensurepath >/dev/null 2>&1 || true
+    fi
+
+    # Resolve a supported interpreter: 3.13 preferred, then 3.12, then 3.11.
+    HR_PY=""
+    for _cand in python3.13 python3.12 python3.11; do
+        if command -v "$_cand" &>/dev/null; then
+            HR_PY="$(command -v "$_cand")"
+            break
+        fi
+    done
+
+    if [ -z "$HR_PY" ]; then
+        warn "hyperresearch needs Python 3.11-3.13 (requires-python >=3.11,<3.14)."
+        warn "  pipx would default to 3.14, install anyway with only a warning, and then"
+        warn "  fail at FETCH time where crawl4ai is broken. Not installing a broken copy."
+        if [ "$OS" = "mac" ]; then
+            warn "  Fix:  brew install python@3.13   then re-run Step 3."
+        else
+            warn "  Fix:  install python3.13 (or 3.12/3.11), then re-run Step 3."
+        fi
+        soft_fail "hyperresearch skipped — no supported Python found"
+        return
+    fi
+
+    info "Installing hyperresearch (pinned to $("$HR_PY" --version 2>&1))..."
+    if ! pipx install --python "$HR_PY" hyperresearch >/dev/null 2>&1; then
+        soft_fail "hyperresearch installation failed"
+        return
+    fi
+
+    if command -v hyperresearch &>/dev/null; then
+        success "hyperresearch installed ($HR_PY)"
+    elif [ -x "$HOME/.local/bin/hyperresearch" ]; then
+        success "hyperresearch installed at ~/.local/bin/hyperresearch"
+        info "  Not on PATH yet — open a new shell, or run: pipx ensurepath"
+    else
+        soft_fail "hyperresearch installed but the binary could not be located"
+        return
+    fi
+
+    info "  Next: run 'hyperresearch install --global' to wire up the skills + agents,"
+    info "        then '/hypersearch <question>' inside Claude Code."
+}
+
+# -----------------------------------------------------------------------------
 # Self-test
 # -----------------------------------------------------------------------------
 run_self_test() {
@@ -662,7 +746,7 @@ main() {
     echo ""
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BLUE}  Step 3 — Developer & Utility Tools${NC}"
-    echo -e "${BLUE}  10 tools • macOS + Linux${NC}"
+    echo -e "${BLUE}  11 tools • macOS + Linux${NC}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 
@@ -679,6 +763,7 @@ main() {
     install_fzf
     install_wget
     install_weasyprint
+    install_hyperresearch
     configure_memory_hook
     configure_no_flicker
     run_self_test
