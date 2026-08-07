@@ -30,6 +30,7 @@ INSTALLED_GH=false
 INSTALLED_GITHUB=false
 INSTALLED_GITFIX=false
 INSTALLED_RECON=false
+INSTALLED_VBC=false
 
 # -----------------------------------------------------------------------------
 # Ensure runtime PATH (brew, nvm, ~/.local/bin) is visible.
@@ -170,10 +171,11 @@ choose_tools() {
             echo ""
             echo "    bash <(curl -fsSL https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-7/step-7-install.sh)"
             echo ""
-            info "Continuing with non-interactive /gitfix + /recon + /osmani-build install..."
+            info "Continuing with non-interactive /gitfix + /recon + /osmani-build + /verify-before-claim install..."
             install_gitfix
             install_recon
             install_osmani_build
+            install_verify_before_claim
             run_self_test
             print_summary
             exit 0
@@ -340,6 +342,63 @@ install_recon() {
 }
 
 # -----------------------------------------------------------------------------
+# Install /verify-before-claim skill — look-don't-guess gate.
+#
+# Fires before answering anything about installed MCP servers, subscription
+# pricing, or which AI models exist. Those three question classes are where an
+# assistant is most confidently wrong: the answer is cheap to look up and
+# expensive to get wrong, so it should never come from memory. Ships with a
+# 5-claim adversarial test suite where a correct verdict WITHOUT a cited
+# source counts as a failure.
+#
+# Has a references/ directory, so this one copies a tree rather than a single
+# SKILL.md — hence the per-file fetch with a local directory fallback.
+# -----------------------------------------------------------------------------
+install_verify_before_claim() {
+    VBC_DIR="$HOME/.claude/skills/verify-before-claim"
+    VBC_FILE="$VBC_DIR/SKILL.md"
+    VBC_REF_DIR="$VBC_DIR/references"
+    VBC_BASE="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/verify-before-claim-skill"
+
+    mkdir -p "$VBC_REF_DIR"
+
+    if [ -f "$VBC_FILE" ]; then
+        info "Updating existing /verify-before-claim skill..."
+    else
+        info "Installing /verify-before-claim skill..."
+    fi
+
+    VBC_OK=false
+    VBC_TMP="$VBC_FILE.tmp"
+    if curl -fsSL --proto '=https' --proto-redir '=https' "$VBC_BASE/SKILL.md" -o "$VBC_TMP" 2>/dev/null && [ -s "$VBC_TMP" ]; then
+        mv "$VBC_TMP" "$VBC_FILE"
+        # references/test-claims.md is part of the contract — the skill tells
+        # you to re-run it after any edit, so a missing file is a broken skill.
+        curl -fsSL --proto '=https' --proto-redir '=https' \
+            "$VBC_BASE/references/test-claims.md" -o "$VBC_REF_DIR/test-claims.md" 2>/dev/null || \
+            warn "/verify-before-claim: test suite did not download (skill still works)"
+        VBC_OK=true
+    else
+        rm -f "$VBC_TMP"
+        warn "Download failed — attempting local fallback..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
+        LOCAL_VBC="$(dirname "$SCRIPT_DIR")/verify-before-claim-skill"
+        if [ -f "$LOCAL_VBC/SKILL.md" ]; then
+            cp "$LOCAL_VBC/SKILL.md" "$VBC_FILE"
+            [ -d "$LOCAL_VBC/references" ] && cp -R "$LOCAL_VBC/references/." "$VBC_REF_DIR/"
+            VBC_OK=true
+        fi
+    fi
+
+    if [ "$VBC_OK" = true ]; then
+        success "/verify-before-claim skill installed at $VBC_FILE"
+        INSTALLED_VBC=true
+    else
+        soft_fail "Could not install /verify-before-claim skill — download and local fallback both failed"
+    fi
+}
+
+# -----------------------------------------------------------------------------
 # Install /osmani-build skill — phase-gated product-build lifecycle.
 # Orchestrates the addyosmani/agent-skills plugin (installed best-effort below).
 # -----------------------------------------------------------------------------
@@ -454,6 +513,14 @@ run_self_test() {
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
+    if $INSTALLED_VBC; then
+        success "TEST: /verify-before-claim skill installed"
+        TEST_PASS=$((TEST_PASS + 1))
+    else
+        soft_fail "TEST: /verify-before-claim skill not found"
+        TEST_FAIL=$((TEST_FAIL + 1))
+    fi
+
     echo ""
     if [ "$TEST_FAIL" -eq 0 ]; then
         echo -e "  ${GREEN}All $TEST_PASS tests passed.${NC} ($TEST_SKIP skipped)"
@@ -485,6 +552,10 @@ print_summary() {
     fi
     if $INSTALLED_RECON; then
         echo "  /recon — pre-build prior-art sweep: ranks competitors, finds the edge before you build"
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+    fi
+    if $INSTALLED_VBC; then
+        echo "  /verify-before-claim — checks config and billing before answering, instead of guessing"
         INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
     fi
 
@@ -547,6 +618,7 @@ main() {
     install_gitfix
     install_recon
     install_osmani_build
+    install_verify_before_claim
 
     run_self_test
     print_summary

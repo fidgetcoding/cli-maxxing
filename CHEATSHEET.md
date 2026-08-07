@@ -17,6 +17,8 @@ The commands I reach for most. Full reference below.
 | `/safetycheck` | Security audit — scans for exposed keys, injection vectors, supply-chain risks |
 | `/gitfix` | Full repo sync — reads every file, fixes doc drift, makes reality match the README |
 | `/recon <thing>` | Pre-build prior-art sweep — ranks competitors, finds the edge, GREEN/YELLOW/RED verdict before you build |
+| `/verify-before-claim` | Check config + billing before answering — MCPs installed, what a plan costs, whether a model is real |
+| `/hypersearch <question>` | Deep research — multi-step source sweep with adversarial critics (needs `hyperresearch`, Step 3) |
 | `/osmani-build` | Phase-gated product-build lifecycle (define → plan → build → verify → review → ship) orchestrating the [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) plugin — offers itself when you start building a real product |
 | `/save` | Capture a conversation into your 2ndBrain vault *(requires [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging))* |
 

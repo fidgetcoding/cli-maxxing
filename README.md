@@ -338,10 +338,30 @@ Claude runs the install. If it asks you to restart your terminal, close the wind
 | ripgrep | Fast code search — Claude Code uses it internally. |
 | tree | Shows your folder structure visually. |
 | fzf | Fuzzy-finder for files and commands. |
+| hyperresearch | Deep-research pipeline for Claude Code — decomposes a question, sweeps for sources, maps where the evidence contradicts itself, then runs adversarial critics over the draft. Pinned to Python 3.11–3.13 (see note below). |
 | wget | Downloads files from the web. |
 | weasyprint | Converts HTML to PDF (Claude uses this to generate docs). |
 | No-flicker mode | Fullscreen rendering in Claude Code — screen stops jumping while Claude works. Scroll speed set to 3. |
 | Memory auto-save hook | Claude auto-saves important context when a session ends, so it remembers across sessions. |
+
+<details>
+<summary><strong>hyperresearch — the Python pin, and why it matters</strong></summary>
+
+`hyperresearch` declares `requires-python >=3.11,<3.14`. A plain `pipx install hyperresearch` uses whatever interpreter pipx defaults to — on current Homebrew that's **3.14** — and pipx **installs it anyway with only a warning**.
+
+That's the trap. Nothing fails during install. It fails hours later, at *fetch* time, because `crawl4ai` (the component that actually retrieves sources) is broken on 3.14. The symptom looks like a broken tool rather than a bad install, which is a miserable thing to debug.
+
+So Step 3 resolves `python3.13` → `python3.12` → `python3.11` and pins to the first one it finds. If none exists it **refuses to install a broken copy** and tells you to run `brew install python@3.13` first.
+
+After Step 3, wire up the skills and agents:
+
+```bash
+hyperresearch install --global
+```
+
+Then ask a research question in Claude Code with `/hypersearch <question>`. Runs scale with the question — a bounded lookup finishes in well under an hour; a full argumentative sweep reads 55–130 sources and bills real tokens, so it's worth knowing which one you asked for.
+
+</details>
 
 <details>
 <summary><strong>No-flicker mode details</strong></summary>
@@ -577,6 +597,7 @@ Script prompts for your PAT, registers the GitHub MCP (token stored in `~/.claud
 | GitHub MCP | Exposes GitHub API ops as Claude tools — read/write repos, issues, PRs, code search, branches, commits. Needs a Personal Access Token. |
 | `/gitfix` skill | Full-repo doc sync. Fixes drift between code and docs. Works on any repo, no token needed. |
 | `/recon` skill | Pre-build prior-art sweep. Ranks existing free + paid competitors, finds the edge, GREEN/YELLOW/RED verdict. Auto-offers on build-intent. No token needed. |
+| `/verify-before-claim` skill | Look-don't-guess gate for three question classes where an assistant is most confidently wrong: which MCP servers are installed, what a subscription actually costs, and whether a model name is real. Reads your actual config and live billing instead of answering from memory, and says `unverified:` plainly when it can't check. Ships a 5-claim adversarial test suite where a *correct verdict with no cited source* still counts as a failure. No token needed. |
 
 ### After Step 7
 
