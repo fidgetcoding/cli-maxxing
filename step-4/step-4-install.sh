@@ -1021,7 +1021,7 @@ Each bullet ≤ ~12 words. If one runs long, it's two facts → split. A dense p
 
 ## Boundaries
 
-This is chat/handoff formatting, not a copy deliverable — `/copywriting` does not apply. Nate overrides still hold: "Nate" never "Nathan", absolute paths, EST timestamps, no UTC.
+This is chat/handoff formatting, not a copy deliverable — `/copywriting` does not apply. Your operator overrides still hold: name/spelling rules, absolute paths, your timezone convention.
 BULLETS_EOF
     success "Bullets skill (/bullets) installed"
 

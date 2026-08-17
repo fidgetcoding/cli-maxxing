@@ -27,3 +27,6 @@ credentials.json
 
 # Node (defensive — step scripts may install deps)
 node_modules/
+
+# Private PII marker list for scripts/check-pii.sh — never commit.
+.pii-patterns.local

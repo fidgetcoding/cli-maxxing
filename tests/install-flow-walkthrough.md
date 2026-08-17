@@ -2,7 +2,7 @@
 
 > **Note:** This walkthrough covers Steps 1, 2, 3, 5, 6, 8, and Final. Steps 4 (FidgetFlo) and 7 (GitHub) are present in the repo but not included in this regression test.
 
-**Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/BRAIN2`, no Telegram bot token, standard macOS, Homebrew either present or absent.
+**Test scenario:** Fresh Mac, username `testuser`, vault at `~/Desktop/MyVault`, no Telegram bot token, standard macOS, Homebrew either present or absent.
 
 **Test date:** 2026-04-20
 
@@ -65,7 +65,7 @@
 **Old code:** `grep -qiE "OBSIDIAN/(2ndBrain|MASTER)"`
 **Current code:** Primary check via `~/.claude/.mogging-vault` marker; fallback `grep -qiE "OBSIDIAN/(2ndBrain|MASTER)|/BRAIN2?(/|$)"`
 
-The `OBSIDIAN/` prefix requirement has been removed. The script first reads the vault path from the marker file written by 2ndBrain-mogging's installer; the regex fallback catches legacy vault names. The vault at `~/Desktop/BRAIN2` will correctly trigger the brain indicator.
+The `OBSIDIAN/` prefix requirement has been removed. The script first reads the vault path from the marker file written by 2ndBrain-mogging's installer; the regex fallback catches legacy vault names. The vault at `~/Desktop/MyVault` will correctly trigger the brain indicator.
 
 **Verified in:**
 - `step-final/step-final-install.sh` (statusline install)
@@ -204,4 +204,4 @@ The `while true` loop has been replaced with a single `read` call. Empty input (
 
 ### Test Verdict
 
-**ALL CRITICAL AND MEDIUM BUGS RESOLVED.** The install flow will complete successfully on a fresh Mac (username: `testuser`, vault at `~/Desktop/BRAIN2`, no Telegram token) with no hangs, no missing indicators, and correct vault detection.
+**ALL CRITICAL AND MEDIUM BUGS RESOLVED.** The install flow will complete successfully on a fresh Mac (username: `testuser`, vault at `~/Desktop/MyVault`, no Telegram token) with no hangs, no missing indicators, and correct vault detection.

@@ -1,6 +1,6 @@
 ---
 name: pdf
-description: "Render a markdown file to PDF with Nate's house style — one header only (drops body H1, frontmatter `title:` is canonical), strips Purpose / Internal notes / Sources sections by default. Opt back in with --keep-notes / --keep-sources. Uses pandoc + weasyprint via the bundled render-pdf.sh. Invoke when the user asks to render, generate, export, make, or turn a markdown doc into a PDF."
+description: "Render a markdown file to PDF with a consistent house style — one header only (drops body H1, frontmatter `title:` is canonical), strips Purpose / Internal notes / Sources sections by default. Opt back in with --keep-notes / --keep-sources. Uses pandoc + weasyprint via the bundled render-pdf.sh. Invoke when the user asks to render, generate, export, make, or turn a markdown doc into a PDF."
 user_invocable: true
 ---
 
@@ -20,7 +20,7 @@ Invoke this skill when the user says any of:
 
 Or when the user explicitly asks to ship a markdown file as a partner-/leadership-facing PDF.
 
-**Do NOT** call pandoc directly for Nate-facing PDFs unless this skill genuinely can't handle the case (escalate first).
+**Do NOT** call pandoc directly for user-facing PDFs unless this skill genuinely can't handle the case (escalate first).
 
 ## The four rules (always enforced by default)
 
@@ -64,7 +64,7 @@ Default output path: `<input>.pdf` next to the source.
 | `--keep-notes` | The doc is a personal reference / internal campaign summary where the "Internal notes" block is part of the value of the PDF itself (rare). |
 | `--keep-sources` | The doc is a research artifact where citations are load-bearing. Also rare. |
 
-If unsure, **don't pass them** — default behavior matches Nate's house style. He'll tell you to keep them when needed.
+If unsure, **don't pass them** — default behavior matches the house style. The user will tell you to keep them when needed.
 
 ## Engine + style
 
@@ -79,11 +79,11 @@ If unsure, **don't pass them** — default behavior matches Nate's house style. 
 
 ## Why these rules exist
 
-PDFs are shareable artifacts (partners, leadership, external counterparts). The markdown is the vault note — keeps full context. The PDF is what gets sent. Internal notes leak intent, Purpose sections look amateur, double headers look unpolished. Recurring failure mode caught 2026-05-11 when stacked frontmatter+body titles shipped in CLIENT-A sandbox PDFs.
+PDFs are shareable artifacts (partners, leadership, external counterparts). The markdown is the vault note — keeps full context. The PDF is what gets sent. Internal notes leak intent, Purpose sections look amateur, double headers look unpolished. Recurring failure mode: stacked frontmatter+body titles shipping in client-facing PDFs.
 
 ## Failure modes / escalation
 
-- **Missing pandoc or weasyprint.** Tell Nate to `brew install pandoc weasyprint`.
+- **Missing pandoc or weasyprint.** Tell the user to `brew install pandoc weasyprint`.
 - **Source file not found.** Surface the path back to him — usually a typo.
 - **Edge case the awk filter doesn't catch** (e.g., a Purpose block disguised as an H3, or a "Notes" section that should be kept). Render once, show him the PDF, ask if any section needs surgery before re-rendering.
 

@@ -3,8 +3,8 @@
 # On landing-page intent phrasing, inject a reminder to invoke the landing-ab skill
 # (self-driving landing page ladder: signup-cta tag, PostHog, flags, LP-OPS.md).
 # Silent on everything else.
-# Companion to ~/.claude/skills/landing-ab/SKILL.md and the vault source note
-# 02-Sources/SRC-2026-07-03-self-driving-landing-page.md (Angus Sewell field guide).
+# Companion to ~/.claude/skills/landing-ab/SKILL.md, which is built from Angus
+# Sewell's self-driving landing page field guide (2026-07-03).
 
 PROMPT=$(jq -r '.prompt // empty' 2>/dev/null)
 [ -z "$PROMPT" ] && exit 0

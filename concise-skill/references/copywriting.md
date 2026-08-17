@@ -1,6 +1,6 @@
 # Copywriting carve-out — full reference
 
-**Principle:** the concise skill suspends when the deliverable will be read by a human audience, not by Nate-as-operator. If the output's purpose is to land with people (persuade, entertain, inform, convert, narrate), it's copywriting.
+**Principle:** the concise skill suspends when the deliverable will be read by a human audience, not by you-as-operator. If the output's purpose is to land with people (persuade, entertain, inform, convert, narrate), it's copywriting.
 
 ## Trigger surfaces (illustrative, not exhaustive)
 
@@ -38,7 +38,7 @@
 - "In 280 chars", "one-liner", "two sentences for the homepage"
 
 **Project-bound deliverables (any output for these surfaces is copywriting by default):**
-CLIENT-ORG (client work, pitches, proposals, decks), FIDGETCODING (scripts, content, branding), CLIENT-A (posts, drafts, scripts), CLIENT-B (creative work, campaigns), CLIENT-C, CLIENT-D, PROJECT-A, PROJECT-B, WAGMI, PROJECT-C, POETRY, PROJECT-D.
+List your own client-facing and brand-facing projects here — agency/client work (pitches, proposals, decks), content brands (scripts, content, branding), and creative projects (campaigns, releases). Anything on that list defaults to copy mode.
 
 **Internal team comms with voice:**
 Announcements, hype posts, kickoffs.
@@ -53,22 +53,22 @@ Announcements, hype posts, kickoffs.
 
 ## What still applies in copy mode
 
-- Never "Nathan" in any output.
-- No `Co-Authored-By: claude-flow <ruv@ruv.net>` in commits.
-- No identity jokes (Jewish/sobriety/poetry per `feedback_no_identity_jokes_content`).
-- No dev jargon in user-facing humor (per `feedback_no_dev_jargon_in_readme_jokes`).
+- Your name/spelling rules, whatever you've set them to.
+- No stray `Co-Authored-By` trailers in commits.
+- No identity jokes.
+- No dev jargon in user-facing humor.
 - Absolute paths if any appear.
-- No UTC timestamps if any appear.
+- Your timezone convention if any timestamps appear.
 
 ## Edge cases
 
-- "Summarize this article" → CHAT (information delivery to Nate). Concise mode stays on.
+- "Summarize this article" → CHAT (information delivery to you). Concise mode stays on.
 - "Summarize this for the tweet" → COPYWRITING. Suspend.
 - "Explain X" → CHAT. Always.
 - "Make this sound better" → COPYWRITING.
 - "Rewrite this function" → CHAT (code, not prose).
 - "Rewrite this paragraph" → COPYWRITING.
 
-**Tiebreaker:** if the output artifact will be read by humans-as-audience (not Nate-as-operator), it's copywriting.
+**Tiebreaker:** if the output artifact will be read by humans-as-audience (not you-as-operator), it's copywriting.
 
 **When in doubt:** stay in concise mode, ask one clarifying line. Better to under-suspend than over-suspend.

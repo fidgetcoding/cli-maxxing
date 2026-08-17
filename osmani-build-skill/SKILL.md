@@ -2,7 +2,7 @@
 name: osmani-build
 description: >
   Product-build lifecycle gate over the addy-agent-skills plugin (addyosmani/agent-skills — 24 phase
-  skills: define → plan → build → verify → review → ship). Fires on PRODUCT build-intent: Nate starts
+  skills: define → plan → build → verify → review → ship). Fires on PRODUCT build-intent: the user starts
   building out a real tool, app, webapp, CLI, MCP server, API, bot, or skill — NOT creative ideation,
   content work, one-off scripts, or vault notes. On build-intent, OFFER one line (combined with the
   /recon offer) — do NOT auto-run. Greenfield → enter at Define. Build already started → NEVER
@@ -17,7 +17,7 @@ allowed-tools: Skill, Bash, Read, Grep, Task, Agent
 # osmani-build — phase-gated product builds
 
 Thin orchestrator. The addy plugin skills do the actual work; this skill decides WHICH of the 24
-fire, in what order, with Nate's house rules overriding addy's defaults. Born 2026-07-02, same day
+fire, in what order, with your house rules overriding addy's defaults. Born 2026-07-02, same day
 the plugin landed (`reference_addy_agent_skills_plugin.md`).
 
 ## When this fires — OFFER, never auto-run
@@ -30,7 +30,7 @@ On product build-intent, ask ONE line combined with the /recon offer, then wait:
   skill intended for real use.
 - NOT build-intent: creative ideation, content/copy work, one-off scripts, vault/note work, small
   refactors. (A refactor heading toward a ship can still get `/osmani-build verify` — offer only when
-  Nate signals shipping intent.)
+  the user signals shipping intent.)
 - Explicit `/osmani-build` invocation skips the offer.
 - "Neither" is always a fine answer. The offer is the contract; the run is optional.
 
@@ -45,7 +45,7 @@ First move: figure out where the project IS. Look, don't guess — check the dir
 | Mid-build | working code exists | Build or Verify — ask one line |
 | Built | feature-complete, unshipped | Verify → Review → Ship |
 
-HARD RULE (Nate, 2026-07-02): if building already started, NEVER walk backwards into Define/Plan
+HARD RULE: if building already started, NEVER walk backwards into Define/Plan
 retroactively. Pick up at the current phase and move forward only.
 
 ## Phase map
