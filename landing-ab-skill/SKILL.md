@@ -31,7 +31,7 @@ Every landing page ships able to watch, test, and rebuild itself. No more frozen
      }
    })
    ```
-4. **Light mode default** — never ship `prefers-color-scheme: dark` as default (standing rule `feedback_never_dark_mode`).
+4. **Light mode default** — never ship `prefers-color-scheme: dark` as default.
 5. **Drop `docs/LP-OPS.md`** into the repo (see template below) so the optimization loop survives the session.
 
 Division of labor: `copywriting` owns the words, `high-end-visual-design` / `ui-ux-pro-max` own the look — this skill owns instrumentation + the optimization loop.

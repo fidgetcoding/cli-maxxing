@@ -18,7 +18,7 @@ allowed-tools: Skill, Bash, Read, Grep, Task, Agent
 
 Thin orchestrator. The addy plugin skills do the actual work; this skill decides WHICH of the 24
 fire, in what order, with your house rules overriding addy's defaults. Born 2026-07-02, same day
-the plugin landed (`reference_addy_agent_skills_plugin.md`).
+the plugin landed.
 
 ## When this fires — OFFER, never auto-run
 
@@ -73,9 +73,9 @@ Default momentum is continue; a bare "go" advances. Never re-litigate a complete
   PR-flow steps inside git-workflow-and-versioning.
 - **Never** `Co-Authored-By: claude-flow <ruv@ruv.net>` or any ruv* coauthor on commits.
 - **No proactive docs/READMEs.** documentation-and-adrs runs only on explicit ask; READMEs follow
-  `feedback_readme_style` (personal voice, no dev-jargon jokes).
+  README style: personal voice, no dev-jargon jokes.
 - **ADRs route through /save branch 4** → `Claude-Memory/adr/ADR-<nnn>-<slug>.md`, not addy's location.
-- **Never dark mode by default** on any scaffold (`feedback_never_dark_mode`).
+- **Never dark mode by default** on any scaffold.
 - **Task creation → /maketasks.** Any planning output that becomes tracked tasks goes through the
   skill — never direct 05-Tasks writes, never minted UUIDs.
 - **/recon stays separate** — this skill never runs the landscape sweep itself.
@@ -87,7 +87,7 @@ Default momentum is continue; a bare "go" advances. Never re-litigate a complete
    `ls ~/.claude/plugins/cache/addy-agent-skills/agent-skills/*/skills/<name>/SKILL.md`
    (version dir changes on plugin update — always glob, never hardcode).
 3. Plugin missing entirely? Reinstall with the SSH→HTTPS workaround in
-   `reference_addy_agent_skills_plugin.md`, then continue.
+   the plugin's own docs, then continue.
 
 ## Non-goals
 

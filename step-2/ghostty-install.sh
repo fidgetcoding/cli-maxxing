@@ -497,7 +497,7 @@ print_summary() {
     # -------------------------------------------------------------------------
     # ONE MORE STEP — Full Disk Access (macOS only)
     # Ghostty silently fails to read most user files until macOS grants it
-    # Full Disk Access. Every WAGMI teammate hit this on their first install.
+    # Full Disk Access. Every tester hit this on their first install.
     # Print exact click-by-click instructions; menu names verified against
     # macOS Sonoma / Sequoia (post-Ventura it's "System Settings", not
     # "System Preferences").
