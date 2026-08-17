@@ -133,7 +133,11 @@ install_skill() {
     SKILL_FILE="$SKILL_DIR/SKILL.md"
     # Pinned to a specific commit SHA — prevents rug-pull via mutable branch ref
     # To update: change the SHA to the new commit and update SKILL_SHA256 to match
-    SKILL_COMMIT="ec371619f2302b6ec91a6711ad3e78a9691fd1c8"
+    # Repinned 2026-08-17: the previous SHA was orphaned by the privacy history
+    # rewrite, and raw.githubusercontent still serves orphaned commits (HTTP 200),
+    # so the old pin advertised a tree that still contained the scrubbed content.
+    # File content is byte-identical, so SKILL_SHA256 below is unchanged.
+    SKILL_COMMIT="cfb973bbecd7e2bb54deb15027ee8b5f5deb6513"
     SKILL_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/${SKILL_COMMIT}/step-8/safetycheck-skill/SKILL.md"
     SKILL_SHA256="9fc7668c6f842cf55582be5b0b10c0b6e9c7cf2d815e19ec388dbed70dfd5c09"
 
