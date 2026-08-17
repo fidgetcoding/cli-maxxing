@@ -274,7 +274,7 @@ These are available in your terminal after Step 4 installs the FidgetFlo CLI.
 | Swarm not responding | Run `npx fidgetflo@latest doctor --fix` to diagnose |
 | MCP tools not connecting | Exit Claude, run `claude mcp list` to check connections, then relaunch |
 | `cbrain` not working | Run `cskip` instead, then tell Claude: "cbrain isn't working — can you figure out why and fix it?" Claude will find the problem, fix it, and get it working for future sessions. |
-| Obsidian vault not found | Vault setup lives in [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging). Once set up, tell Claude the full path to your vault (e.g., `~/BRAIN2`). Avoid `~/Desktop/...` — macOS TCC protection breaks CLI access to the Desktop. |
+| Obsidian vault not found | Vault setup lives in [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging). Once set up, tell Claude the full path to your vault (e.g., `~/MyVault`). Avoid `~/Desktop/...` — macOS TCC protection breaks CLI access to the Desktop. |
 | Shift+Return acts like Enter | Try Option+Enter as an alternative for multi-line input |
 
 ---

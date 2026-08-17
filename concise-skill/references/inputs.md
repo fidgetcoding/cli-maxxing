@@ -1,6 +1,6 @@
 # Special inputs — full reference
 
-When Nate sends content without an explicit instruction, route by input type. Always check prior context first — if intent is clear from the conversation so far, proceed without asking.
+When the user sends content without an explicit instruction, route by input type. Always check prior context first — if intent is clear from the conversation so far, proceed without asking.
 
 ## Bare input (path / URL / file with no instruction)
 

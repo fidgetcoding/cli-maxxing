@@ -48,6 +48,32 @@ jobs:
           fi
           echo "No hardcoded secrets detected"
 
+  pii-guard:
+    name: Personal-context guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Block maintainer PII and client names in shippable files
+        env:
+          # Private marker list (client/project roster, vault name). Kept in a
+          # secret so the roster never appears in this public repo — a hardcoded
+          # list would publish the exact thing the guard protects. Generic checks
+          # (real home paths, bare emails) run even when the secret is unset.
+          PII_EXTRA_PATTERNS: ${{ secrets.PII_EXTRA_PATTERNS }}
+        run: |
+          # Every skill file here installs into somebody else's ~/.claude/skills/.
+          # Personal names, client rosters, and private vault paths must not ship.
+          # Regression on 2026-08-17: an update overwrote a downstream scrub and
+          # redistributed the client roster to 5 external installers.
+          if [ -z "${PII_EXTRA_PATTERNS:-}" ]; then
+            echo "::warning::PII_EXTRA_PATTERNS secret is unset — only generic checks ran. Set it in repo settings for full roster coverage."
+          fi
+          if ! ./scripts/check-pii.sh; then
+            echo "::error::Personal operating context detected in shippable files — see matches above"
+            exit 1
+          fi
+
   download-url-check:
     name: Verify pinned download URLs are reachable
     runs-on: ubuntu-latest

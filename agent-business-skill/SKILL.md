@@ -1,13 +1,13 @@
 ---
 name: agent-business
-description: Turn any app or human service into an AI agent business (Angus Sewell 6-op playbook, 2026-07-03). Use whenever Nate wants to build an AI agent that texts clients, a texting coach/tutor/advisor/consultant agent, an SMS/iMessage/WhatsApp agent, a service-as-an-agent business, or says "turn this app into an agent", "AI coach business", "agent that replaces a [coach/tutor/advisor]", or wants the app-to-agent playbook applied to a market. Also invocable directly as /agent-business.
+description: Turn any app or human service into an AI agent business (Angus Sewell 6-op playbook, 2026-07-03). Use whenever the user wants to build an AI agent that texts clients, a texting coach/tutor/advisor/consultant agent, an SMS/iMessage/WhatsApp agent, a service-as-an-agent business, or says "turn this app into an agent", "AI coach business", "agent that replaces a [coach/tutor/advisor]", or wants the app-to-agent playbook applied to a market. Also invocable directly as /agent-business.
 ---
 
 # /agent-business — turn any app into an AI agent business
 
 Every winning app is a cheap self-serve version of a service humans pay far more for. Rebuild that human service as an AI agent living between app and human: same outcome, fraction of the human's price. Worked example: texting AI fitness coach at $700/mo vs a $1,500+/mo human coach.
 
-**Source of truth:** `/Users/nathandavidovich/BRAIN2/02-Sources/SRC-2026-07-03-agent-business-build-guide.md` (archived PDF alongside).
+**Source:** Angus Sewell's app-to-agent build guide (2026-07-03).
 
 Run the 6 ops in order. Each op below = objective + the moves. Verbatim prompts live in the source note — pull them when executing.
 

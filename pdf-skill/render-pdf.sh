@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# render-pdf.sh — Nate's house-style markdown → PDF renderer
+# render-pdf.sh — house-style markdown → PDF renderer
 #
 # Default behavior (always applied):
 #   - Drops the first body H1 (frontmatter `title:` is the only header)

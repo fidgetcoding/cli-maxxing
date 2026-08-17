@@ -1,0 +1,32 @@
+# .pii-patterns.local.example
+#
+# Copy to `.pii-patterns.local` (gitignored) and fill in YOUR OWN private
+# markers. scripts/check-pii.sh reads that file and fails any commit or push
+# that would ship one of these strings in the pack.
+#
+# Why this file is separate: the pack is public. If the roster lived in
+# scripts/check-pii.sh, the guard would publish the exact thing it protects.
+# Keep the real list here (local) and in the PII_EXTRA_PATTERNS repo secret (CI).
+#
+# Format: one POSIX extended regex per line. Blank lines and # comments ignored.
+# They are joined with `|`, so keep each line a self-contained alternative.
+
+# --- Your name, as it must never appear in shippable skill prose -------------
+# The skills install into other people's machines; a name here becomes an
+# instruction to address THEM by YOUR name.
+#YourFirstName
+#YourFullName
+#your-macos-username
+
+# --- Your client and project codenames --------------------------------------
+# This is the important one. A client roster in a skill file can reach a
+# different client's team.
+#CLIENT-ONE
+#CLIENT-TWO
+#PROJECT-CODENAME
+
+# --- Your private vault / working directory names ----------------------------
+#MYVAULT
+
+# --- Anything else you would not want a stranger's Claude to read aloud ------
+#your-private-domain\.com

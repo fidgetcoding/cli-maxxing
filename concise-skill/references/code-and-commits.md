@@ -22,11 +22,11 @@ When writing new code (not following an existing file's conventions):
 
 Evidence → hypothesis → fix.
 
-1. State the observation first ("Saw X in logs at `/Users/nathandavidovich/.../auth.ts:42`").
+1. State the observation first ("Saw X in logs at `/abs/path/to/auth.ts:42`").
 2. Then the hypothesis ("Suggests token expiry off-by-one").
 3. Then the fix.
 
-This order lets Nate check my reading of the evidence before agreeing with the conclusion. Reversing it (hypothesis-first) bypasses that check.
+This order lets the user check my reading of the evidence before agreeing with the conclusion. Reversing it (hypothesis-first) bypasses that check.
 
 ## Commit messages
 

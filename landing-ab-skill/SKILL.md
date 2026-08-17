@@ -1,13 +1,13 @@
 ---
 name: landing-ab
-description: Build every landing page "self-driving" per the 5-level PostHog ladder (Angus Sewell field guide, 2026-07-03). Use whenever Nate asks to build, make, create, ship, spin up, redo, or redesign a landing page, marketing site, marketing page, splash page, one-pager, waitlist page, lead-magnet page, promo page/site, coming-soon page, or product page — or wants A/B testing, PostHog, analytics, heatmaps, session replay, conversion optimization, feature flags, or per-visitor personalization added to an existing page. Also invocable directly as /landing-ab.
+description: Build every landing page "self-driving" per the 5-level PostHog ladder (Angus Sewell field guide, 2026-07-03). Use whenever the user asks to build, make, create, ship, spin up, redo, or redesign a landing page, marketing site, marketing page, splash page, one-pager, waitlist page, lead-magnet page, promo page/site, coming-soon page, or product page — or wants A/B testing, PostHog, analytics, heatmaps, session replay, conversion optimization, feature flags, or per-visitor personalization added to an existing page. Also invocable directly as /landing-ab.
 ---
 
 # /landing-ab — self-driving landing pages
 
 Every landing page ships able to watch, test, and rebuild itself. No more frozen billboards.
 
-**Source of truth:** `/Users/nathandavidovich/BRAIN2/02-Sources/SRC-2026-07-03-self-driving-landing-page.md` (archived PDF alongside). The ladder: L1 Static → L2 Watch → L3 Test → L4 Auto-iterate → L5 Personalize.
+**Source:** Angus Sewell's self-driving landing page field guide (2026-07-03). The ladder: L1 Static → L2 Watch → L3 Test → L4 Auto-iterate → L5 Personalize.
 
 ## Non-negotiable defaults on every new landing-page build (L1+L2 baked in)
 
@@ -22,7 +22,7 @@ Every landing page ships able to watch, test, and rebuild itself. No more frozen
      enable_heatmaps: true
    })
    ```
-   Ask Nate once for the PostHog project key + region. Unknown → leave `<YOUR_PROJECT_KEY>` and flag it in `docs/LP-OPS.md`.
+   Ask the user once for the PostHog project key + region. Unknown → leave `<YOUR_PROJECT_KEY>` and flag it in `docs/LP-OPS.md`.
 3. **Stub the experiment flag hook** so L3 is pre-wired:
    ```js
    posthog.onFeatureFlags(function () {
@@ -65,4 +65,4 @@ Offer once, one line: "Ladder next steps — L3 A/B now, L4 weekly optimizer (Po
 
 ## Existing pages
 
-Invoked on an already-live page: retrofit in ladder order — tag CTA → add PostHog → then whatever level Nate asked for. Never skip L2; everything above it is blind without data.
+Invoked on an already-live page: retrofit in ladder order — tag CTA → add PostHog → then whatever level the user asked for. Never skip L2; everything above it is blind without data.

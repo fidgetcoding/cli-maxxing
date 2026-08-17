@@ -33,7 +33,7 @@ over Tailscale, with zero access granted in the reverse direction.
 2. Their macOS username (`whoami` on their machine — NOT their display name).
 3. Are you sitting at their machine now, or handing them instructions? (hand-off → generate the doc)
 
-Share-invite email defaults to `nate@lorecraft.io` — confirm silently unless it's clearly not Nate.
+Share-invite email defaults to the account you're signed in as — confirm silently unless it's clearly wrong.
 
 ## Phase 1 — on THEIR machine
 
