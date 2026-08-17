@@ -6,7 +6,7 @@ allowed-tools: Bash, WebSearch, WebFetch, Read, Write, Task, Agent
 
 # recon — look before you build
 
-The rule (memory `feedback_prior_art_check_before_building`): **prior-art sweep BEFORE code, not after.** talk2me is the scar — a whole hands-free voice loop for Claude Code built and shipped before discovering `mbailey/voicemode` (MIT, ~1.2k★) does nearly the same thing and Anthropic ships native `/voice`. The check belongs at turn one.
+The rule: **prior-art sweep BEFORE code, not after.** talk2me is the scar — a whole hands-free voice loop for Claude Code built and shipped before discovering `mbailey/voicemode` (MIT, ~1.2k★) does nearly the same thing and Anthropic ships native `/voice`. The check belongs at turn one.
 
 This skill produces a **ranked landscape + edge analysis + GREEN/YELLOW/RED verdict**. It does NOT build. Building starts only after the discussion.
 
