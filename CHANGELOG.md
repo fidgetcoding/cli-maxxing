@@ -28,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 - `/concise` skill — new Tool & mid-task rule adapted from Karpathy's guidelines (multica-ai/andrej-karpathy-skills, principle 4 "Goal-Driven Execution"): before starting any multi-step task, state pass/fail criteria in one line (command, test, or observable output); "done" = criteria verified, not vibes. Closes the gap where verification only ran *after* changes with no up-front definition of success.
-- Git history rewrite: `git filter-repo` collapsed all author/committer identities (dependabot[bot], lorecraft-io, nate variants) into a single `Nate Davidovich <nate@lorecraft.io>` identity across `main` and both release tags (v1.9.1, v2.0.0). All `Co-authored-by:` trailers stripped (162 of them — mostly `claude-flow <ruv@ruv.net>` carryover from pre-rebrand). Tag commit hashes changed; this repo has no published npm artifact, so no downstream impact.
+- Git history rewrite: `git filter-repo` collapsed all author/committer identities (dependabot[bot], lorecraft-io, nate variants) into a single `Nate Davidovich <nate@lorecraft.io>` identity across `main` and both release tags (v1.9.1, v2.0.0). All `Co-authored-by:` trailers stripped (162 of them — mostly `claude-flow <ruv@ruv.net>` carryover from pre-rebrand). Tag commit hashes changed; this repo has no published npm artifact, so no downstream impact. <!-- pii-allow: historical author-identity record -->
 - Step 6 ordering — `gh` CLI moved from Step 3 to Step 7 so the full GitHub stack (CLI + MCP + workflows) ships together.
 - Step 5 — design-stack MCPs (Figma / Excalidraw / Gamma / Magic / YouTube / IG) removed from cli-maxxing cheatsheets — these now live exclusively in the `creativity-maxxing` install. cli-maxxing remains the lean core terminal install.
 - Step 5 — `2ndbrain-maxxing` references flipped to `2ndBrain-mogging` across `README-SECTIONS/` and `tests/`.
@@ -58,7 +58,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed — Major split + rebrand
 
-This is the first version after the post-mogging split (per `project_cli_maxxing_split`). The original "AI Super Setup" stack was carved into three focused repos:
+This is the first version after the post-mogging split. The original "AI Super Setup" stack was carved into three focused repos:
 
 - **cli-maxxing** (this repo) — core terminal install: shell, package managers, Claude Code, MCPs (calendar/task/automation), GitHub stack, safetycheck.
 - **creativity-maxxing** — design / video / audio / transcription tooling.

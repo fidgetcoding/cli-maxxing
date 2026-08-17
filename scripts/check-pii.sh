@@ -74,8 +74,10 @@ is_allowed() {
         'LICENSE|private')                           return 0 ;;
         'SECURITY.md|private')                       return 0 ;;
         # Historical record of the prior identity collapse.
+        # CHANGELOG keeps the generic exemption for the author-identity record,
+        # but NOT the private tier: a blanket file exemption here let a client
+        # name pass CI on 2026-08-17. Per-line 'pii-allow' pragmas instead.
         'CHANGELOG.md|generic')                      return 0 ;;
-        'CHANGELOG.md|private')                      return 0 ;;
         # This file documents the pattern mechanism itself.
         'scripts/check-pii.sh|generic')              return 0 ;;
         'scripts/check-pii.sh|private')              return 0 ;;
