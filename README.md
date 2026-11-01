@@ -12,6 +12,8 @@
 
 **Everything you need to start working with AI-powered development tools; one command per step.**
 
+More: [ESSENCE.md](ESSENCE.md) · [EVOLUTION.md](EVOLUTION.md)
+
 > [!NOTE]
 > **Heads up — this was fidgetcoded.** I'm no expert, but I tried — nominally — my best. Getting this stack running end-to-end on a clean machine took a lot of trial and error, and it still might not be perfect.
 >
@@ -27,6 +29,10 @@
 >
 > 1. **Get Claude CLI up first (Step 1).** Once it's running, you can paste any error straight into it and Claude will help you troubleshoot EVERYTHING downstream.
 > 2. **Re-run the install step.** A lot of first-pass failures quietly clear themselves on the second try — re-running is almost always the right first move before anything fancier.
+
+## Why I made it
+
+Getting this stack running on a clean machine took me a lot of trial and error. Then I ran it on my mom's Mac and half of it bailed. So now it's one command, and a robot runs that command on fresh machines every time I change it, because my own machine hid the bugs.
 
 ## The Trilogy
 
