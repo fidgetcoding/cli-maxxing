@@ -1,0 +1,52 @@
+name: Pinned versions
+
+# The installer depends on other people's releases. This checks daily that every
+# pinned version and SHA-256 still resolves, so a vendor change turns into a red
+# run here and an email to me, not into a broken install for someone else.
+
+on:
+  schedule:
+    - cron: '30 10 * * *' # Daily
+  workflow_dispatch:
+  push:
+    branches: [main, 'ci/**']
+    paths:
+      - 'install.sh'
+      - 'update.sh'
+      - 'step-*/**'
+      - 'scripts/check-pins.sh'
+      - 'tests/pins/**'
+      - '.github/workflows/pins.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'install.sh'
+      - 'update.sh'
+      - 'step-*/**'
+      - 'scripts/check-pins.sh'
+      - 'tests/pins/**'
+      - '.github/workflows/pins.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check-pins:
+    name: Every pin still resolves
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0 # The orphaned-commit check needs real history
+      - run: bash scripts/check-pins.sh
+
+  catches-a-change:
+    name: The check catches a vendor change
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - run: bash tests/pins/test-check-pins.sh
