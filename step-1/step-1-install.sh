@@ -143,6 +143,7 @@ preflight_checks() {
 # 3. Update package index (Linux only)
 # -----------------------------------------------------------------------------
 update_package_index() {
+    if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then return; fi
     if [ "$OS" = "linux" ]; then
         if command -v apt-get &>/dev/null; then
             info "Updating apt package index..."
@@ -183,6 +184,8 @@ install_build_tools() {
             success "build-essential already installed"
         elif command -v gcc &>/dev/null && command -v make &>/dev/null; then
             success "Build tools already available (gcc + make)"
+        elif [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
+            warn "Skipping build tools (gcc, make): installing them needs an admin. Claude Code doesn't need them."
         else
             info "Installing build-essential..."
             if command -v apt-get &>/dev/null; then
@@ -209,6 +212,9 @@ install_homebrew() {
 
     if command -v brew &>/dev/null; then
         success "Homebrew already installed"
+    elif [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
+        warn "Skipping Homebrew: installing it needs an admin account. Node.js and Claude Code don't need it."
+        return
     else
         info "Installing Homebrew..."
         info "You may be prompted for your password."
@@ -292,7 +298,11 @@ install_node() {
     local NODE_MAJOR
     if command -v node &>/dev/null; then
         NODE_MAJOR=$(node -v | sed 's/v//' | cut -d. -f1)
-        if [ "$NODE_MAJOR" -ge 18 ]; then
+        if [ "$NODE_MAJOR" -ge 18 ] && [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ] && [ ! -w "$(npm prefix -g 2>/dev/null)/lib" ]; then
+            # A system Node is fine until `npm install -g` needs root. Without
+            # sudo the fix is a Node this account owns.
+            warn "Node.js $(node -v) is system-wide, and this account can't install global packages into it. Installing a personal copy via nvm..."
+        elif [ "$NODE_MAJOR" -ge 18 ]; then
             success "Node.js $(node -v) already installed (meets v18+ requirement)"
             return
         else
@@ -759,9 +769,22 @@ main() {
     detect_os
     preflight_checks
 
-    # Prompt for sudo password upfront so it doesn't interrupt mid-install
-    info "Some tools require sudo. You may be prompted for your password."
-    sudo -v 2>/dev/null || true
+    # install.sh already ran this. Running Step 1 on its own needs the same answer.
+    if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
+        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
+        if command -v cm_preflight &>/dev/null; then
+            cm_preflight || exit 1
+        fi
+    fi
+
+    if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
+        # Fail each sudo call at once instead of hanging on a password prompt.
+        sudo() { warn "Skipped, needs an admin: sudo $*"; return 1; }
+    else
+        # Prompt for sudo password upfront so it doesn't interrupt mid-install
+        info "Some tools require sudo. You may be prompted for your password."
+        sudo -v 2>/dev/null || true
+    fi
 
     update_package_index
     install_build_tools

@@ -78,6 +78,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 - You need an **internet connection** since the scripts download everything live.
 - **Don't run it as root.** Just open your terminal normally and paste the command.
 - If anything is already installed on your machine, the scripts will detect that and skip it automatically.
+- **No admin rights, or a locked-down work Mac?** The installer checks before it changes anything, and tells you what's possible. See [Troubleshooting](#the-installer-says-this-account-cant-use-sudo).
 
 > **Linux works, and I test it.** On every change and every week, GitHub Actions runs the real installer as a brand new account on Ubuntu 24.04, Ubuntu 22.04, Debian 12 and Fedora 41, runs it a second time, then checks everything from a clean login shell. Those runs happen in containers with no desktop, so two things aren't covered: Ghostty (it installs from snap on Ubuntu, isn't in Fedora's default repos, and there's no snap in a container) and clicking around a real desktop. Arc is macOS-only. On Ubuntu 22.04, hyperresearch gets skipped with a message, because it needs Python 3.11 or newer.
 >
@@ -721,6 +722,23 @@ Setup is complete. Head to **[You're Ready](#youre-ready)** below for your daily
 ## Troubleshooting
 
 [Back to top](#quick-navigation)
+
+### The installer says this account can't use sudo
+
+You still get Claude Code. Without admin rights the installer sets up what fits in your home folder: Node.js, Claude Code, your shortcuts, the safety check skill and the status line. It skips Homebrew, Ghostty, Arc and the Step 3 tools, because those need an admin. FidgetFlo needs `jq` from Step 3, so it only installs if `jq` is already there.
+
+To get the rest, have an admin make your account one, or install those tools, then run the installer again. It picks up where it left off.
+
+### The installer says "This install can't finish on this machine yet"
+
+It checked before changing anything, found something that would have failed partway through, and stopped. Nothing was installed. It tells you which of these it hit:
+
+- **No admin rights, and a prerequisite is missing:** the Xcode Command Line Tools on a Mac, `git` or `libatomic` on Linux. Installing those takes an admin.
+- **macOS older than 13:** Claude Code needs 13 or newer.
+- **Santa in Lockdown mode:** your company's allowlist would kill Node.js and Claude Code when they start. Ask IT to allow them. If they already have, re-run with `CLI_MAXXING_IGNORE_POLICY=1` in front of the command.
+- **A proxy or firewall:** it names the hosts it can't reach. Ask IT to allow them, or try another network.
+
+If your Mac is managed (MDM) but none of that applies, you get a warning and the install carries on. Plenty of managed Macs work fine, and if a step does get refused, that policy is the first place to look.
 
 ### I ran the installer but `claude` command is not found
 
