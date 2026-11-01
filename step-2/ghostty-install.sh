@@ -558,6 +558,18 @@ main() {
     echo ""
 
     source_runtime_path
+    # install.sh already ran this. Running this step on its own needs the same answer.
+    if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
+        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
+        if command -v cm_preflight &>/dev/null; then
+            cm_preflight || exit 1
+        fi
+    fi
+    if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
+        # Fail each sudo call at once instead of hanging on a password prompt.
+        sudo() { warn "Skipped, needs an admin: sudo $*"; return 1; }
+    fi
+
     detect_os
     install_ghostty
     install_font

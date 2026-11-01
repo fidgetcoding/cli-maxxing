@@ -44,9 +44,6 @@ reload_path() {
   esac
 }
 
-# Breadcrumb dir — child step scripts touch step-N.done here on success.
-mkdir -p "$HOME/.cli-maxxing"
-
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BLUE}  CLI Maxxing — Install${NC}"
@@ -55,6 +52,19 @@ echo -e "${BLUE}  Ghostty · Arc · Dev Tools · Safety Check · Status Line${NC
 echo -e "${BLUE}  Running all steps in order, skipping what's already done${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
+
+# Preflight runs before the subscription gate and before anything is written, so
+# a machine that can't finish finds out now and not 15 minutes in.
+PREFLIGHT_SCRIPT="$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 "$BASE_URL/scripts/preflight.sh")"
+if [ -z "$PREFLIGHT_SCRIPT" ]; then
+    echo -e "${RED}[FAIL]${NC} Can't reach raw.githubusercontent.com. Check your internet connection and try again."
+    exit 1
+fi
+eval "$PREFLIGHT_SCRIPT"
+cm_preflight || exit 1
+
+# Breadcrumb dir — child step scripts touch step-N.done here on success.
+mkdir -p "$HOME/.cli-maxxing"
 
 # Subscription gate — before any downloads. The CLI is free; Claude itself
 # requires a paid claude.ai plan. No plan = the whole install is wasted time,
@@ -115,23 +125,42 @@ if ! command -v claude &>/dev/null || ! claude --version &>/dev/null; then
 fi
 echo ""
 
-# Step 2 — Bonus Software (Ghostty + Arc)
-echo -e "${YELLOW}>>> Step 2 — Bonus Software${NC}"
-echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-2/step-2-install.sh" | bash
-echo ""
+# Without sudo, Steps 2 and 3 can't do their job: casks need an admin, and on
+# Linux every Step 3 tool comes from the system package manager. Step 4 can run
+# only if jq is already on this machine.
+EXPECTED_CRUMBS=(step-1 ghostty arc step-3 step-4 step-8 step-final)
+SKIPPED_STEPS=()
+if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
+    EXPECTED_CRUMBS=(step-1 step-8 step-final)
+    SKIPPED_STEPS+=("Step 2 (Ghostty, Arc)" "Step 3 (developer tools)")
+    if command -v jq &>/dev/null; then
+        EXPECTED_CRUMBS+=(step-4)
+    else
+        SKIPPED_STEPS+=("Step 4 (FidgetFlo, needs jq)")
+    fi
+fi
 
-# Step 3 — Developer & Utility Tools
-echo -e "${YELLOW}>>> Step 3 — Developer & Utility Tools${NC}"
-echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-3/step-3-install.sh" | bash
-echo ""
+if [ "${CLI_MAXXING_NO_SUDO:-0}" != "1" ]; then
+    # Step 2 — Bonus Software (Ghostty + Arc)
+    echo -e "${YELLOW}>>> Step 2 — Bonus Software${NC}"
+    echo ""
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-2/step-2-install.sh" | bash
+    echo ""
+
+    # Step 3 — Developer & Utility Tools
+    echo -e "${YELLOW}>>> Step 3 — Developer & Utility Tools${NC}"
+    echo ""
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-3/step-3-install.sh" | bash
+    echo ""
+fi
 
 # Step 4 — FidgetFlo
-echo -e "${YELLOW}>>> Step 4 — FidgetFlo${NC}"
-echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-4/step-4-install.sh" | bash
-echo ""
+if [ "${CLI_MAXXING_NO_SUDO:-0}" != "1" ] || command -v jq &>/dev/null; then
+    echo -e "${YELLOW}>>> Step 4 — FidgetFlo${NC}"
+    echo ""
+    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-4/step-4-install.sh" | bash
+    echo ""
+fi
 
 # Step 8 — Safety Check
 echo -e "${YELLOW}>>> Step 8 — Safety Check${NC}"
@@ -152,7 +181,6 @@ echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━
 echo ""
 
 # Breadcrumb check — list any expected steps that did NOT touch their .done file.
-EXPECTED_CRUMBS=(step-1 ghostty arc step-3 step-4 step-8 step-final)
 MISSING_CRUMBS=()
 for crumb in "${EXPECTED_CRUMBS[@]}"; do
   if [ ! -f "$HOME/.cli-maxxing/${crumb}.done" ]; then
@@ -168,6 +196,16 @@ if [ "${#MISSING_CRUMBS[@]}" -gt 0 ]; then
   echo -e "${YELLOW}   The script is idempotent and will resume.${NC}"
   echo ""
   echo -e "${YELLOW}   Missing: ${MISSING_CRUMBS[*]}${NC}"
+  echo ""
+fi
+
+if [ "${#SKIPPED_STEPS[@]}" -gt 0 ]; then
+  echo -e "${YELLOW}  Partial install: this account can't use sudo, so these were skipped:${NC}"
+  for skipped in "${SKIPPED_STEPS[@]}"; do
+    echo -e "${YELLOW}    - $skipped${NC}"
+  done
+  echo -e "${YELLOW}  Claude Code itself is installed. Open a new terminal and run: claude --version${NC}"
+  echo -e "${YELLOW}  Once an admin has sorted out access, run the installer again to get the rest.${NC}"
   echo ""
 fi
 
