@@ -121,7 +121,7 @@ install_ghostty() {
         if command -v apt-get &>/dev/null; then
             # Ubuntu/Debian — Ghostty may need a PPA or manual install
             warn "Ghostty may not be in default repos. Trying snap..."
-            sudo snap install ghostty 2>/dev/null || {
+            sudo snap install ghostty --classic 2>/dev/null || {
                 warn "Snap install failed. Visit https://ghostty.org/download for Linux install instructions."
                 warn "Skipping Ghostty install — continuing with config setup."
                 return

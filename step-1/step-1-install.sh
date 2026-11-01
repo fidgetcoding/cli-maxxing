@@ -21,6 +21,11 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
+# These scripts run through `curl | bash`, so stdin is the script itself. A package
+# that asks a question, like tzdata on Ubuntu 22.04, either hangs forever or takes
+# its answer from the rest of the script. Nothing here should ever be asked.
+apt_install() { sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$@" </dev/null; }
+
 # -----------------------------------------------------------------------------
 # 0. Runtime PATH bootstrap — source whatever brew/nvm/.local bin already exist
 #    so a re-run of step-1 in a fresh shell can see previously-installed tools.
@@ -60,6 +65,10 @@ source_runtime_path() {
 #    shell from getent).
 # -----------------------------------------------------------------------------
 detect_os() {
+    # Containers, cron and ssh commands can leave USER unset, and this script
+    # runs under set -u.
+    USER="${USER:-$(id -un)}"
+
     case "$(uname -s)" in
         Darwin)       OS="mac" ;;
         Linux)        OS="linux" ;;
@@ -92,7 +101,16 @@ detect_os() {
             */bash|*)
                 USER_SHELL="bash"
                 SHELL_RCS=("$HOME/.bashrc")
-                SHELL_PROFILES=("$HOME/.bash_profile")
+                # Login bash reads only the FIRST of .bash_profile, .bash_login
+                # and .profile. Debian and Ubuntu ship a .profile that loads
+                # .bashrc, so creating an empty .bash_profile here would shadow
+                # it and hide everything this installer writes from ssh and
+                # other login shells.
+                if [ -e "$HOME/.bash_profile" ]; then
+                    SHELL_PROFILES=("$HOME/.bash_profile")
+                else
+                    SHELL_PROFILES=("$HOME/.profile")
+                fi
                 ;;
         esac
     fi
@@ -168,9 +186,9 @@ install_build_tools() {
         else
             info "Installing build-essential..."
             if command -v apt-get &>/dev/null; then
-                sudo apt-get install -y -qq build-essential || soft_fail "build-essential installation failed"
+                apt_install build-essential || soft_fail "build-essential installation failed"
             elif command -v dnf &>/dev/null; then
-                sudo dnf groupinstall -y "Development Tools" || soft_fail "Development Tools installation failed"
+                sudo dnf install -y @development-tools || soft_fail "Development Tools installation failed"
             else
                 warn "Could not install build tools — install gcc and make manually if needed"
                 return
@@ -255,7 +273,7 @@ install_git() {
         brew install git
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq git
+            apt_install git
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y git
         else
@@ -293,12 +311,26 @@ install_node() {
 
     command -v nvm &>/dev/null || fail "nvm installation failed"
 
+    # Node's Linux builds need libatomic, which Fedora doesn't install by default.
+    if [ "$OS" = "linux" ] && command -v dnf &>/dev/null; then
+        sudo dnf install -y -q libatomic || warn "Could not install libatomic. Node.js may not start without it."
+    fi
+
     info "Installing Node.js LTS..."
+    # nvm is not safe under set -u. On bash 4.4+ `nvm use --lts` reads an unset
+    # local and the whole script dies right here, before Claude Code installs.
+    # macOS's bash 3.2 tolerates it, which is why this only ever hit Linux and
+    # Macs where a newer bash comes first on PATH.
+    set +u
     nvm install --lts
     nvm use --lts
     nvm alias default 'lts/*'
+    set -u
 
     command -v node &>/dev/null || fail "Node.js installation failed"
+    # On PATH isn't the same as working: a missing system library only shows up
+    # when it starts, and without this it gets blamed on Claude Code a step later.
+    node -v &>/dev/null || fail "Node.js installed but won't start. Run 'node -v' to see which system library it's missing, install that, then re-run this script."
     success "Node.js $(node -v) installed via nvm"
 }
 
@@ -457,17 +489,26 @@ install_claude_code() {
     # macOS: Terminal launches the passwd shell as a LOGIN shell. Login bash
     # reads ~/.bash_profile and NOT ~/.bashrc — without this bridge, every
     # alias and PATH line written above is invisible to a bash-default user
-    # in every new terminal window.
+    # in every new terminal window. Linux bash needs the same guarantee for ssh
+    # and other login shells, through whichever profile file it reads first.
+    # That also repairs the empty .bash_profile earlier versions of this
+    # installer left on Debian and Ubuntu.
+    local login_profile=""
     if [ "$OS" = "mac" ]; then
-        [ -e "$HOME/.bash_profile" ] || touch "$HOME/.bash_profile"
-        if ! grep -q 'bashrc' "$HOME/.bash_profile" 2>/dev/null; then
+        login_profile="$HOME/.bash_profile"
+    elif [ "$USER_SHELL" = "bash" ]; then
+        login_profile="${SHELL_PROFILES[0]}"
+    fi
+    if [ -n "$login_profile" ]; then
+        [ -e "$login_profile" ] || touch "$login_profile"
+        if ! grep -q 'bashrc' "$login_profile" 2>/dev/null; then
             {
                 echo ""
-                echo '# Load .bashrc in login shells (macOS Terminal runs bash as a login shell)'
+                echo '# Load .bashrc in login shells (Terminal and ssh run bash as a login shell)'
                 # shellcheck disable=SC2016
                 echo '[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"'
-            } >> "$HOME/.bash_profile"
-            success "Added .bashrc bridge to ~/.bash_profile (bash login shells load RC config)"
+            } >> "$login_profile"
+            success "Added .bashrc bridge to $login_profile (bash login shells load RC config)"
         fi
     fi
 

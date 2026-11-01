@@ -79,7 +79,7 @@ detect_os() {
     else
         local login_shell=""
         if command -v getent &>/dev/null; then
-            login_shell=$(getent passwd "$USER" 2>/dev/null | cut -d: -f7)
+            login_shell=$(getent passwd "${USER:-$(id -un)}" 2>/dev/null | cut -d: -f7)
         fi
         if [ -z "$login_shell" ]; then
             login_shell="${SHELL:-/bin/bash}"
