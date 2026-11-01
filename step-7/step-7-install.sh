@@ -25,6 +25,11 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
+# These scripts run through `curl | bash`, so stdin is the script itself. A package
+# that asks a question, like tzdata on Ubuntu 22.04, either hangs forever or takes
+# its answer from the rest of the script. Nothing here should ever be asked.
+apt_install() { sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$@" </dev/null; }
+
 # Track what was installed this run
 INSTALLED_GH=false
 INSTALLED_GITHUB=false
@@ -123,7 +128,7 @@ install_gh() {
             sudo install -m 0644 "$keyring_tmp" /usr/share/keyrings/githubcli-archive-keyring.gpg
             rm -f "$keyring_tmp"
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            if sudo apt-get update -qq && sudo apt-get install -y -qq gh; then
+            if sudo apt-get update -qq && apt_install gh; then
                 :
             else
                 soft_fail "GitHub CLI installation failed"

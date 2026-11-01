@@ -24,6 +24,11 @@ warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 soft_fail() { echo -e "${RED}[FAIL]${NC} $1 (non-critical, continuing...)"; ERRORS=$((ERRORS + 1)); }
 
+# These scripts run through `curl | bash`, so stdin is the script itself. A package
+# that asks a question, like tzdata on Ubuntu 22.04, either hangs forever or takes
+# its answer from the rest of the script. Nothing here should ever be asked.
+apt_install() { sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$@" </dev/null; }
+
 # -----------------------------------------------------------------------------
 # source_runtime_path — defense-in-depth PATH hydration
 #
@@ -124,7 +129,7 @@ install_python() {
             brew install python3
         else
             if command -v apt-get &>/dev/null; then
-                sudo apt-get install -y -qq python3 python3-pip python3-venv
+                apt_install python3 python3-pip python3-venv
             elif command -v dnf &>/dev/null; then
                 sudo dnf install -y python3 python3-pip
             else
@@ -141,7 +146,7 @@ install_python() {
             python3 -m ensurepip --upgrade 2>/dev/null || brew install python3
         else
             if command -v apt-get &>/dev/null; then
-                sudo apt-get install -y -qq python3-pip
+                apt_install python3-pip
             else
                 curl -fsSL --proto '=https' --proto-redir '=https' https://bootstrap.pypa.io/get-pip.py | python3
             fi
@@ -164,7 +169,7 @@ install_pandoc() {
         brew install pandoc
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq pandoc
+            apt_install pandoc
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y pandoc
         elif command -v snap &>/dev/null; then
@@ -195,7 +200,7 @@ install_xlsx2csv() {
             brew install pipx || { soft_fail "pipx installation failed — skipping xlsx2csv"; return; }
         else
             if command -v apt-get &>/dev/null; then
-                sudo apt-get install -y -qq pipx || {
+                apt_install pipx || {
                     # Fallback: bootstrap pipx via pip on older Ubuntus
                     python3 -m pip install --user pipx --break-system-packages --quiet 2>/dev/null \
                         || python3 -m pip install --user pipx --quiet \
@@ -248,7 +253,7 @@ install_pdftotext() {
         brew install poppler || { soft_fail "poppler installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq poppler-utils || { soft_fail "poppler-utils installation failed"; return; }
+            apt_install poppler-utils || { soft_fail "poppler-utils installation failed"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y poppler-utils || { soft_fail "poppler-utils installation failed"; return; }
         else
@@ -274,7 +279,7 @@ install_jq() {
         brew install jq
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq jq
+            apt_install jq
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y jq
         else
@@ -301,7 +306,7 @@ install_ripgrep() {
         brew install ripgrep || { soft_fail "ripgrep installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq ripgrep || { soft_fail "ripgrep installation failed"; return; }
+            apt_install ripgrep || { soft_fail "ripgrep installation failed"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y ripgrep || { soft_fail "ripgrep installation failed"; return; }
         elif command -v snap &>/dev/null; then
@@ -329,7 +334,7 @@ install_tree() {
         brew install tree || { soft_fail "tree installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq tree || { soft_fail "tree installation failed"; return; }
+            apt_install tree || { soft_fail "tree installation failed"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y tree || { soft_fail "tree installation failed"; return; }
         else
@@ -355,7 +360,7 @@ install_fzf() {
         brew install fzf || { soft_fail "fzf installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq fzf || { soft_fail "fzf installation failed"; return; }
+            apt_install fzf || { soft_fail "fzf installation failed"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y fzf || { soft_fail "fzf installation failed"; return; }
         else
@@ -385,7 +390,7 @@ install_wget() {
         brew install wget || { soft_fail "wget installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq wget || { soft_fail "wget installation failed"; return; }
+            apt_install wget || { soft_fail "wget installation failed"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y wget || { soft_fail "wget installation failed"; return; }
         else
@@ -411,7 +416,7 @@ install_weasyprint() {
         brew install weasyprint || { soft_fail "weasyprint installation failed"; return; }
     else
         if command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq weasyprint || { soft_fail "weasyprint installation failed"; return; }
+            apt_install weasyprint || { soft_fail "weasyprint installation failed"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y weasyprint || { soft_fail "weasyprint installation failed"; return; }
         else
@@ -455,7 +460,7 @@ install_hyperresearch() {
         if [ "$OS" = "mac" ]; then
             brew install pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
         elif command -v apt-get &>/dev/null; then
-            sudo apt-get install -y -qq pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
+            apt_install pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
         elif command -v dnf &>/dev/null; then
             sudo dnf install -y pipx >/dev/null 2>&1 || { soft_fail "pipx installation failed — skipping hyperresearch"; return; }
         else
@@ -472,6 +477,15 @@ install_hyperresearch() {
             break
         fi
     done
+
+    # A fresh Mac only has Apple's Python 3.9, and brew's default python3 has
+    # moved past 3.13, so on macOS there is usually nothing supported to find yet.
+    if [ -z "$HR_PY" ] && [ "$OS" = "mac" ]; then
+        info "Installing Python 3.13 for hyperresearch..."
+        if brew install python@3.13 >/dev/null 2>&1 && [ -x "$(brew --prefix python@3.13)/bin/python3.13" ]; then
+            HR_PY="$(brew --prefix python@3.13)/bin/python3.13"
+        fi
+    fi
 
     if [ -z "$HR_PY" ]; then
         warn "hyperresearch needs Python 3.11-3.13 (requires-python >=3.11,<3.14)."

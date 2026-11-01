@@ -74,12 +74,16 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 >
 > The installer will prompt you upfront — press Enter if you're subscribed, Ctrl+C to bail and sign up first.
 
-- Your computer needs to be from roughly **2020 or later** (macOS Big Sur+ or a recent Linux).
+- You need **macOS 13 or newer**, or a recent Linux (exactly what's tested is below). Claude Code itself sets that macOS floor.
 - You need an **internet connection** since the scripts download everything live.
 - **Don't run it as root.** Just open your terminal normally and paste the command.
 - If anything is already installed on your machine, the scripts will detect that and skip it automatically.
 
-> **Windows:** Not supported. macOS and Linux only (frankly, I'm not 100% certain Linux is supported).
+> **Linux works, and I test it.** On every change and every week, GitHub Actions runs the real installer as a brand new account on Ubuntu 24.04, Ubuntu 22.04, Debian 12 and Fedora 41, runs it a second time, then checks everything from a clean login shell. Those runs happen in containers with no desktop, so two things aren't covered: Ghostty (it installs from snap on Ubuntu, isn't in Fedora's default repos, and there's no snap in a container) and clicking around a real desktop. Arc is macOS-only. On Ubuntu 22.04, hyperresearch gets skipped with a message, because it needs Python 3.11 or newer.
+>
+> **macOS** gets the same test on a new account with the runner's own tools removed: macOS 15 on every change, and macOS 14 weekly, because Homebrew builds much of the stack from source there and it takes over an hour. The one thing CI can't do is click the Xcode Command Line Tools dialog, so that part is still only proven on real Macs.
+>
+> **Windows:** Not supported, and I don't plan to port it.
 
 ---
 
