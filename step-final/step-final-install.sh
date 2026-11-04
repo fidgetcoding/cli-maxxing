@@ -18,6 +18,36 @@ success() { echo -e "${GREEN}[OK]${NC} $1"; }
 warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 
+# Serialize this installer's settings merges and atomically replace valid JSON.
+# Existing custom status lines belong to the user; a null entry is unconfigured.
+configure_statusline() (
+    local settings="$HOME/.claude/settings.json" tmp="" lock
+    lock="$settings.cli-maxxing-lock"
+    mkdir "$lock" 2>/dev/null || { warn "Settings are being updated by another installer: $lock"; return 1; }
+    trap '[ -z "$tmp" ] || rm -f "$tmp"; rmdir "$lock"' EXIT
+    trap 'exit 130' INT
+    trap 'exit 143' TERM
+    tmp=$(mktemp "$HOME/.claude/.settings.XXXXXX") || return 1
+    if [ -f "$settings" ]; then
+        if ! command -v jq >/dev/null 2>&1; then
+            warn "jq unavailable; existing settings preserved. Run Step 3 and Final again to configure the status line."
+            return 0
+        fi
+        jq -es '
+          if length == 1 and (.[0] | type) == "object" then .[0]
+          else error("settings must be one JSON object") end |
+          if .statusLine == null then
+            .statusLine = {"type":"command", "command":"~/.claude/statusline.sh"}
+          elif (.statusLine | type) == "object" and .statusLine.type == "command"
+               and (.statusLine.command | type) == "string" and (.statusLine.command | length) > 0 then .
+          else error("invalid statusLine configuration") end
+        ' "$settings" > "$tmp" || return 1
+    else
+        printf '%s\n' '{"statusLine":{"type":"command","command":"~/.claude/statusline.sh"}}' > "$tmp" || return 1
+    fi
+    chmod 600 "$tmp" && mv "$tmp" "$settings" || return 1
+)
+
 # -----------------------------------------------------------------------------
 # source_runtime_path — load brew/nvm/~/.local/bin into current PATH so that
 # health checks (node, claude, jq, etc.) see what's actually installed on disk
@@ -40,7 +70,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         \. "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # 3. Prepend ~/.local/bin to PATH (idempotent — skip if already present)
@@ -53,6 +85,7 @@ source_runtime_path() {
 # Refresh PATH before any health check so we see commands that were installed
 # in earlier steps but haven't been picked up by this shell yet.
 source_runtime_path
+rm -f "$HOME/.cli-maxxing/step-final.done" || fail "Could not clear previous completion marker"
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -67,36 +100,45 @@ if ! command -v jq &>/dev/null; then
 fi
 
 # Create .claude directory if it doesn't exist
-mkdir -p "$HOME/.claude"
+mkdir -p "$HOME/.claude" || fail "Could not create ~/.claude"
 
 # Install statusline.sh
 info "Installing status line script..."
-cat > "$HOME/.claude/statusline.sh" << 'STATUSLINE_EOF'
+STATUSLINE_TMP=$(mktemp "$HOME/.claude/.statusline.XXXXXX") || fail "Could not create statusline temporary file"
+trap 'rm -f "$STATUSLINE_TMP"' EXIT
+cat > "$STATUSLINE_TMP" << 'STATUSLINE_EOF'
 #!/bin/bash
 # Status Line — real state only
 # 2ndBrain (Obsidian) + fidgetflo (MCP) + Swarm/Hive activity
 
-input=$(cat)
-
-# jq is required to parse Claude Code's stdin JSON (installed in Step 3).
-# Without it, emit a minimal static line instead of spraying errors.
+# Parse and validate stdin once. No input-derived strings reach shell arithmetic.
+# Newlines/control characters are stripped from display fields before read splits
+# the six records. Invalid JSON/types produce the same harmless fallback.
 if ! command -v jq >/dev/null 2>&1; then
   echo "Claude (jq missing — run Step 3)"
   exit 0
 fi
-
-# Parse Claude Code's JSON input
-MODEL=$(echo "$input" | jq -r '.model.display_name // "Opus 4.6"' 2>/dev/null)
-CTX=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null | cut -d. -f1)
-DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0' 2>/dev/null)
-CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
-
-# Harden against malformed stdin: jq exits non-zero and leaves these empty,
-# which would otherwise blow up the arithmetic below with stderr noise.
-[ -z "$MODEL" ] && MODEL="Claude"
-[ -z "$CTX" ] && CTX=0
-DURATION_MS="${DURATION_MS%%.*}"; DURATION_MS="${DURATION_MS//[^0-9]/}"
-[ -z "$DURATION_MS" ] && DURATION_MS=0
+FIELDS=$(jq -rs '
+  def text($fallback):
+    if type == "string" and length > 0 then gsub("[\u0000-\u001f\u007f]"; "") else $fallback end;
+  def integer($fallback; $max):
+    if type == "number" and . >= 0 and . <= $max then floor else $fallback end;
+  if length == 1 and (.[0] | type) == "object" then .[0] else {} end |
+  (try .model.display_name catch null | text("Claude")),
+  (try .context_window.used_percentage catch null | integer(0; 100)),
+  (try .cost.total_duration_ms catch null | integer(0; 315360000000)),
+  (try .workspace.current_dir catch null | text("")),
+  (try .rate_limits.five_hour.used_percentage catch null | integer(""; 100)),
+  (try .rate_limits.seven_day.used_percentage catch null | integer(""; 100))
+' 2>/dev/null) || FIELDS=$'Claude\n0\n0\n\n\n'
+{
+  IFS= read -r MODEL
+  IFS= read -r CTX
+  IFS= read -r DURATION_MS
+  IFS= read -r CWD
+  IFS= read -r U5
+  IFS= read -r U7
+} <<< "$FIELDS"
 
 # Format duration
 if [ "$DURATION_MS" != "0" ] && [ "$DURATION_MS" != "null" ]; then
@@ -120,7 +162,7 @@ fi
 BRAIN=""
 MOGGING_VAULT_MARKER="$HOME/.claude/.mogging-vault"
 if [ -f "$MOGGING_VAULT_MARKER" ] && [ -n "$CWD" ]; then
-  VAULT_PATH=$(head -n1 "$MOGGING_VAULT_MARKER" 2>/dev/null | tr -d '\n')
+  IFS= read -r VAULT_PATH < "$MOGGING_VAULT_MARKER" || true
   if [ -n "$VAULT_PATH" ]; then
     case "$CWD" in
       "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 Brain²" ;;
@@ -133,19 +175,19 @@ fi
 
 # --- fidgetflo CHECK ---
 fidgetflo=""
-if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
+if pgrep -f "fidgetflo" >/dev/null 2>&1; then
   fidgetflo="⚡️ fidgetflo"
 fi
 
 # --- SWARM CHECK (only shows when actively running) ---
 # Lock file is written by /fswarm skill, removed on completion.
 # Agents run as Claude Code subprocesses (not CLI), so pgrep won't find them.
-# Auto-clean lock files older than 30 min as stale.
+# Ignore lock files older than 30 min as stale.
 SWARM=""
 SWARM_LOCK="/tmp/fidgetflo-swarm-active"
 if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-swarm-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$SWARM_LOCK" 2>/dev/null
+  if [ "$(find "$SWARM_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
     # Sanitize: keep only digits to prevent injection from a malicious lock-file write
@@ -159,24 +201,24 @@ if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
 fi
 
 # --- HIVE CHECK (only shows when actively running) ---
-# Same approach — trust lock file, auto-clean after 30 min.
+# Same approach — ignore stale lock files after 30 min.
 HIVE=""
 HIVE_LOCK="/tmp/fidgetflo-hive-active"
 if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-hive-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$HIVE_LOCK" 2>/dev/null
+  if [ "$(find "$HIVE_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     HIVE="👑 Hive"
   fi
 fi
 
 # --- MINI CHECK (only shows when actively running) ---
-# Same approach — trust lock file, auto-clean after 30 min.
+# Same approach — ignore stale lock files after 30 min.
 MINI=""
 MINI_LOCK="/tmp/fidgetflo-mini-active"
 if [ -f "$MINI_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-mini-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$MINI_LOCK" 2>/dev/null
+  if [ "$(find "$MINI_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     MINI_AGENT_COUNT=$(cat "$MINI_LOCK" 2>/dev/null || echo "")
     # Sanitize: keep only digits to prevent injection from a malicious lock-file write
@@ -215,8 +257,6 @@ usage_seg() {
   printf '%s %s%s%s%s%s %s%%' "$label" "$c" "$fill" "$dim" "$emp" "$reset" "$p"
 }
 
-U5=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
-U7=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' 2>/dev/null)
 seg=$(usage_seg "5h" "$U5"); [ -n "$seg" ] && USAGE="$seg"
 seg=$(usage_seg "7d" "$U7"); [ -n "$seg" ] && { [ -n "$USAGE" ] && USAGE="$USAGE · "; USAGE="$USAGE$seg"; }
 
@@ -254,74 +294,18 @@ fi
 LINE="${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
 [ -n "$PARTS" ] && LINE="${PARTS} • ${LINE}"
 [ -n "$USAGE" ] && LINE="${LINE} • ${USAGE}"
-echo "$LINE"
+printf '%s\n' "$LINE"
 STATUSLINE_EOF
 
-chmod +x "$HOME/.claude/statusline.sh"
+if [ "$?" -ne 0 ] || ! chmod 755 "$STATUSLINE_TMP" || ! mv "$STATUSLINE_TMP" "$HOME/.claude/statusline.sh"; then
+    fail "Could not install statusline script"
+fi
 success "Status line script installed at ~/.claude/statusline.sh"
 
-# Configure settings.json (MERGE, don't overwrite)
+# Configure only global settings; project overrides are intentional user choices.
 info "Configuring Claude Code settings..."
 SETTINGS_FILE="$HOME/.claude/settings.json"
-
-if [ -f "$SETTINGS_FILE" ]; then
-    # Check if statusLine already configured
-    if grep -q '"statusLine"' "$SETTINGS_FILE" 2>/dev/null; then
-        success "Status line already configured in settings.json"
-    else
-        # Use jq to merge if available, otherwise warn
-        if command -v jq &>/dev/null; then
-            if jq '. + {"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" 2>/dev/null \
-                && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"; then
-                success "Status line added to settings.json"
-            else
-                # jq failed (settings.json is probably invalid JSON) — don't
-                # claim success, and don't leave the temp file behind.
-                rm -f "$SETTINGS_FILE.tmp"
-                warn "Could not merge into settings.json (invalid JSON?) — add this manually:"
-                echo '  "statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}'
-            fi
-        else
-            warn "jq not available — add this to your ~/.claude/settings.json manually:"
-            echo '  "statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}'
-        fi
-    fi
-else
-    # Create minimal settings.json
-    cat > "$SETTINGS_FILE" << 'SETTINGS_EOF'
-{
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  }
-}
-SETTINGS_EOF
-    success "Created settings.json with status line config"
-fi
-
-# =============================================================================
-# Clean up project-level statusLine overrides
-# FidgetFlo/claude-flow init can write a verbose statusLine into project .claude/settings.json
-# files, which overrides our clean global statusline. Remove any we find.
-# =============================================================================
-info "Checking for project-level statusLine overrides..."
-FOUND_OVERRIDES=0
-while IFS= read -r PROJECT_SETTINGS; do
-    if command -v jq &>/dev/null && jq -e '.statusLine' "$PROJECT_SETTINGS" &>/dev/null 2>&1; then
-        if jq 'del(.statusLine)' "$PROJECT_SETTINGS" > "${PROJECT_SETTINGS}.tmp" 2>/dev/null \
-            && mv "${PROJECT_SETTINGS}.tmp" "$PROJECT_SETTINGS"; then
-            warn "Removed statusLine override from: $PROJECT_SETTINGS"
-            FOUND_OVERRIDES=$((FOUND_OVERRIDES + 1))
-        else
-            rm -f "${PROJECT_SETTINGS}.tmp"
-        fi
-    fi
-done < <(find "$HOME/Desktop" "$HOME/Documents" -maxdepth 5 -path "*/.claude/settings.json" -not -path "$HOME/.claude/settings.json" 2>/dev/null)
-if [ "$FOUND_OVERRIDES" -eq 0 ]; then
-    success "No project-level statusLine overrides found"
-else
-    success "Cleaned $FOUND_OVERRIDES project-level statusLine override(s)"
-fi
+configure_statusline || fail "Could not configure status line; existing settings preserved."
 
 # =============================================================================
 # Health Check — verify all commands from previous steps
@@ -531,7 +515,7 @@ if [ -s "$HOME/.claude/skills/gitfix/SKILL.md" ]; then
     TEST_PASS=$((TEST_PASS + 1))
 else
     warn "TEST: /gitfix skill not found — run Step 7 to install it"
-    TEST_FAIL=$((TEST_FAIL + 1))
+    OPTIONAL_FAIL=$((OPTIONAL_FAIL + 1))
 fi
 
 # Test 4b: /recon skill present (installed by Step 7)
@@ -540,11 +524,12 @@ if [ -s "$HOME/.claude/skills/recon/SKILL.md" ]; then
     TEST_PASS=$((TEST_PASS + 1))
 else
     warn "TEST: /recon skill not found — run Step 7 to install it"
-    TEST_FAIL=$((TEST_FAIL + 1))
+    OPTIONAL_FAIL=$((OPTIONAL_FAIL + 1))
 fi
 
 echo ""
 echo "  $TEST_PASS tests passed, $TEST_FAIL failed."
+[ "$TEST_FAIL" -eq 0 ] || fail "Status line verification failed; re-run Final after fixing the error."
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -575,4 +560,4 @@ echo ""
 
 # Mark step complete (best-effort — don't fail the run if mkdir/touch can't write)
 mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
-touch "$HOME/.cli-maxxing/step-final.done" 2>/dev/null || true
+touch "$HOME/.cli-maxxing/step-final.done" || fail "Could not record Final completion"

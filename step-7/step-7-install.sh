@@ -58,7 +58,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         . "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # ~/.local/bin — prepend if not already on PATH.
@@ -597,6 +599,8 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    rm -f "$HOME/.cli-maxxing/step-7.done" || exit 1
+
     source_runtime_path
 
     echo ""
@@ -608,10 +612,13 @@ main() {
 
     # install.sh already ran this. Running this step on its own needs the same answer.
     if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
-        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
-        if command -v cm_preflight &>/dev/null; then
-            cm_preflight || exit 1
+        local preflight
+        if ! preflight=$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh) \
+            || [ -z "$preflight" ] || ! bash -n <<< "$preflight"; then
+            fail "Could not download preflight; no installation attempted."
         fi
+        eval "$preflight"
+        command -v cm_preflight >/dev/null 2>&1 && cm_preflight || exit 1
     fi
     if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
         # Fail each sudo call at once instead of hanging on a password prompt.
@@ -642,6 +649,10 @@ main() {
 
     # Breadcrumb for /doctor and re-run detection.
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
+    if [ "$ERRORS" -gt 0 ]; then
+        warn "This step has $ERRORS unresolved issue(s); completion was not recorded."
+        return 1
+    fi
     touch "$HOME/.cli-maxxing/step-7.done" 2>/dev/null || true
 }
 

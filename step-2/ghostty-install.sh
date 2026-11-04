@@ -72,7 +72,9 @@ source_runtime_path() {
     done
     export NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
+    set +u # nvm reads unset internal variables during auto-use
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    set -u
     case ":$PATH:" in
         *":$HOME/.local/bin:"*) ;;
         *) export PATH="$HOME/.local/bin:$PATH" ;;
@@ -202,12 +204,8 @@ configure_ghostty() {
     mkdir -p "$CONFIG_DIR"
 
     if [ -f "$CONFIG_FILE" ]; then
-        if grep -q "CLI Maxxing" "$CONFIG_FILE" 2>/dev/null; then
-            success "Ghostty config already configured — skipping"
-            return
-        fi
-        info "Ghostty config already exists — backing up to config.backup"
-        cp "$CONFIG_FILE" "$CONFIG_FILE.backup"
+        success "Existing Ghostty configuration preserved at $CONFIG_FILE"
+        return
     fi
 
     info "Writing Ghostty config..."
@@ -560,10 +558,13 @@ main() {
     source_runtime_path
     # install.sh already ran this. Running this step on its own needs the same answer.
     if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
-        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
-        if command -v cm_preflight &>/dev/null; then
-            cm_preflight || exit 1
+        local preflight
+        if ! preflight=$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh) \
+            || [ -z "$preflight" ] || ! bash -n <<< "$preflight"; then
+            fail "Could not download preflight; no installation attempted."
         fi
+        eval "$preflight"
+        command -v cm_preflight >/dev/null 2>&1 && cm_preflight || exit 1
     fi
     if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
         # Fail each sudo call at once instead of hanging on a password prompt.

@@ -18,6 +18,13 @@ success() { echo -e "${GREEN}[OK]${NC} $1"; }
 warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()    { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 
+# Credentials are configured only in an interactive terminal. A batch update
+# must not consume script input or reset an existing Telegram access policy.
+if [ ! -t 0 ]; then
+    info "Telegram setup needs interactive input; run Step 6 directly to configure it."
+    exit 0
+fi
+
 # -----------------------------------------------------------------------------
 # Ensure runtime PATH (brew, nvm, ~/.local/bin) is visible.
 # Defense-in-depth: users typically run Step 6 in a fresh terminal after
@@ -39,7 +46,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         . "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # ~/.local/bin — prepend if not already on PATH.
@@ -187,7 +196,7 @@ info "Configuring access policy..."
 mkdir -p "$CONFIG_DIR"
 chmod 700 "$CONFIG_DIR"
 
-if [ -f "$ACCESS_FILE" ] && [ "$SKIP_TOKEN" = true ]; then
+if [ -f "$ACCESS_FILE" ]; then
     success "Access policy already configured at $ACCESS_FILE"
 else
     cat > "$ACCESS_FILE" << 'POLICY'

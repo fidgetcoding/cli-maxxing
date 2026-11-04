@@ -16,6 +16,37 @@ NC='\033[0m'
 
 BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/step-2"
 
+# Download a complete, syntax-checked script before executing any of it.
+# Embedded in each entry point because the public one-liners run standalone.
+DOWNLOAD_DIR=$(mktemp -d "${TMPDIR:-/tmp}/cli-maxxing-download.XXXXXX") || exit 1
+trap 'rm -rf "$DOWNLOAD_DIR"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+FAILED_STEPS=()
+run_step() {
+    local path="$1" crumb script rc=0
+    shift
+    script="$DOWNLOAD_DIR/step.sh"
+    for crumb in "$@"; do
+        rm -f "$HOME/.cli-maxxing/$crumb.done" || { FAILED_STEPS+=("$path"); return 1; }
+    done
+    if curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 \
+        "$BASE_URL/$path" -o "$script" && [ -s "$script" ] && bash -n "$script"; then
+        # Steps 5–7 remain non-interactive in a batch; credentials are entered
+        # only when the user explicitly runs those steps in their terminal.
+        bash "$script" </dev/null || rc=$?
+    else
+        rc=1
+    fi
+    if [ "$rc" -ne 0 ]; then
+        for crumb in "$@"; do rm -f "$HOME/.cli-maxxing/$crumb.done"; done
+        FAILED_STEPS+=("$path")
+        printf '[FAIL] %s did not complete (exit %s). Re-run this step after fixing the error.\n' "$path" "$rc" >&2
+    fi
+    return "$rc"
+}
+
+
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BLUE}  Step 2 — Bonus Software${NC}"
@@ -25,15 +56,19 @@ echo ""
 
 echo -e "${YELLOW}>>> Ghostty Terminal${NC}"
 echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/ghostty-install.sh" | bash
+run_step "ghostty-install.sh" ghostty || true
 echo ""
 
 echo -e "${YELLOW}>>> Arc Browser${NC}"
 echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/arc-install.sh" | bash
+run_step "arc-install.sh" arc || true
 echo ""
 
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then
+    printf '[FAIL] Step 2 incomplete: %s\n' "${FAILED_STEPS[*]}" >&2
+    exit 1
+fi
 echo -e "${GREEN}  Step 2 Complete — Ghostty and Arc are ready.${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""

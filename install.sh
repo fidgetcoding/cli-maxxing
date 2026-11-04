@@ -17,6 +17,37 @@ NC='\033[0m'
 
 BASE_URL="https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main"
 
+# Download a complete, syntax-checked script before executing any of it.
+# Embedded in each entry point because the public one-liners run standalone.
+DOWNLOAD_DIR=$(mktemp -d "${TMPDIR:-/tmp}/cli-maxxing-download.XXXXXX") || exit 1
+trap 'rm -rf "$DOWNLOAD_DIR"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+FAILED_STEPS=()
+run_step() {
+    local path="$1" crumb script rc=0
+    shift
+    script="$DOWNLOAD_DIR/step.sh"
+    for crumb in "$@"; do
+        rm -f "$HOME/.cli-maxxing/$crumb.done" || { FAILED_STEPS+=("$path"); return 1; }
+    done
+    if curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 \
+        "$BASE_URL/$path" -o "$script" && [ -s "$script" ] && bash -n "$script"; then
+        # Steps 5–7 remain non-interactive in a batch; credentials are entered
+        # only when the user explicitly runs those steps in their terminal.
+        bash "$script" </dev/null || rc=$?
+    else
+        rc=1
+    fi
+    if [ "$rc" -ne 0 ]; then
+        for crumb in "$@"; do rm -f "$HOME/.cli-maxxing/$crumb.done"; done
+        FAILED_STEPS+=("$path")
+        printf '[FAIL] %s did not complete (exit %s). Re-run this step after fixing the error.\n' "$path" "$rc" >&2
+    fi
+    return "$rc"
+}
+
+
 # -----------------------------------------------------------------------------
 # reload_path — re-source brew + nvm into the current shell so chained child
 # steps in this pipeline can find node, npm, brew, etc. Needed because Step 1
@@ -35,7 +66,9 @@ reload_path() {
   # nvm — source if installed
   export NVM_DIR="$HOME/.nvm"
   # shellcheck disable=SC1091
+  set +u # nvm reads unset internal variables during auto-use
   [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  set -u
 
   # ~/.local/bin — prepend idempotently
   case ":$PATH:" in
@@ -55,13 +88,12 @@ echo ""
 
 # Preflight runs before the subscription gate and before anything is written, so
 # a machine that can't finish finds out now and not 15 minutes in.
-PREFLIGHT_SCRIPT="$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 "$BASE_URL/scripts/preflight.sh")"
-if [ -z "$PREFLIGHT_SCRIPT" ]; then
+if ! PREFLIGHT_SCRIPT="$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 "$BASE_URL/scripts/preflight.sh")" || [ -z "$PREFLIGHT_SCRIPT" ] || ! bash -n <<< "$PREFLIGHT_SCRIPT"; then
     echo -e "${RED}[FAIL]${NC} Can't reach raw.githubusercontent.com. Check your internet connection and try again."
     exit 1
 fi
 eval "$PREFLIGHT_SCRIPT"
-cm_preflight || exit 1
+command -v cm_preflight >/dev/null 2>&1 && cm_preflight || exit 1
 
 # Breadcrumb dir — child step scripts touch step-N.done here on success.
 mkdir -p "$HOME/.cli-maxxing"
@@ -95,7 +127,7 @@ echo ""
 # Step 1 — CLI Tools
 echo -e "${YELLOW}>>> Step 1 — CLI Tools${NC}"
 echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-1/step-1-install.sh" | bash
+run_step "step-1/step-1-install.sh" step-1 || exit 1
 # BUG A fix: Step 1 installs brew+nvm; re-source them into this shell so the
 # remaining curl|bash steps (2/3/4/7/8/final) can actually find them.
 reload_path
@@ -144,13 +176,13 @@ if [ "${CLI_MAXXING_NO_SUDO:-0}" != "1" ]; then
     # Step 2 — Bonus Software (Ghostty + Arc)
     echo -e "${YELLOW}>>> Step 2 — Bonus Software${NC}"
     echo ""
-    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-2/step-2-install.sh" | bash
+    run_step "step-2/step-2-install.sh" ghostty arc || true
     echo ""
 
     # Step 3 — Developer & Utility Tools
     echo -e "${YELLOW}>>> Step 3 — Developer & Utility Tools${NC}"
     echo ""
-    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-3/step-3-install.sh" | bash
+    run_step "step-3/step-3-install.sh" step-3 || true
     echo ""
 fi
 
@@ -158,25 +190,25 @@ fi
 if [ "${CLI_MAXXING_NO_SUDO:-0}" != "1" ] || command -v jq &>/dev/null; then
     echo -e "${YELLOW}>>> Step 4 — FidgetFlo${NC}"
     echo ""
-    curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-4/step-4-install.sh" | bash
+    run_step "step-4/step-4-install.sh" step-4 || true
     echo ""
 fi
 
 # Step 8 — Safety Check
 echo -e "${YELLOW}>>> Step 8 — Safety Check${NC}"
 echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-8/step-8-install.sh" | bash
+run_step "step-8/step-8-install.sh" step-8 || true
 echo ""
 
 # Final Step — Status Line (wrap-up)
 echo -e "${YELLOW}>>> Final Step — Status Line${NC}"
 echo ""
-curl -fsSL --proto '=https' --proto-redir '=https' "$BASE_URL/step-final/step-final-install.sh" | bash
+run_step "step-final/step-final-install.sh" step-final || true
 echo ""
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Core install complete.${NC}"
+echo -e "${GREEN}  Core install steps finished; checking results.${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -230,3 +262,8 @@ echo "    Second Brain:    bash <(curl -fsSL https://raw.githubusercontent.com/f
 echo ""
 echo "  Open a new terminal window for aliases to take effect."
 echo ""
+
+if [ "${#FAILED_STEPS[@]}" -gt 0 ] || [ "${#MISSING_CRUMBS[@]}" -gt 0 ]; then
+    echo "[FAIL] Install incomplete. See the failed or missing steps above." >&2
+    exit 1
+fi

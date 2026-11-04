@@ -48,7 +48,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         \. "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     if [ -d "$HOME/.local/bin" ]; then
@@ -190,25 +192,27 @@ uninstall_status_line() {
     # a notice — the user can either install jq or clear the field manually.
     # IMPORTANT: run this BEFORE uninstall_dev_tools, which removes jq itself.
     local settings="$HOME/.claude/settings.json"
-    if [ -f "$settings" ]; then
-        if grep -q '"statusLine"' "$settings" 2>/dev/null; then
-            if command -v jq &>/dev/null; then
-                if jq 'del(.statusLine)' "$settings" > "${settings}.tmp" 2>/dev/null; then
-                    mv "${settings}.tmp" "$settings" 2>/dev/null || true
-                    success "statusLine key removed from $settings"
-                else
-                    rm -f "${settings}.tmp" 2>/dev/null || true
-                    warn "Could not strip statusLine from $settings — remove the key manually"
-                fi
-            else
-                warn "jq not available — remove the \"statusLine\" key from $settings manually"
-            fi
+    if [ ! -f "$settings" ]; then
+        skip "settings.json (not found)"
+    elif ! command -v jq >/dev/null 2>&1; then
+        warn "jq unavailable; existing statusLine settings preserved"
+    elif jq -e '.statusLine.command == "~/.claude/statusline.sh"' "$settings" >/dev/null 2>&1; then
+        if (
+            lock="$settings.cli-maxxing-lock"; tmp=""
+            mkdir "$lock" 2>/dev/null || exit 1
+            trap '[ -z "$tmp" ] || rm -f "$tmp"; rmdir "$lock"' EXIT
+            tmp=$(mktemp "$HOME/.claude/.settings.XXXXXX") || exit 1
+            jq 'if .statusLine.command == "~/.claude/statusline.sh" then del(.statusLine) else . end' "$settings" > "$tmp" \
+                && chmod 600 "$tmp" && mv "$tmp" "$settings"
+        ); then
+            success "CLI-MAXXING statusLine key removed"
         else
-            skip "statusLine key (not found in settings.json)"
+            warn "Could not update settings; existing configuration preserved"
         fi
     else
-        skip "settings.json (not found — nothing to strip)"
+        skip "Custom or unrecognized statusLine configuration preserved"
     fi
+
 }
 
 # -----------------------------------------------------------------------------

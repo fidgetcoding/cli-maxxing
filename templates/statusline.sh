@@ -2,27 +2,34 @@
 # Status Line — real state only
 # 2ndBrain (Obsidian) + fidgetflo (MCP) + Swarm/Hive activity
 
-input=$(cat)
-
-# jq is required to parse Claude Code's stdin JSON (installed in Step 3).
-# Without it, emit a minimal static line instead of spraying errors.
+# Parse and validate stdin once. No input-derived strings reach shell arithmetic.
+# Newlines/control characters are stripped from display fields before read splits
+# the six records. Invalid JSON/types produce the same harmless fallback.
 if ! command -v jq >/dev/null 2>&1; then
   echo "Claude (jq missing — run Step 3)"
   exit 0
 fi
-
-# Parse Claude Code's JSON input
-MODEL=$(echo "$input" | jq -r '.model.display_name // "Opus 4.6"' 2>/dev/null)
-CTX=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null | cut -d. -f1)
-DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0' 2>/dev/null)
-CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
-
-# Harden against malformed stdin: jq exits non-zero and leaves these empty,
-# which would otherwise blow up the arithmetic below with stderr noise.
-[ -z "$MODEL" ] && MODEL="Claude"
-[ -z "$CTX" ] && CTX=0
-DURATION_MS="${DURATION_MS%%.*}"; DURATION_MS="${DURATION_MS//[^0-9]/}"
-[ -z "$DURATION_MS" ] && DURATION_MS=0
+FIELDS=$(jq -rs '
+  def text($fallback):
+    if type == "string" and length > 0 then gsub("[\u0000-\u001f\u007f]"; "") else $fallback end;
+  def integer($fallback; $max):
+    if type == "number" and . >= 0 and . <= $max then floor else $fallback end;
+  if length == 1 and (.[0] | type) == "object" then .[0] else {} end |
+  (try .model.display_name catch null | text("Claude")),
+  (try .context_window.used_percentage catch null | integer(0; 100)),
+  (try .cost.total_duration_ms catch null | integer(0; 315360000000)),
+  (try .workspace.current_dir catch null | text("")),
+  (try .rate_limits.five_hour.used_percentage catch null | integer(""; 100)),
+  (try .rate_limits.seven_day.used_percentage catch null | integer(""; 100))
+' 2>/dev/null) || FIELDS=$'Claude\n0\n0\n\n\n'
+{
+  IFS= read -r MODEL
+  IFS= read -r CTX
+  IFS= read -r DURATION_MS
+  IFS= read -r CWD
+  IFS= read -r U5
+  IFS= read -r U7
+} <<< "$FIELDS"
 
 # Format duration
 if [ "$DURATION_MS" != "0" ] && [ "$DURATION_MS" != "null" ]; then
@@ -46,7 +53,7 @@ fi
 BRAIN=""
 MOGGING_VAULT_MARKER="$HOME/.claude/.mogging-vault"
 if [ -f "$MOGGING_VAULT_MARKER" ] && [ -n "$CWD" ]; then
-  VAULT_PATH=$(head -n1 "$MOGGING_VAULT_MARKER" 2>/dev/null | tr -d '\n')
+  IFS= read -r VAULT_PATH < "$MOGGING_VAULT_MARKER" || true
   if [ -n "$VAULT_PATH" ]; then
     case "$CWD" in
       "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 Brain²" ;;
@@ -59,19 +66,19 @@ fi
 
 # --- fidgetflo CHECK ---
 fidgetflo=""
-if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
+if pgrep -f "fidgetflo" >/dev/null 2>&1; then
   fidgetflo="⚡️ fidgetflo"
 fi
 
 # --- SWARM CHECK (only shows when actively running) ---
 # Lock file is written by /fswarm skill, removed on completion.
 # Agents run as Claude Code subprocesses (not CLI), so pgrep won't find them.
-# Auto-clean lock files older than 30 min as stale.
+# Ignore lock files older than 30 min as stale.
 SWARM=""
 SWARM_LOCK="/tmp/fidgetflo-swarm-active"
 if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-swarm-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$SWARM_LOCK" 2>/dev/null
+  if [ "$(find "$SWARM_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
     # Sanitize: keep only digits to prevent injection from a malicious lock-file write
@@ -85,24 +92,24 @@ if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
 fi
 
 # --- HIVE CHECK (only shows when actively running) ---
-# Same approach — trust lock file, auto-clean after 30 min.
+# Same approach — ignore stale lock files after 30 min.
 HIVE=""
 HIVE_LOCK="/tmp/fidgetflo-hive-active"
 if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-hive-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$HIVE_LOCK" 2>/dev/null
+  if [ "$(find "$HIVE_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     HIVE="👑 Hive"
   fi
 fi
 
 # --- MINI CHECK (only shows when actively running) ---
-# Same approach — trust lock file, auto-clean after 30 min.
+# Same approach — ignore stale lock files after 30 min.
 MINI=""
 MINI_LOCK="/tmp/fidgetflo-mini-active"
 if [ -f "$MINI_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-mini-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$MINI_LOCK" 2>/dev/null
+  if [ "$(find "$MINI_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     MINI_AGENT_COUNT=$(cat "$MINI_LOCK" 2>/dev/null || echo "")
     # Sanitize: keep only digits to prevent injection from a malicious lock-file write
@@ -141,8 +148,6 @@ usage_seg() {
   printf '%s %s%s%s%s%s %s%%' "$label" "$c" "$fill" "$dim" "$emp" "$reset" "$p"
 }
 
-U5=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
-U7=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' 2>/dev/null)
 seg=$(usage_seg "5h" "$U5"); [ -n "$seg" ] && USAGE="$seg"
 seg=$(usage_seg "7d" "$U7"); [ -n "$seg" ] && { [ -n "$USAGE" ] && USAGE="$USAGE · "; USAGE="$USAGE$seg"; }
 
@@ -180,4 +185,4 @@ fi
 LINE="${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
 [ -n "$PARTS" ] && LINE="${PARTS} • ${LINE}"
 [ -n "$USAGE" ] && LINE="${LINE} • ${USAGE}"
-echo "$LINE"
+printf '%s\n' "$LINE"

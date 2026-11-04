@@ -43,7 +43,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         \. "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # 3. Prepend ~/.local/bin to PATH (idempotent — skip if already first/present)
@@ -414,6 +416,8 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    rm -f "$HOME/.cli-maxxing/step-8.done" || exit 1
+
     # Refresh PATH before any prereq check so we see node/claude that were
     # installed in earlier steps but haven't been picked up by this shell yet.
     source_runtime_path
@@ -439,6 +443,10 @@ main() {
 
     # Mark step complete (best-effort — don't fail the run if mkdir/touch can't write)
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
+    if [ "$ERRORS" -gt 0 ]; then
+        warn "This step has $ERRORS unresolved issue(s); completion was not recorded."
+        return 1
+    fi
     touch "$HOME/.cli-maxxing/step-8.done" 2>/dev/null || true
 }
 

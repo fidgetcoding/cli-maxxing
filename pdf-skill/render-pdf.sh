@@ -26,10 +26,14 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --keep-notes)   KEEP_NOTES=1; shift ;;
     --keep-sources) KEEP_SOURCES=1; shift ;;
-    -o)             OUTPUT="$2"; shift 2 ;;
+    -o)
+      [[ $# -ge 2 && -n "$2" ]] || { echo "error: -o requires an output path" >&2; exit 1; }
+      OUTPUT="$2"; shift 2 ;;
+    --) shift; [[ $# -eq 1 ]] || { echo "error: expected one input file" >&2; exit 1; }; INPUT="$1"; shift ;;
     -h|--help)
       sed -n '2,18p' "$0"; exit 0 ;;
-    *)              INPUT="$1"; shift ;;
+    -*) echo "error: unknown option: $1" >&2; exit 1 ;;
+    *) [[ -z "$INPUT" ]] || { echo "error: expected one input file" >&2; exit 1; }; INPUT="$1"; shift ;;
   esac
 done
 
@@ -47,8 +51,9 @@ if [[ -z "$OUTPUT" ]]; then
   OUTPUT="${INPUT%.md}.pdf"
 fi
 
-TMP=$(mktemp -t renderpdf.XXXXXX).md
-trap 'rm -f "$TMP"' EXIT
+PDF_TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/renderpdf.XXXXXX")
+trap 'rm -rf "$PDF_TMP_DIR"' EXIT
+TMP="$PDF_TMP_DIR/input.md"
 
 awk -v keep_notes="$KEEP_NOTES" -v keep_sources="$KEEP_SOURCES" '
 BEGIN { first_h1=1; skip_section=0; skip_para=0 }

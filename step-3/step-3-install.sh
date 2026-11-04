@@ -51,7 +51,9 @@ source_runtime_path() {
     # 2. nvm — source if present (node/npm may live under $NVM_DIR/versions/node/*/bin)
     if [ -s "$HOME/.nvm/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         \. "$HOME/.nvm/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # 3. ~/.local/bin — idempotent prepend (pipx shims, ctg, user-installed bins)
@@ -85,9 +87,9 @@ detect_os() {
     # We match that pattern so no-flicker + memory hook land in whichever rc
     # the user actually sources.
     if [ "$OS" = "mac" ]; then
-        SHELL_RCS="$HOME/.zshrc $HOME/.bashrc"
+        SHELL_RCS=("$HOME/.zshrc" "$HOME/.bashrc")
     else
-        SHELL_RCS="$SHELL_RC"
+        SHELL_RCS=("$SHELL_RC")
     fi
 }
 
@@ -566,10 +568,7 @@ run_self_test() {
 
     # No-flicker mode — check across all rc files we write to
     NO_FLICKER_FOUND=""
-    # SHELL_RCS is a whitespace-separated list here; intentional word-split is safe
-    # because we control the values (only $HOME/.zshrc and $HOME/.bashrc are ever added).
-    # shellcheck disable=SC2086
-    for rc in $SHELL_RCS; do
+    for rc in "${SHELL_RCS[@]}"; do
         if [ -f "$rc" ] && grep -q 'CLAUDE_CODE_NO_FLICKER' "$rc" 2>/dev/null; then
             NO_FLICKER_FOUND="${NO_FLICKER_FOUND}${rc} "
         fi
@@ -578,7 +577,7 @@ run_self_test() {
         success "TEST: no-flicker mode — configured in ${NO_FLICKER_FOUND% }"
         TEST_PASS=$((TEST_PASS + 1))
     else
-        soft_fail "TEST: no-flicker mode — not found in any of: $SHELL_RCS"
+        soft_fail "TEST: no-flicker mode — not found in any of: ${SHELL_RCS[*]}"
         TEST_FAIL=$((TEST_FAIL + 1))
     fi
 
@@ -597,60 +596,36 @@ run_self_test() {
 # Auto-save memory hook — saves conversation context on session end
 # -----------------------------------------------------------------------------
 configure_memory_hook() {
-    local CLAUDE_SETTINGS="$HOME/.claude/settings.json"
     local HOOK_CMD
-
-    # Create .claude dir if needed
-    mkdir -p "$HOME/.claude"
-
-    # Check if hook already exists
-    if [ -f "$CLAUDE_SETTINGS" ] && grep -q '"Stop"' "$CLAUDE_SETTINGS" 2>/dev/null; then
-        success "Memory auto-save hook already configured"
-        return
+    # shellcheck disable=SC2016
+    HOOK_CMD='SESSION_ID=$(jq -r '"'"'.session_id // empty'"'"' 2>/dev/null); SESSION_ID="${SESSION_ID//[^A-Za-z0-9_-]/}"; if [ -z "$SESSION_ID" ]; then SESSION_ID="nosid"; fi; MARKER="/tmp/claude-memory-saved-${SESSION_ID}"; if [ -f "$MARKER" ]; then echo '"'"'{"continue": true}'"'"'; else touch "$MARKER"; echo '"'"'{"continue": false, "stopReason": "MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop."}'"'"'; fi'
+    if ! (
+        settings="$HOME/.claude/settings.json"
+        mkdir -p "$HOME/.claude" || exit 1
+        lock="$settings.cli-maxxing-lock"
+        mkdir "$lock" 2>/dev/null || { warn "Settings are being updated by another installer: $lock"; exit 1; }
+        tmp=""
+        trap '[ -z "$tmp" ] || rm -f "$tmp"; rmdir "$lock"' EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        command -v jq >/dev/null 2>&1 || { warn "jq is required to configure the memory hook"; exit 1; }
+        tmp=$(mktemp "$HOME/.claude/.settings.XXXXXX") || exit 1
+        source_file="$settings"; exists=true
+        if [ ! -f "$settings" ]; then source_file=/dev/null; exists=false; fi
+        jq -es --arg cmd "$HOOK_CMD" --argjson exists "$exists" '
+          if length == 0 and ($exists | not) then {}
+          elif length == 1 and (.[0] | type) == "object" then .[0]
+          else error("settings must be one JSON object") end |
+          .hooks = (.hooks // {}) | .hooks.Stop = (.hooks.Stop // []) |
+          if (.hooks.Stop | type) != "array" then error("Stop hooks must be an array")
+          elif any(.hooks.Stop[]?.hooks[]?; (.command? // "" | contains("claude-memory-saved-"))) then .
+          else .hooks.Stop += [{"hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}] end
+        ' "$source_file" > "$tmp" && chmod 600 "$tmp" && mv "$tmp" "$settings"
+    ); then
+        soft_fail "Could not merge memory hook; existing settings preserved"
+        return 1
     fi
-
-    info "Configuring memory auto-save hook..."
-
-    if [ -f "$CLAUDE_SETTINGS" ]; then
-        # Settings file exists — add hooks if not present.
-        # SESSION_ID is sanitized to [A-Za-z0-9_-] before the filesystem
-        # touches it, so a malformed value (containing '/' or '..') cannot
-        # escape /tmp or cause path confusion. Claude Code owns this value
-        # today, but the sanitizer is defense-in-depth against future
-        # changes in what the stop-hook JSON carries.
-        if command -v jq &>/dev/null; then
-            # shellcheck disable=SC2016
-            HOOK_CMD='SESSION_ID=$(jq -r '"'"'.session_id // empty'"'"' 2>/dev/null); SESSION_ID="${SESSION_ID//[^A-Za-z0-9_-]/}"; if [ -z "$SESSION_ID" ]; then SESSION_ID="nosid"; fi; MARKER="/tmp/claude-memory-saved-${SESSION_ID}"; if [ -f "$MARKER" ]; then echo '"'"'{"continue": true}'"'"'; else touch "$MARKER"; echo '"'"'{"continue": false, "stopReason": "MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop."}'"'"'; fi'
-
-            jq --arg cmd "$HOOK_CMD" '.hooks = (.hooks // {}) | .hooks.Stop = [{"hooks": [{"type": "command", "command": $cmd, "timeout": 5}]}]' "$CLAUDE_SETTINGS" > "${CLAUDE_SETTINGS}.tmp" \
-                && mv "${CLAUDE_SETTINGS}.tmp" "$CLAUDE_SETTINGS"
-            success "Memory auto-save hook configured"
-        else
-            warn "jq not available yet, skipping hook config. Run Step 3 again after jq installs."
-        fi
-    else
-        # No settings file — create one with the hook. SESSION_ID is sanitized
-        # to [A-Za-z0-9_-] before it touches the filesystem so a malformed
-        # value cannot escape /tmp. Matches the jq-merge branch above.
-        cat > "$CLAUDE_SETTINGS" << 'SETTINGS_EOF'
-{
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "SESSION_ID=$(jq -r '.session_id // empty' 2>/dev/null); SESSION_ID=\"${SESSION_ID//[^A-Za-z0-9_-]/}\"; if [ -z \"$SESSION_ID\" ]; then SESSION_ID=\"nosid\"; fi; MARKER=\"/tmp/claude-memory-saved-${SESSION_ID}\"; if [ -f \"$MARKER\" ]; then echo '{\"continue\": true}'; else touch \"$MARKER\"; echo '{\"continue\": false, \"stopReason\": \"MANDATORY: Before ending, review this conversation and save any key decisions, project context, outcomes, or user preferences to memory files. If nothing noteworthy was discussed, acknowledge that and stop.\"}'; fi",
-            "timeout": 5
-          }
-        ]
-      }
-    ]
-  }
-}
-SETTINGS_EOF
-        success "Memory auto-save hook configured"
-    fi
+    success "Memory auto-save hook configured"
 }
 
 # -----------------------------------------------------------------------------
@@ -665,9 +640,7 @@ configure_no_flicker() {
     local FLICKER_ANY_WRITTEN=""
     local rc changed
 
-    # SHELL_RCS is a whitespace-separated list; intentional word-split is safe.
-    # shellcheck disable=SC2086
-    for rc in $SHELL_RCS; do
+    for rc in "${SHELL_RCS[@]}"; do
         # Only write to files that already exist — never materialize a .bashrc
         # on a zsh-only macOS user and vice versa.
         [ -f "$rc" ] || continue
@@ -698,7 +671,7 @@ configure_no_flicker() {
     if $FLICKER_ANY_CHANGED; then
         success "No-flicker mode enabled in ${FLICKER_ANY_WRITTEN% }"
     else
-        success "No-flicker mode already configured in $SHELL_RCS"
+        success "No-flicker mode already configured in ${SHELL_RCS[*]}"
     fi
 }
 
@@ -727,7 +700,7 @@ print_summary() {
     local NO_FLICKER_STATUS="—"
     local rc
     # shellcheck disable=SC2086
-    for rc in $SHELL_RCS; do
+    for rc in "${SHELL_RCS[@]}"; do
         if [ -f "$rc" ] && grep -q 'CLAUDE_CODE_NO_FLICKER' "$rc" 2>/dev/null; then
             NO_FLICKER_STATUS="enabled"
             break
@@ -752,6 +725,8 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    rm -f "$HOME/.cli-maxxing/step-3.done" || exit 1
+
     # Defense-in-depth for BUG A: hydrate PATH before any brew/node/claude probe.
     # install.sh wrapper calls reload_path between steps, but step-3 may be
     # invoked standalone (curl | bash) — so we self-hydrate first thing.
@@ -766,10 +741,13 @@ main() {
 
     # install.sh already ran this. Running this step on its own needs the same answer.
     if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
-        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
-        if command -v cm_preflight &>/dev/null; then
-            cm_preflight || exit 1
+        local preflight
+        if ! preflight=$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh) \
+            || [ -z "$preflight" ] || ! bash -n <<< "$preflight"; then
+            fail "Could not download preflight; no installation attempted."
         fi
+        eval "$preflight"
+        command -v cm_preflight >/dev/null 2>&1 && cm_preflight || exit 1
     fi
     if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
         # Fail each sudo call at once instead of hanging on a password prompt.
@@ -797,6 +775,10 @@ main() {
 
     # Success marker — consumed by install.sh wrapper for step-skip logic
     mkdir -p "$HOME/.cli-maxxing"
+    if [ "$ERRORS" -gt 0 ]; then
+        warn "This step has $ERRORS unresolved issue(s); completion was not recorded."
+        return 1
+    fi
     touch "$HOME/.cli-maxxing/step-3.done"
 }
 

@@ -42,7 +42,9 @@ source_runtime_path() {
     if [ -d "$HOME/.nvm" ]; then
         export NVM_DIR="$HOME/.nvm"
         # shellcheck source=/dev/null
+        set +u # nvm reads unset internal variables during auto-use
         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+        set -u
     fi
 
     # User-local bin (ctg and friends)
@@ -310,14 +312,16 @@ install_node() {
         fi
     fi
 
-    if [ ! -d "$HOME/.nvm" ]; then
+    if [ ! -s "$HOME/.nvm/nvm.sh" ]; then
         info "Installing nvm..."
         curl -fsSL --proto '=https' --proto-redir '=https' https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     fi
 
     export NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
+    set +u # nvm reads unset internal variables during auto-use
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    set -u
 
     command -v nvm &>/dev/null || fail "nvm installation failed"
 
@@ -371,7 +375,9 @@ install_claude_code() {
                 # Rehydrate nvm in case the shim dir just got populated.
                 export NVM_DIR="$HOME/.nvm"
                 # shellcheck source=/dev/null
+                set +u # nvm reads unset internal variables during auto-use
                 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                set -u
                 if command -v claude &>/dev/null && claude --version &>/dev/null; then
                     installed=1
                     break
@@ -430,7 +436,7 @@ install_claude_code() {
                     {
                         echo ""
                         echo '# claude bin dir'
-                        echo "export PATH=\"$claude_bin_dir:\$PATH\""
+                        printf 'export PATH=%q:"$PATH"\n' "$claude_bin_dir"
                     } >> "$rc"
                     success "Added $claude_bin_dir to PATH in $rc"
                 fi
@@ -748,6 +754,8 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    rm -f "$HOME/.cli-maxxing/step-1.done" || exit 1
+
     # Source any brew/nvm/.local/bin that already exist so a re-run in a fresh
     # shell sees previously-installed tools before we start detecting them.
     source_runtime_path
@@ -771,10 +779,13 @@ main() {
 
     # install.sh already ran this. Running Step 1 on its own needs the same answer.
     if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
-        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
-        if command -v cm_preflight &>/dev/null; then
-            cm_preflight || exit 1
+        local preflight
+        if ! preflight=$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh) \
+            || [ -z "$preflight" ] || ! bash -n <<< "$preflight"; then
+            fail "Could not download preflight; no installation attempted."
         fi
+        eval "$preflight"
+        command -v cm_preflight >/dev/null 2>&1 && cm_preflight || exit 1
     fi
 
     if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
@@ -804,6 +815,10 @@ main() {
 
     # Sentinel — lets step-2+ (and any orchestrator) detect "step-1 is done".
     mkdir -p "$HOME/.cli-maxxing"
+    if [ "$ERRORS" -gt 0 ]; then
+        warn "This step has $ERRORS unresolved issue(s); completion was not recorded."
+        return 1
+    fi
     touch "$HOME/.cli-maxxing/step-1.done"
 }
 

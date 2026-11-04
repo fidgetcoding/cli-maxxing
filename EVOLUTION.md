@@ -72,6 +72,32 @@ Broke, on its first run: nvm killed Step 1 under `set -u` on bash 4.4 and up. An
 Fixed: `5fdf2ec`.
 Also built: preflight, which runs before anything is written (`8a868f1`). No sudo gets a clear partial install or a clear stop, and never a password prompt that can't succeed. A daily check reads the pins straight out of the step scripts (`69367f0`), and `tests/pins` breaks each kind of pin to prove the check catches a vendor change. GitHub had already switched off Security Checks for inactivity, so the daily job now keeps scheduled checks on (`826851f`).
 
+**Round 7: failure recovery and statusline cost (11-04).**
+I added offline regression tests that exercise the installers with disposable homes,
+stub downloads and fake commands. They cover repeated runs, truncated downloads,
+missing tools, malformed settings, shell paths with spaces/metacharacters and
+untrusted statusline input without installing anything on the development machine.
+
+Fixed: orchestration now downloads each step completely before running it, reports
+child failures and clears stale completion markers. Counted errors no longer mark
+steps complete. nvm sourcing tolerates unset internal variables, and shell PATH
+persistence quotes literal directories. Existing Ghostty, project statusline,
+custom global statusline and Telegram access settings survive maintenance. Global
+statusline/memory-hook merges validate JSON and use atomic writes with an installer
+lock; memory-hook reruns preserve other Stop hooks. The PDF helper cleans up its
+temporary files on both success and failure.
+
+The statusline now validates numeric input before shell arithmetic and parses JSON
+once instead of six times. Both embedded copies match the template. The Step 5
+selection menu reads the MCP inventory once instead of eleven times. The fixture
+benchmark compares the old and new statusline with alternating runs; its timings
+measure script execution, not end-to-end Claude responsiveness.
+
+Tested locally: 32 offline maintenance tests passed on Bash 3.2 and Bash 5.3. The
+same suite is wired into the existing Linux/macOS preflight CI job. Actual package
+installation, vendor endpoints and credential-backed MCP integration still need
+the throwaway-machine CI checks; I did not run a live install in this pass.
+
 ## Test log
 
 | Date | Check | Result |

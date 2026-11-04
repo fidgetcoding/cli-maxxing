@@ -31,6 +31,36 @@ pin_npm() {
     if [ -n "$v" ]; then echo "$1@$v"; else echo "$1@latest"; fi
 }
 
+# Serialize this installer's settings merges and atomically replace valid JSON.
+# Existing custom status lines belong to the user; a null entry is unconfigured.
+configure_statusline() (
+    local settings="$HOME/.claude/settings.json" tmp="" lock
+    lock="$settings.cli-maxxing-lock"
+    mkdir "$lock" 2>/dev/null || { warn "Settings are being updated by another installer: $lock"; return 1; }
+    trap '[ -z "$tmp" ] || rm -f "$tmp"; rmdir "$lock"' EXIT
+    trap 'exit 130' INT
+    trap 'exit 143' TERM
+    tmp=$(mktemp "$HOME/.claude/.settings.XXXXXX") || return 1
+    if [ -f "$settings" ]; then
+        if ! command -v jq >/dev/null 2>&1; then
+            warn "jq unavailable; existing settings preserved. Run Step 3 and Final again to configure the status line."
+            return 0
+        fi
+        jq -es '
+          if length == 1 and (.[0] | type) == "object" then .[0]
+          else error("settings must be one JSON object") end |
+          if .statusLine == null then
+            .statusLine = {"type":"command", "command":"~/.claude/statusline.sh"}
+          elif (.statusLine | type) == "object" and .statusLine.type == "command"
+               and (.statusLine.command | type) == "string" and (.statusLine.command | length) > 0 then .
+          else error("invalid statusLine configuration") end
+        ' "$settings" > "$tmp" || return 1
+    else
+        printf '%s\n' '{"statusLine":{"type":"command","command":"~/.claude/statusline.sh"}}' > "$tmp" || return 1
+    fi
+    chmod 600 "$tmp" && mv "$tmp" "$settings" || return 1
+)
+
 # -----------------------------------------------------------------------------
 # BUG A defense-in-depth: source runtime PATH before any tool detection
 # -----------------------------------------------------------------------------
@@ -58,7 +88,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         \. "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # 3. ~/.local/bin — prepend if not already present
@@ -210,16 +242,7 @@ init_config() {
 
     npx fidgetflo init 2>/dev/null || true
 
-    # fidgetflo init may write a verbose statusLine to project-level .claude/settings.json.
-    # Remove it so our clean global statusline (Final Step) isn't overridden.
-    local PROJECT_SETTINGS=".claude/settings.json"
-    if [ -f "$PROJECT_SETTINGS" ] && command -v jq &>/dev/null; then
-        if jq -e '.statusLine' "$PROJECT_SETTINGS" &>/dev/null; then
-            jq 'del(.statusLine)' "$PROJECT_SETTINGS" > "${PROJECT_SETTINGS}.tmp" \
-                && mv "${PROJECT_SETTINGS}.tmp" "$PROJECT_SETTINGS"
-            info "Removed fidgetflo statusLine override from project settings (global statusline takes priority)"
-        fi
-    fi
+    # Preserve project statusLine settings. Project choices override globals.
 
     success "fidgetflo configuration initialized"
 }
@@ -285,7 +308,7 @@ install_swarm_skills() {
     info "Installing swarm skills and statusline..."
 
     local FSWARM_DIR FHIVE_DIR FMINI_DIR FMINI1_DIR FMINI2_DIR FMINI3_DIR FMINIMAX_DIR
-    local FSWARM1_DIR FSWARM2_DIR FSWARM3_DIR FSWARMMAX_DIR W4W_DIR STATUSLINE_DIR SETTINGS_FILE EXISTING
+    local FSWARM1_DIR FSWARM2_DIR FSWARM3_DIR FSWARMMAX_DIR W4W_DIR STATUSLINE_DIR
 
     # --- /fswarm skill ---
     FSWARM_DIR="$HOME/.claude/skills/fswarm"
@@ -1030,18 +1053,41 @@ BULLETS_EOF
     # Lock files are used because fswarm/fhive agents run as Claude Code subprocesses
     # (via the Agent tool), not as CLI processes — process detection cannot find them.
     STATUSLINE_DIR="$HOME/.claude"
-    cat > "$STATUSLINE_DIR/statusline.sh" << 'STATUSLINE_EOF'
+    local statusline_tmp
+    statusline_tmp=$(mktemp "$STATUSLINE_DIR/.statusline.XXXXXX") || { soft_fail "Could not create statusline temporary file"; return 1; }
+    cat > "$statusline_tmp" << 'STATUSLINE_EOF'
 #!/bin/bash
 # Status Line — real state only
 # 2ndBrain (Obsidian) + fidgetflo (MCP) + Swarm/Hive activity
 
-input=$(cat)
-
-# Parse Claude Code's JSON input
-MODEL=$(echo "$input" | jq -r '.model.display_name // "Opus 4.6"' 2>/dev/null)
-CTX=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null | cut -d. -f1)
-DURATION_MS=$(echo "$input" | jq -r '.cost.total_duration_ms // 0' 2>/dev/null)
-CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
+# Parse and validate stdin once. No input-derived strings reach shell arithmetic.
+# Newlines/control characters are stripped from display fields before read splits
+# the six records. Invalid JSON/types produce the same harmless fallback.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Claude (jq missing — run Step 3)"
+  exit 0
+fi
+FIELDS=$(jq -rs '
+  def text($fallback):
+    if type == "string" and length > 0 then gsub("[\u0000-\u001f\u007f]"; "") else $fallback end;
+  def integer($fallback; $max):
+    if type == "number" and . >= 0 and . <= $max then floor else $fallback end;
+  if length == 1 and (.[0] | type) == "object" then .[0] else {} end |
+  (try .model.display_name catch null | text("Claude")),
+  (try .context_window.used_percentage catch null | integer(0; 100)),
+  (try .cost.total_duration_ms catch null | integer(0; 315360000000)),
+  (try .workspace.current_dir catch null | text("")),
+  (try .rate_limits.five_hour.used_percentage catch null | integer(""; 100)),
+  (try .rate_limits.seven_day.used_percentage catch null | integer(""; 100))
+' 2>/dev/null) || FIELDS=$'Claude\n0\n0\n\n\n'
+{
+  IFS= read -r MODEL
+  IFS= read -r CTX
+  IFS= read -r DURATION_MS
+  IFS= read -r CWD
+  IFS= read -r U5
+  IFS= read -r U7
+} <<< "$FIELDS"
 
 # Format duration
 if [ "$DURATION_MS" != "0" ] && [ "$DURATION_MS" != "null" ]; then
@@ -1065,7 +1111,7 @@ fi
 BRAIN=""
 MOGGING_VAULT_MARKER="$HOME/.claude/.mogging-vault"
 if [ -f "$MOGGING_VAULT_MARKER" ] && [ -n "$CWD" ]; then
-  VAULT_PATH=$(head -n1 "$MOGGING_VAULT_MARKER" 2>/dev/null | tr -d '\n')
+  IFS= read -r VAULT_PATH < "$MOGGING_VAULT_MARKER" || true
   if [ -n "$VAULT_PATH" ]; then
     case "$CWD" in
       "$VAULT_PATH"|"$VAULT_PATH"/*) BRAIN="🧠 Brain²" ;;
@@ -1078,19 +1124,19 @@ fi
 
 # --- fidgetflo CHECK ---
 fidgetflo=""
-if pgrep -f "fidgetflo.*mcp" >/dev/null 2>&1 || pgrep -f "fidgetflo/bin/cli" >/dev/null 2>&1 || pgrep -f "fidgetflo" >/dev/null 2>&1; then
+if pgrep -f "fidgetflo" >/dev/null 2>&1; then
   fidgetflo="⚡️ fidgetflo"
 fi
 
 # --- SWARM CHECK (only shows when actively running) ---
 # Lock file is written by /fswarm skill, removed on completion.
 # Agents run as Claude Code subprocesses (not CLI), so pgrep won't find them.
-# Auto-clean lock files older than 30 min as stale.
+# Ignore lock files older than 30 min as stale.
 SWARM=""
 SWARM_LOCK="/tmp/fidgetflo-swarm-active"
 if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-swarm-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$SWARM_LOCK" 2>/dev/null
+  if [ "$(find "$SWARM_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     AGENT_COUNT=$(cat "$SWARM_LOCK" 2>/dev/null || echo "")
     # Sanitize: keep only digits to prevent injection from a malicious lock-file write
@@ -1104,24 +1150,24 @@ if [ -f "$SWARM_LOCK" ] 2>/dev/null; then
 fi
 
 # --- HIVE CHECK (only shows when actively running) ---
-# Same approach — trust lock file, auto-clean after 30 min.
+# Same approach — ignore stale lock files after 30 min.
 HIVE=""
 HIVE_LOCK="/tmp/fidgetflo-hive-active"
 if [ -f "$HIVE_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-hive-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$HIVE_LOCK" 2>/dev/null
+  if [ "$(find "$HIVE_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     HIVE="👑 Hive"
   fi
 fi
 
 # --- MINI CHECK (only shows when actively running) ---
-# Same approach — trust lock file, auto-clean after 30 min.
+# Same approach — ignore stale lock files after 30 min.
 MINI=""
 MINI_LOCK="/tmp/fidgetflo-mini-active"
 if [ -f "$MINI_LOCK" ] 2>/dev/null; then
-  if [ "$(find /tmp -maxdepth 1 -name 'fidgetflo-mini-active' -mmin +30 2>/dev/null)" ]; then
-    rm -f "$MINI_LOCK" 2>/dev/null
+  if [ "$(find "$MINI_LOCK" -prune -mmin +30 2>/dev/null)" ]; then
+    : # Ignore stale markers; their owner manages cleanup.
   else
     MINI_AGENT_COUNT=$(cat "$MINI_LOCK" 2>/dev/null || echo "")
     # Sanitize: keep only digits to prevent injection from a malicious lock-file write
@@ -1160,8 +1206,6 @@ usage_seg() {
   printf '%s %s%s%s%s%s %s%%' "$label" "$c" "$fill" "$dim" "$emp" "$reset" "$p"
 }
 
-U5=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
-U7=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' 2>/dev/null)
 seg=$(usage_seg "5h" "$U5"); [ -n "$seg" ] && USAGE="$seg"
 seg=$(usage_seg "7d" "$U7"); [ -n "$seg" ] && { [ -n "$USAGE" ] && USAGE="$USAGE · "; USAGE="$USAGE$seg"; }
 
@@ -1199,27 +1243,16 @@ fi
 LINE="${MODEL} • ⏱ ${TIME_FMT} • ${CTX}% ctx"
 [ -n "$PARTS" ] && LINE="${PARTS} • ${LINE}"
 [ -n "$USAGE" ] && LINE="${LINE} • ${USAGE}"
-echo "$LINE"
+printf '%s\n' "$LINE"
 STATUSLINE_EOF
-    chmod +x "$STATUSLINE_DIR/statusline.sh"
+    if [ "$?" -ne 0 ] || ! chmod 755 "$statusline_tmp" || ! mv "$statusline_tmp" "$STATUSLINE_DIR/statusline.sh"; then
+        rm -f "$statusline_tmp"
+        soft_fail "Could not install statusline script"
+        return 1
+    fi
     success "Statusline script installed at $STATUSLINE_DIR/statusline.sh"
 
-    # --- Configure statusline in Claude Code settings ---
-    SETTINGS_FILE="$HOME/.claude/settings.json"
-    if [ -f "$SETTINGS_FILE" ] && command -v jq &>/dev/null; then
-        # Check if statusline is already configured
-        EXISTING=$(jq -r '.statusLine.command // ""' "$SETTINGS_FILE" 2>/dev/null)
-        if [ -z "$EXISTING" ] || [ "$EXISTING" = "null" ]; then
-            jq '.statusLine = {"type": "command", "command": "~/.claude/statusline.sh"}' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" \
-                && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
-            success "Statusline configured in Claude Code settings"
-        else
-            success "Statusline already configured (${EXISTING})"
-        fi
-    else
-        warn "Could not configure statusline automatically. Add to ~/.claude/settings.json manually:"
-        echo '  "statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}'
-    fi
+    configure_statusline || { soft_fail "Could not configure status line; existing settings preserved"; return 1; }
 }
 
 # -----------------------------------------------------------------------------
@@ -1511,6 +1544,8 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    rm -f "$HOME/.cli-maxxing/step-4.done" || exit 1
+
     # BUG A defense-in-depth: load PATH before any tool probe runs
     source_runtime_path
 
@@ -1523,10 +1558,13 @@ main() {
 
     # install.sh already ran this. Running this step on its own needs the same answer.
     if [ -z "${CLI_MAXXING_PREFLIGHT_DONE:-}" ]; then
-        eval "$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh)"
-        if command -v cm_preflight &>/dev/null; then
-            cm_preflight || exit 1
+        local preflight
+        if ! preflight=$(curl -fsSL --proto '=https' --proto-redir '=https' --connect-timeout 10 --max-time 120 https://raw.githubusercontent.com/fidgetcoding/cli-maxxing/main/scripts/preflight.sh) \
+            || [ -z "$preflight" ] || ! bash -n <<< "$preflight"; then
+            fail "Could not download preflight; no installation attempted."
         fi
+        eval "$preflight"
+        command -v cm_preflight >/dev/null 2>&1 && cm_preflight || exit 1
     fi
     if [ "${CLI_MAXXING_NO_SUDO:-0}" = "1" ]; then
         # Fail each sudo call at once instead of hanging on a password prompt.
@@ -1548,6 +1586,10 @@ main() {
 
     # Mark step complete for orchestrator / resume-logic to detect.
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
+    if [ "$ERRORS" -gt 0 ]; then
+        warn "This step has $ERRORS unresolved issue(s); completion was not recorded."
+        return 1
+    fi
     touch "$HOME/.cli-maxxing/step-4.done"
 }
 

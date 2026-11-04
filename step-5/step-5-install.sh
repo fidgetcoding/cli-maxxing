@@ -72,7 +72,9 @@ source_runtime_path() {
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
         # shellcheck disable=SC1091
+        set +u # nvm reads unset internal variables during auto-use
         . "$NVM_DIR/nvm.sh" 2>/dev/null || true
+        set -u
     fi
 
     # ~/.local/bin — prepend if not already on PATH.
@@ -115,56 +117,58 @@ choose_tools() {
     if [ ! -t 0 ]; then
         info "Non-interactive mode detected (running via curl pipe)"
         CHOICES=""
+        local inventory
+        inventory=$(claude mcp list 2>/dev/null) || inventory=""
 
         # Auto-detect already-installed tools. Anchor each name at the start
         # of the line followed by ":" — that matches `claude mcp list` output
         # format ("name: command ...") without matching substrings inside
         # another MCP's command string.
-        if claude mcp list 2>/dev/null | grep -qE '^notion:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^notion:' 2>/dev/null; then
             CHOICES="$CHOICES 1"
             INSTALLED_NOTION=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^granola:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^granola:' 2>/dev/null; then
             CHOICES="$CHOICES 2"
             INSTALLED_GRANOLA=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^n8n:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^n8n:' 2>/dev/null; then
             CHOICES="$CHOICES 3"
             INSTALLED_N8N=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^google-calendar:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^google-calendar:' 2>/dev/null; then
             CHOICES="$CHOICES 4"
             INSTALLED_GCAL=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^morgen:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^morgen:' 2>/dev/null; then
             CHOICES="$CHOICES 5"
             INSTALLED_MORGEN=true
         fi
         # Match the "motion" MCP specifically — `claude mcp list` prints lines
         # shaped like "name: command ...". Use ERE + anchored name prefix so
         # we don't accidentally match substrings inside other MCP commands.
-        if claude mcp list 2>/dev/null | grep -qE '^motion:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^motion:' 2>/dev/null; then
             CHOICES="$CHOICES 6"
             INSTALLED_MOTION=true
             MOTION_PREEXISTING=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^playwright:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^playwright:' 2>/dev/null; then
             CHOICES="$CHOICES 7"
             INSTALLED_PLAYWRIGHT=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^swiftkit:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^swiftkit:' 2>/dev/null; then
             CHOICES="$CHOICES 8"
             INSTALLED_SWIFTKIT=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^superhuman:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^superhuman:' 2>/dev/null; then
             CHOICES="$CHOICES 9"
             INSTALLED_SUPERHUMAN=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^gdrive:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^gdrive:' 2>/dev/null; then
             CHOICES="$CHOICES 10"
             INSTALLED_GDRIVE=true
         fi
-        if claude mcp list 2>/dev/null | grep -qE '^vercel:' 2>/dev/null; then
+        if printf '%s\n' "$inventory" | grep -qE '^vercel:' 2>/dev/null; then
             CHOICES="$CHOICES 11"
             INSTALLED_VERCEL=true
         fi
@@ -934,6 +938,8 @@ print_summary() {
 # Main
 # -----------------------------------------------------------------------------
 main() {
+    rm -f "$HOME/.cli-maxxing/step-5.done" || exit 1
+
     source_runtime_path
 
     echo ""
@@ -972,6 +978,10 @@ main() {
 
     # Breadcrumb for /doctor and re-run detection.
     mkdir -p "$HOME/.cli-maxxing" 2>/dev/null || true
+    if [ "$ERRORS" -gt 0 ]; then
+        warn "This step has $ERRORS unresolved issue(s); completion was not recorded."
+        return 1
+    fi
     touch "$HOME/.cli-maxxing/step-5.done" 2>/dev/null || true
 }
 

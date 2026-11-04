@@ -34,7 +34,9 @@ source_runtime_path() {
     done
     export NVM_DIR="$HOME/.nvm"
     # shellcheck source=/dev/null
+    set +u # nvm reads unset internal variables during auto-use
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    set -u
     case ":$PATH:" in
         *":$HOME/.local/bin:"*) ;;
         *) export PATH="$HOME/.local/bin:$PATH" ;;
