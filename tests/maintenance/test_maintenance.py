@@ -351,6 +351,45 @@ class Recovery(Sandbox):
                 self.assertFalse((self.home / f'.cli-maxxing/step-{step}.done').exists())
 
 
+    def run_step3_hyperresearch(self, os_name, supported_python=False):
+        # A bin-only PATH guarantees the host cannot supply Python or installers.
+        self.stub('pipx', 'echo called >> "$TRACE"\nexit 19')
+        self.stub('brew', 'exit 1')
+        for name in ['mkdir', 'touch']:
+            (self.bin / name).symlink_to(shutil.which(name))
+        if supported_python:
+            self.stub('python3.13', 'echo "Python 3.13.0"')
+        path = 'step-3/step-3-install.sh'
+        names = re.findall(r'^(\w+)\(\) \{', (ROOT / path).read_text(), re.M)
+        stubs = '\n'.join(n + '() { :; }' for n in names
+                          if n not in ['main', 'install_hyperresearch', 'soft_fail', 'warn'])
+        body = 'set -u\nERRORS=0; RED=""; GREEN=""; YELLOW=""; BLUE=""; NC=""; CLI_MAXXING_PREFLIGHT_DONE=1;\n'
+        body += 'soft_fail() { ERRORS=$((ERRORS+1)); }; warn() { echo "$*"; };\n'
+        body += stubs + '\n' + function(path, 'install_hyperresearch') + '\n' + function(path, 'main')
+        body += '\nmain\nrc=$?\necho "ERRORS=$ERRORS"\nexit "$rc"\n'
+        return self.run_shell(body, PATH=str(self.bin), OS=os_name)
+
+    def test_step3_linux_unsupported_python_is_an_optional_skip(self):
+        r = self.run_step3_hyperresearch('linux')
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn('hyperresearch skipped', r.stdout)
+        self.assertIn('ERRORS=0', r.stdout)
+        self.assertTrue((self.home / '.cli-maxxing/step-3.done').exists())
+        self.assertFalse((self.work / 'trace').exists())
+
+    def test_step3_mac_python_install_failure_blocks_completion(self):
+        r = self.run_step3_hyperresearch('mac')
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('ERRORS=1', r.stdout)
+        self.assertFalse((self.home / '.cli-maxxing/step-3.done').exists())
+
+    def test_step3_hyperresearch_install_failure_blocks_completion(self):
+        r = self.run_step3_hyperresearch('linux', supported_python=True)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('ERRORS=1', r.stdout)
+        self.assertFalse((self.home / '.cli-maxxing/step-3.done').exists())
+        self.assertEqual((self.work / 'trace').read_text().splitlines(), ['called'])
+
     def test_preflight_failure_never_evaluates_partial_body(self):
         self.stub('curl', 'echo \'touch "$HOME/preflight-executed"\'\nexit 18')
         for path in ['step-1/step-1-install.sh', 'step-3/step-3-install.sh',

@@ -495,10 +495,13 @@ install_hyperresearch() {
         warn "  fail at FETCH time where crawl4ai is broken. Not installing a broken copy."
         if [ "$OS" = "mac" ]; then
             warn "  Fix:  brew install python@3.13   then re-run Step 3."
+            soft_fail "hyperresearch skipped — no supported Python found"
         else
             warn "  Fix:  install python3.13 (or 3.12/3.11), then re-run Step 3."
+            # Linux distros without a supported interpreter intentionally skip
+            # this optional tool; required tools can still complete Step 3.
+            warn "hyperresearch skipped — no supported Python found"
         fi
-        soft_fail "hyperresearch skipped — no supported Python found"
         return
     fi
 

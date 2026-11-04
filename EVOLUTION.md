@@ -98,6 +98,12 @@ same suite is wired into the existing Linux/macOS preflight CI job. Actual packa
 installation, vendor endpoints and credential-backed MCP integration still need
 the throwaway-machine CI checks; I did not run a live install in this pass.
 
+Release CI then caught an Ubuntu 22.04 regression: its intentional hyperresearch
+skip (no supported Python) was counted as a failed Step 3. That Linux skip now
+warns without blocking completion. Added regressions for the supported skip,
+failed Python installation on macOS, and failed hyperresearch installation;
+actual installation failures still prevent the completion marker.
+
 ## Test log
 
 | Date | Check | Result |
