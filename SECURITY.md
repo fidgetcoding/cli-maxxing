@@ -11,7 +11,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 1. **Do NOT open a public GitHub issue.**
-2. Use GitHub's private reporting: the repo's **Security** tab → **Report a vulnerability**. Only the maintainer sees the report.
+2. Email **nate@lorecraft.io**, or use GitHub's private reporting: the repo's **Security** tab → **Report a vulnerability**. Either way, only the maintainer sees it.
 3. Include: description of the vulnerability, steps to reproduce, and potential impact.
 4. You will receive acknowledgment within 48 hours.
 
