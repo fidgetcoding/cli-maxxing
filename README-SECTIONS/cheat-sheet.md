@@ -130,7 +130,6 @@ These activate on their own when Claude detects a relevant task via natural lang
 | Morgen *(recommended)* | Step 5 | Natural language — unified calendar + tasks across Google/Outlook/iCloud/native | "What's on my calendar this week?" · "Add a task called 'Review contracts' due Friday" |
 | Motion Calendar | Step 5 | Natural language — Motion-specific features (teammate visibility, full event search) | "Who on my team has a conflict at 3pm?" |
 | Playwright | Step 5 | Natural language — browser automation for web apps with no API. Runs a separate Chromium instance, reads accessibility-tree snapshots (not pixels) | "Log into Higgsfield and generate an image for me" · "Open this URL, fill the form, and tell me what comes back" |
-| SwiftKit | Step 5 | Natural language — hosted toolkit for iOS / macOS / Swift dev (100+ tools). Default for anything Apple-platform | "Build me a SwiftUI login screen" |
 | Superhuman | Step 5 | Natural language — email triage + drafting via Superhuman's official remote MCP | "Triage my inbox" · "Draft a reply to the latest thread" |
 | Google Drive | Step 5 | Natural language — browse, search, and read Docs / Sheets / PDFs / shared folders via Google's official hosted MCP | "Find the latest Q3 planning doc in my Drive" |
 | Vercel | Step 5 | Natural language — deployments, build logs, runtime logs, domains, env vars via Vercel's official remote MCP | "List my recent deployments" · "Show build logs for the last failed deploy" |

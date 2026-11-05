@@ -67,17 +67,17 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - name: Assert step-5 advertises Vercel MCP (option 11)
+      - name: Assert step-5 advertises Vercel MCP (option 10)
         run: |
-          if ! grep -q '11) Vercel' step-5/step-5-install.sh; then
-            echo "::error file=step-5/step-5-install.sh::Vercel MCP option 11 missing from step-5 menu"
+          if ! grep -q '10) Vercel' step-5/step-5-install.sh; then
+            echo "::error file=step-5/step-5-install.sh::Vercel MCP option 10 missing from step-5 menu"
             exit 1
           fi
           if ! grep -q 'install_vercel' step-5/step-5-install.sh; then
             echo "::error file=step-5/step-5-install.sh::install_vercel dispatch missing"
             exit 1
           fi
-          echo "step-5 Vercel MCP (option 11) coverage verified"
+          echo "step-5 Vercel MCP (option 10) coverage verified"
       - name: Assert step-5 advertises core MCP suite
         run: |
           missing=0

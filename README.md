@@ -62,7 +62,7 @@ Install `cli-maxxing` first. `creativity-maxxing` and `task-maxxing` can be inst
 | [Step 2](#step-2---bonus-software) | Bonus Software | Ghostty (terminal) + Arc (browser). Optional, but highly recommended | ~4 min |
 | [Step 3](#step-3---developer--utility-tools) | Developer & Utility Tools | Adds file converters, search, utilities, and no-flicker mode | ~3 min |
 | [Step 4](#step-4---fidgetflo) | FidgetFlo | Multi-agent orchestration: swarms, hives, persistent memory, Opus-locked | ~3 min |
-| [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + SwiftKit + Superhuman + Google Drive + Vercel (pick what you use; Morgen recommended) | ~5 min |
+| [Step 5](#step-5---productivity-tools) | Productivity Tools | Notion + Granola + n8n + GCal + Morgen + Motion + Playwright + Superhuman + Google Drive + Vercel (pick what you use; Morgen recommended) | ~5 min |
 | [Step 6](#step-6---telegram) | Telegram | Message Claude from your phone via Telegram bot | ~2 min |
 | [Step 7](#step-7---github) | GitHub | GitHub MCP + /gitfix + /recon skills: repos, issues, PRs, code search, full-repo doc sync, pre-build prior-art recon (MCP requires PAT) | ~2 min |
 | [Step 8](#step-8---safety-check) | Safety Check | Security auditing: scan any project for vulnerabilities, plus full MCP security checks | ~2 min |
@@ -113,7 +113,7 @@ Run the steps in order. Each one builds on the last.
 
 **[Step 4: FidgetFlo](#step-4---fidgetflo)** is where you set up [FidgetFlo](https://github.com/fidgetcoding/fidgetflo), the multi-agent orchestration layer that turns Claude into a full team of AI agents: `/fswarm`, `/fmini`, `/fhive`, persistent memory, Opus-locked.
 
-**[Step 5: Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools: notes, calendars, email, meetings, workflows, browser automation, deployments, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, or Vercel. All optional, install only what you need.
+**[Step 5: Productivity Tools](#step-5---productivity-tools)** connects Claude to your productivity tools: notes, calendars, email, meetings, workflows, browser automation, deployments, and hosted toolkits. Pick the ones you use: Notion, Granola, your own n8n instance, Google Calendar, Morgen (recommended), Motion Calendar, Playwright, Superhuman, Google Drive, or Vercel. All optional, install only what you need.
 
 **[Step 6: Telegram](#step-6---telegram)** connects Claude to Telegram so you can message it straight from your phone. You create a free bot through Telegram (takes about two minutes), the script handles the rest, and then you use `ctg` or `cbraintg` to launch Claude with Telegram connected. Messages show up in your session in real time. This step is completely optional; everything else works without it.
 
@@ -494,7 +494,7 @@ Connects Claude to the productivity tools you already use. Everything's optional
 
 Claude picks the right tool automatically based on what you ask. Pick whichever apply:
 
-1. **Notion** · 2. **Granola** · 3. **n8n** · 4. **Google Calendar** · 5. **Morgen** ⭐ · 6. **Motion Calendar** · 7. **Playwright** · 8. **SwiftKit** · 9. **Superhuman** · 10. **Google Drive** · 11. **Vercel**
+1. **Notion** · 2. **Granola** · 3. **n8n** · 4. **Google Calendar** · 5. **Morgen** ⭐ · 6. **Motion Calendar** · 7. **Playwright** · 8. **Superhuman** · 9. **Google Drive** · 10. **Vercel**
 
 > **Morgen (5) is the recommended default.** It unifies Google, Outlook, iCloud, and native calendars + tasks behind a single API key. Google Calendar (4) and Motion (6) are secondary, so install them only if you need those accounts directly.
 >
@@ -522,10 +522,9 @@ The script asks which tools you want, then walks you through each one's credenti
 | 5 | **[Morgen](https://github.com/fidgetcoding/morgen-mcp)** ⭐ 💚 | Unified calendar + tasks across Google/Outlook/iCloud/native. Natural-language dates/recurrence, auto-schedule, day reflow. One key for everything. | API key from [platform.morgen.so/developers-api](https://platform.morgen.so/developers-api). |
 | 6 | **[Motion Calendar](https://github.com/fidgetcoding/motion-mcp)** 💚 | Teammate visibility + full event search that Morgen's API doesn't expose. *Motion-specific features only.* | Motion API key + Firebase key + refresh token + user ID (script walks you through). |
 | 7 | **Playwright** ([Microsoft](https://github.com/microsoft/playwright-mcp)) | Lets Claude log into and operate web apps with no API. Runs its own Chromium (not your real browser), reads via accessibility-tree snapshots, which keeps it fast. | Node 18+ (from Step 1) + ~hundreds of MB disk for Chromium. No credentials. |
-| 8 | **SwiftKit** | Hosted MCP toolkit for **iOS / macOS / Swift development**: 100+ tools for writing, building, and shipping Apple-platform code behind one HTTP endpoint. Default for anything iPhone/iOS/Swift-related. Nothing to install locally. | Account + API key (`sk_live_` or `sk_test_`). |
-| 9 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
-| 10 | **Google Drive** | Browse, search, and read Google Drive files (Docs, Sheets, PDFs, shared folders) via Google's official hosted MCP at `drivemcp.googleapis.com`. | Google account. One-time browser OAuth on first use. |
-| 11 | **Vercel** ([vercel.com](https://vercel.com)) | Deployments, build logs, runtime logs, domain management, environment variables, and project config via Vercel's official remote MCP. | Vercel account. One-time browser OAuth on first use. |
+| 8 | **Superhuman** ([superhuman.com](https://superhuman.com)) | Email triage + drafting from Claude via Superhuman's official remote MCP. | Active Superhuman subscription. One-time browser OAuth on first use. |
+| 9 | **Google Drive** | Browse, search, and read Google Drive files (Docs, Sheets, PDFs, shared folders) via Google's official hosted MCP at `drivemcp.googleapis.com`. | Google account. One-time browser OAuth on first use. |
+| 10 | **Vercel** ([vercel.com](https://vercel.com)) | Deployments, build logs, runtime logs, domain management, environment variables, and project config via Vercel's official remote MCP. | Vercel account. One-time browser OAuth on first use. |
 
 > **Playwright scope note:** Microsoft explicitly says "Playwright MCP is not a security boundary." Treat anything Claude loads through it the same as any browser session you'd drive manually.
 >
@@ -902,7 +901,7 @@ Once you're inside Claude, type:
 /mcp
 ```
 
-This shows every MCP server and its connection status. Everything you installed should show as **Connected**: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, Vercel, GitHub (if you ran Step 7), Obsidian (from 2ndBrain-mogging), and design tools (from creativity-maxxing). If anything shows as failed or disconnected, just tell Claude:
+This shows every MCP server and its connection status. Everything you installed should show as **Connected**: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, Superhuman, Google Drive, Vercel, GitHub (if you ran Step 7), Obsidian (from 2ndBrain-mogging), and design tools (from creativity-maxxing). If anything shows as failed or disconnected, just tell Claude:
 
 > "One of my MCP servers isn't connecting. Can you troubleshoot it?"
 
@@ -925,7 +924,7 @@ That's it. `cbrain` opens Claude Code directly inside your 2ndBrain vault with a
 **What `cbrain` gives you:**
 - Drops you into your Obsidian vault automatically, no `cd`-ing around
 - All permissions skipped, so Claude acts immediately with no approval prompts
-- Full access to everything: `/fswarm` (+ tiers `1`/`2`/`3`/`max`), `/fmini` (+ tiers `1`/`2`/`3`/`max`), `/fhive`, `/w4w`, `/concise`, `/bullets`, `/safetycheck`, `/gitfix`, `/recon`, FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, Vercel, Obsidian, design tools, video tools. All of it.
+- Full access to everything: `/fswarm` (+ tiers `1`/`2`/`3`/`max`), `/fmini` (+ tiers `1`/`2`/`3`/`max`), `/fhive`, `/w4w`, `/concise`, `/bullets`, `/safetycheck`, `/gitfix`, `/recon`, FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, Superhuman, Google Drive, Vercel, Obsidian, design tools, video tools. All of it.
 - Your status line shows what's active at a glance
 
 **When to use something else:**
@@ -949,7 +948,7 @@ Run the steps in this order:
 | 2 | Bonus Software | Ghostty (GPU-accelerated terminal) + Arc (power-user browser). Optional but recommended. |
 | 3 | Developer & Utility Tools | Python, Pandoc, jq, ripgrep, no-flicker mode, etc. |
 | 4 | FidgetFlo | Multi-agent orchestration: swarms, hives, persistent memory, Opus-locked |
-| 5 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + SwiftKit + Superhuman + Google Drive + Vercel (all optional; pick what you use, Morgen recommended) |
+| 5 | Productivity Tools | Notion + Granola + n8n + Google Calendar + Morgen + Motion Calendar + Playwright + Superhuman + Google Drive + Vercel (all optional; pick what you use, Morgen recommended) |
 | 6 | Telegram | Telegram bot setup, so you can message Claude from your phone. Press Enter to skip if you don't have a bot yet. |
 | 7 | GitHub | GitHub CLI (`gh`) + GitHub MCP (repos, issues, PRs, code search; MCP requires PAT) + `/gitfix` skill for full-repo doc sync + `/recon` skill for pre-build prior-art recon |
 | 8 | Safety Check | Security auditing: 12 core checks + 12 MCP checks for tool poisoning, DNS rebinding, supply chain attacks |
@@ -995,7 +994,7 @@ Removes the cli-maxxing aliases (`cskip`, `cc`, `ccr`, `ccc`), the `ctg` script,
 <summary><strong>Full list of what gets removed</strong></summary>
 
 - Claude Code shell aliases (`cskip`, `cc`, `ccr`, `ccc`) and the `ctg` script (`~/.local/bin/ctg`). `cbrain` and `cbraintg` are managed by 2ndBrain-mogging and aren't removed here.
-- All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, SwiftKit, Superhuman, Google Drive, GitHub. Design and media MCPs are managed by [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing), and Obsidian by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)
+- All MCPs installed by this repo: FidgetFlo, Notion, Granola, n8n, Google Calendar, Morgen, Motion Calendar, Playwright, Superhuman, Google Drive, GitHub. Design and media MCPs are managed by [creativity-maxxing](https://github.com/fidgetcoding/creativity-maxxing), and Obsidian by [2ndBrain-mogging](https://github.com/fidgetcoding/2ndBrain-mogging)
 - All skills: `fswarm*`, `fmini*`, `fhive`, `w4w`, `concise`, `bullets`, `gitfix`, `recon`, `safetycheck`. UI/UX Pro Max, the Taste Skill pack and Remotion are managed by creativity-maxxing
 - Dev tools: pandoc, jq, ripgrep, tree, fzf, wget, weasyprint, xlsx2csv, poppler (ffmpeg is creativity-maxxing's, so it's not touched here)
 - GitHub CLI (`gh`, installed by Step 7 alongside the GitHub MCP + /gitfix + /recon skills)

@@ -35,6 +35,7 @@ And right after: "need to make sure that CLAUDE ALWAYS DOWNLOADS. that is litera
 | 2026-11-01 | `3075b66` | ESSENCE and EVOLUTION published |
 | 2026-11-04 | `b3d5ebd` | Recovery: whole-step downloads, honest failure counts, settings that survive reruns, 32 offline tests |
 | 2026-11-04 | `fd3998f` | Ubuntu 22.04's optional hyperresearch skip stops failing Step 3, 35 offline tests |
+| 2026-11-05 | this commit | SwiftKit dropped from Step 5 because its site went dead. Superhuman, Google Drive and Vercel move up to 8, 9 and 10. Uninstall still removes old SwiftKit installs |
 
 ## Round by round
 
